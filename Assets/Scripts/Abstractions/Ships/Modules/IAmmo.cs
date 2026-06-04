@@ -1,4 +1,4 @@
-﻿using Infrastructure;
+﻿using Abstractions.Infrastructure;
 using UnityEngine;
 
 namespace Abstractions.Ships

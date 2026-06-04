@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using Abstractions.Infrastructure;
 using Abstractions.Ships;
-using Infrastructure;
 
 namespace Abstractions.Services
 {

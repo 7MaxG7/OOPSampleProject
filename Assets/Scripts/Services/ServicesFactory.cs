@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Abstractions.Services;
 using Configs;
 using Sounds;
@@ -19,7 +19,7 @@ namespace Services
             _soundConfig = soundConfig;
         }
 
-        public async Task<SoundPlayerView> CreateSoundPlayerAsync() 
+        public async UniTask<SoundPlayerView> CreateSoundPlayerAsync() 
             => await _assetsProvider.CreateInstanceAsync<SoundPlayerView>(_soundConfig.SoundPlayerPrefab, isDontDestroyAsset: true);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using Abstractions;
+using Abstractions.Infrastructure;
 using Abstractions.Services;
-using Services;
+using Cysharp.Threading.Tasks;
 using Utils;
 using Zenject;
 
@@ -16,12 +17,14 @@ namespace Infrastructure
         private readonly IAmmoFactory _ammoFactory;
         private readonly IUiFactory _uiFactory;
         private readonly IDamageHandler _damageHandler;
+        private readonly ICancellationTokenProvider _tokenProvider;
         private IGameStateMachine _stateMachine;
 
 
         [Inject]
         public LoadBattleState(ISceneLoader sceneLoader, IBattleObserver battleObserver, IAssetsProvider assetsProvider
-            , IShipsInitializer shipsInitializer, IAmmoFactory ammoFactory, IUiFactory uiFactory, IDamageHandler damageHandler)
+            , IShipsInitializer shipsInitializer, IAmmoFactory ammoFactory, IUiFactory uiFactory, IDamageHandler damageHandler,
+            ICancellationTokenProvider tokenProvider)
         {
             _sceneLoader = sceneLoader;
             _battleObserver = battleObserver;
@@ -30,10 +33,26 @@ namespace Infrastructure
             _ammoFactory = ammoFactory;
             _uiFactory = uiFactory;
             _damageHandler = damageHandler;
+            _tokenProvider = tokenProvider;
         }
 
         public void Enter()
-            => _sceneLoader.LoadScene(Constants.BATTLE_SCENE_NAME, PrepareSceneAsync);
+        {
+            InitAndRunBattleAsync().Forget();
+        }
+
+        private async UniTaskVoid InitAndRunBattleAsync()
+        {
+            using var cts = _tokenProvider.CreateLocalCts();
+            await _sceneLoader.LoadSceneAsync(Constants.BATTLE_SCENE_NAME, cts);
+
+            await _assetsProvider.WarmUpCurrentSceneAsync();
+            await _uiFactory.PrepareCanvasAsync();
+            _ammoFactory.PrepareRoot();
+            PrepareOpponents();
+
+            _stateMachine.Enter<RunBattleState>();
+        }
 
         public void Exit()
         {
@@ -44,20 +63,10 @@ namespace Infrastructure
             _stateMachine = stateMachine;
         }
 
-        private async void PrepareSceneAsync()
-        {
-            await _assetsProvider.WarmUpCurrentSceneAsync();
-            await _uiFactory.PrepareCanvasAsync();
-            _ammoFactory.PrepareRoot();
-            PrepareOpponents();
-            
-            _stateMachine.Enter<RunBattleState>();
-        }
-
         private void PrepareOpponents()
         {
             _shipsInitializer.PrepareShipsAsync();
-            
+
             foreach (var ship in _shipsInitializer.Ships.Values)
             {
                 ship.PrepareToBattle();

@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Abstractions.Services;
 using Abstractions.Ships;
 using Enums;
@@ -27,7 +27,7 @@ namespace Services
             _damageHandler = damageHandler;
         }
         
-        public async Task<IWeapon> CreateEquipment(WeaponType weaponType, Transform parent)
+        public async UniTask<IWeapon> CreateEquipment(WeaponType weaponType, Transform parent)
         {
             var weaponData = _staticDataService.GetWeaponData(weaponType);
             var weapon = new Weapon(weaponData.Cooldown, weaponData.Damage, weaponData.AmmoSpeed, weaponType, _ammoFactory

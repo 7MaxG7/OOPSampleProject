@@ -1,12 +1,12 @@
-﻿using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
+using Abstractions.Infrastructure;
 using Abstractions.Ships;
-using Infrastructure;
 
 namespace Abstractions.Services
 {
     public interface IAmmoFactory : ISceneCleanable
     {
         void PrepareRoot();
-        Task<IAmmo> SpawnAmmo(IWeapon weapon);
+        UniTask<IAmmo> SpawnAmmo(IWeapon weapon);
     }
 }

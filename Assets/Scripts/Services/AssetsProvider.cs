@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using Abstractions.Infrastructure;
 using Abstractions.Services;
 using Configs;
-using Infrastructure;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -59,7 +59,7 @@ namespace Services
             Addressables.InitializeAsync();
         }
 
-        public async Task WarmUpCurrentSceneAsync()
+        public async UniTask WarmUpCurrentSceneAsync()
         {
             var sceneName = _sceneLoader.GetCurrentSceneName();
             var assetReferences = _assetsConfig.GetAssetReferencesForState(sceneName);
@@ -67,11 +67,11 @@ namespace Services
                 await LoadAsync(reference);
         }
 
-        public async Task<T> CreateInstanceAsync<T>(AssetReference assetReference,
+        public async UniTask<T> CreateInstanceAsync<T>(AssetReference assetReference,
             Transform parent = null, bool isDontDestroyAsset = false) where T : MonoBehaviour
             => await CreateInstanceAsync<T>(assetReference, Vector3.zero, Quaternion.identity, parent, false, isDontDestroyAsset);
 
-        public async Task<T> CreateInstanceAsync<T>(AssetReference assetReference, Vector3 position, Quaternion rotation
+        public async UniTask<T> CreateInstanceAsync<T>(AssetReference assetReference, Vector3 position, Quaternion rotation
             , Transform parent = null, bool isPositioned = true, bool isDontDestroyAsset = false) where T : MonoBehaviour
         {
             var prefab = await LoadAsync(assetReference, isDontDestroyAsset);
@@ -80,13 +80,13 @@ namespace Services
                 : Instantiate(prefab, parent).GetComponent<T>();
         }
 
-        public async Task<GameObject> CreateInstanceAsync(AssetReference assetReference, Transform parent = null)
+        public async UniTask<GameObject> CreateInstanceAsync(AssetReference assetReference, Transform parent = null)
         {
             var prefab = await LoadAsync(assetReference);
             return Instantiate(prefab, parent);
         }
 
-        private async Task<GameObject> LoadAsync(AssetReference assetReference, bool isDontDestroyAsset = false)
+        private async UniTask<GameObject> LoadAsync(AssetReference assetReference, bool isDontDestroyAsset = false)
         {
             _isCleaned = false;
             var loadedAssets = isDontDestroyAsset ? _loadedDontDestroyAssets : _loadedAssets;

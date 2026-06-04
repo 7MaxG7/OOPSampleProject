@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
 using Abstractions;
+using Abstractions.Infrastructure;
 using Abstractions.Services;
+using Abstractions.Ui;
 using Configs;
+using Cysharp.Threading.Tasks;
 using Sounds;
-using Ui.ShipSetup.Controllers;
+using UI.ShipSetup;
 using Zenject;
 
 
@@ -11,8 +13,6 @@ namespace Infrastructure
 {
     internal sealed class ShipSetupState : IGameState
     {
-        private const float CURTAIN_HIDE_DELAY = 0.35f;
-
         private readonly ICurtain _curtain;
         private readonly IShipsInitializer _shipsInitializer;
         private readonly ISoundPlayer _soundPlayer;
@@ -21,14 +21,16 @@ namespace Infrastructure
         private readonly IUiFactory _uiFactory;
         private readonly ICleaner _cleaner;
         private readonly UiConfig _uiConfig;
-        
+        private readonly ICancellationTokenProvider _tokenProvider;
+
         private IGameStateMachine _stateMachine;
         private ShipSetupMenuController _shipSetupMenu;
 
 
         [Inject]
         public ShipSetupState(ICurtain curtain, IShipsInitializer shipsInitializer, IStaticDataService staticDataService
-            , ISoundPlayer soundPlayer, IAssetsProvider assetsProvider, IUiFactory uiFactory, ICleaner cleaner, UiConfig uiConfig)
+            , ISoundPlayer soundPlayer, IAssetsProvider assetsProvider, IUiFactory uiFactory, ICleaner cleaner, UiConfig uiConfig,
+            ICancellationTokenProvider tokenProvider)
         {
             _curtain = curtain;
             _shipsInitializer = shipsInitializer;
@@ -38,15 +40,20 @@ namespace Infrastructure
             _uiFactory = uiFactory;
             _cleaner = cleaner;
             _uiConfig = uiConfig;
+            _tokenProvider = tokenProvider;
         }
 
-        public async void Enter()
+        public void Enter()
+            => StartSetupAsync().Forget();
+
+        private async UniTaskVoid StartSetupAsync()
         {
+            using var cts = _tokenProvider.CreateLocalCts();
+
             await _assetsProvider.WarmUpCurrentSceneAsync();
-            await PrepareSetupSceneAsync();
+            await InitSceneAsync();
             _soundPlayer.PlayMusic();
-            // Delay prevents lagging animation on load after bootstrap
-            _curtain.HideCurtain(CURTAIN_HIDE_DELAY);
+            await _curtain.SetCurtainVisibleAsync(false, cts.Token);
         }
 
         public void Exit()
@@ -60,23 +67,30 @@ namespace Infrastructure
             _stateMachine = stateMachine;
         }
 
-        private async Task PrepareSetupSceneAsync()
+        private async UniTask InitSceneAsync()
         {
             await _uiFactory.PrepareCanvasAsync();
             await _shipsInitializer.PrepareShipsAsync();
             await SetupUiAsync();
         }
 
-        private async Task SetupUiAsync()
+        private async UniTask SetupUiAsync()
         {
             _shipSetupMenu = await _uiFactory.CreateShipSetupMenuAsync();
-            _shipSetupMenu.Init(_staticDataService, _uiFactory, _stateMachine.CoroutineRunner, _uiConfig);
+            _shipSetupMenu.Init(_staticDataService, _uiFactory, _uiConfig);
             await _shipSetupMenu.SetupUiAsync(_shipsInitializer.Ships.Keys);
             _shipSetupMenu.OnSetupComplete += SwitchState;
             _cleaner.AddCleanable(_shipSetupMenu);
         }
 
-        private void SwitchState() 
-            => _curtain.ShowCurtain(callback: _stateMachine.Enter<LoadBattleState>);
+        private void SwitchState()
+            => SwitchStateAsync().Forget();
+
+        private async UniTaskVoid SwitchStateAsync()
+        {
+            using var cts = _tokenProvider.CreateLocalCts();
+            await _curtain.SetCurtainVisibleAsync(true, cts.Token);
+            _stateMachine.Enter<LoadBattleState>();
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using Zenject;
+﻿using Abstractions.Infrastructure;
+using Zenject;
 
 
 namespace Infrastructure.Zenject

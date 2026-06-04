@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Abstractions.Services;
 using Abstractions.Ships;
 using Enums;
@@ -40,7 +40,7 @@ namespace Services
                 _shipsParent = new GameObject(Constants.SHIPS_PARENT_NAME).transform;
         }
         
-        public async Task<IShip> CreateShipAsync(ShipModel shipModel, Vector3 position, Quaternion rotation)
+        public async UniTask<IShip> CreateShipAsync(ShipModel shipModel, Vector3 position, Quaternion rotation)
         {
             var ship = await CreateShipAsync(shipModel.ShipType, position, rotation);
             await SetWeaponsAsync(ship.WeaponBattery, shipModel.WeaponTypes);
@@ -49,7 +49,7 @@ namespace Services
             return ship;
         }
 
-        private async Task<Ship> CreateShipAsync(ShipType shipType, Vector3 position, Quaternion rotation)
+        private async UniTask<Ship> CreateShipAsync(ShipType shipType, Vector3 position, Quaternion rotation)
         {
             var shipData = _staticDataService.GetShipData(shipType);
             var health = new Health(shipData.MaxHp, shipData.MaxShied, shipData.ShieldRecovery, shipData.ShieldRecoveryInterval);
@@ -62,13 +62,13 @@ namespace Services
             return ship;
         }
 
-        private async Task SetWeaponsAsync(IWeaponBattery weapons, Dictionary<int, WeaponType> weaponTypes)
+        private async UniTask SetWeaponsAsync(IWeaponBattery weapons, Dictionary<int, WeaponType> weaponTypes)
         {
             foreach (var slotIndex in weaponTypes.Keys.Where(slotIndex => slotIndex < weapons.MaxEquipmentsAmount))
                 await weapons.SetEquipmentAsync(slotIndex, weaponTypes[slotIndex]);
         }
 
-        private async Task SetModulesAsync(IShipModules modules, Dictionary<int, ModuleType> moduleTypes)
+        private async UniTask SetModulesAsync(IShipModules modules, Dictionary<int, ModuleType> moduleTypes)
         {
             foreach (var slotIndex in moduleTypes.Keys.Where(slotIndex => slotIndex < modules.MaxEquipmentsAmount))
                 await modules.SetEquipmentAsync(slotIndex, moduleTypes[slotIndex]);

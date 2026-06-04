@@ -1,15 +1,17 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Abstractions.Infrastructure;
 using Abstractions.Services;
 using Configs;
+using Cysharp.Threading.Tasks;
 using Enums;
-using Infrastructure;
 using Ships;
+using Ui;
+using Ui.ShipSetup;
 using UnityEngine;
 
-namespace Ui.ShipSetup.Controllers
+namespace UI.ShipSetup
 {
     public sealed class ShipSetupMenuController : ISceneCleanable
     {
@@ -17,24 +19,25 @@ namespace Ui.ShipSetup.Controllers
 
         private IStaticDataService _staticDataService;
         private readonly IShipConfigurationsHolder _configurationsHolder;
-        private ICoroutineRunner _coroutineRunner;
         private IUiFactory _uiFactory;
         private UiConfig _uiConfig;
-        
+        private readonly ICancellationTokenProvider _tokenProvider;
+
         private WeaponSelectPanelController _weaponSelectPanel;
         private ModuleSelectPanelController _moduleSelectPanel;
         private readonly ShipSetupMenuView _shipSetupMenuView;
-        private readonly Dictionary<OpponentId,ShipModel> _shipModels;
+        private readonly Dictionary<OpponentId, ShipModel> _shipModels;
         private readonly Dictionary<OpponentId, ShipPanelController> _shipPanels = new();
 
-
-        public ShipSetupMenuController(ShipSetupMenuView view, Dictionary<OpponentId,ShipModel> shipModels)
+        public ShipSetupMenuController(ShipSetupMenuView view, Dictionary<OpponentId, ShipModel> shipModels,
+            ICancellationTokenProvider tokenProvider)
         {
             _shipSetupMenuView = view;
             _shipModels = shipModels;
+            _tokenProvider = tokenProvider;
         }
 
-        public void CleanUp() 
+        public void CleanUp()
             => SceneCleanUp();
 
         public void SceneCleanUp()
@@ -45,6 +48,7 @@ namespace Ui.ShipSetup.Controllers
                 panel.OnModuleSelectClick -= ShowSelectModulePanel;
                 panel.CleanUp();
             }
+
             _shipPanels.Clear();
 
             _weaponSelectPanel.CleanUp();
@@ -54,42 +58,40 @@ namespace Ui.ShipSetup.Controllers
             _shipSetupMenuView.HideAllButton.onClick.RemoveAllListeners();
         }
 
-        public void Init(IStaticDataService staticDataService, IUiFactory uiFactory, ICoroutineRunner coroutineRunner
-            , UiConfig uiConfig)
+        public void Init(IStaticDataService staticDataService, IUiFactory uiFactory, UiConfig uiConfig)
         {
             _staticDataService = staticDataService;
             _uiFactory = uiFactory;
-            _coroutineRunner = coroutineRunner;
             _uiConfig = uiConfig;
         }
 
-        public async Task SetupUiAsync(IEnumerable<OpponentId> opponentIds)
+        public async UniTask SetupUiAsync(IEnumerable<OpponentId> opponentIds)
         {
             await SetupWeaponSelectPanelAsync();
             await SetupModuleSelectPanelAsync();
 
-            foreach (var opponentId in opponentIds) 
+            foreach (var opponentId in opponentIds)
                 await InitShipPanelAsync(opponentId);
 
             _shipSetupMenuView.SetupCompleteButton.onClick.AddListener(() => OnSetupComplete?.Invoke());
             _shipSetupMenuView.HideAllButton.onClick.AddListener(HideSelectPanels);
         }
 
-        private async Task SetupModuleSelectPanelAsync()
+        private async UniTask SetupModuleSelectPanelAsync()
         {
-            _moduleSelectPanel = new ModuleSelectPanelController(_shipSetupMenuView.ModuleSelectPanel, _shipModels);
-            _shipSetupMenuView.ModuleSelectPanel.Init(_uiFactory, _coroutineRunner, _uiConfig.FadeAnimDuration);
+            _moduleSelectPanel = new ModuleSelectPanelController(_shipSetupMenuView.ModuleSelectPanel, _shipModels, _tokenProvider);
+            _shipSetupMenuView.ModuleSelectPanel.Init(_uiFactory, _uiConfig.FadeAnimDuration);
             await _moduleSelectPanel.SetupModuledSelectPanelAsync(_staticDataService.GetAllEnabledModulesData());
         }
 
-        private async Task SetupWeaponSelectPanelAsync()
+        private async UniTask SetupWeaponSelectPanelAsync()
         {
-            _weaponSelectPanel = new WeaponSelectPanelController(_shipSetupMenuView.WeaponSelectPanel, _shipModels);
-            _shipSetupMenuView.WeaponSelectPanel.Init(_uiFactory, _coroutineRunner, _uiConfig.FadeAnimDuration);
+            _weaponSelectPanel = new WeaponSelectPanelController(_shipSetupMenuView.WeaponSelectPanel, _shipModels, _tokenProvider);
+            _shipSetupMenuView.WeaponSelectPanel.Init(_uiFactory, _uiConfig.FadeAnimDuration);
             await _weaponSelectPanel.SetupWeaponSelectPanelAsync(_staticDataService.GetAllEnabledWeaponsData());
         }
 
-        private async Task InitShipPanelAsync(OpponentId opponentId)
+        private async UniTask InitShipPanelAsync(OpponentId opponentId)
         {
             var shipPanelView = _shipSetupMenuView.ShipPanels.FirstOrDefault(view => view.OpponentId == opponentId);
             if (shipPanelView == null)
@@ -113,22 +115,22 @@ namespace Ui.ShipSetup.Controllers
 
         private void HideSelectPanels()
         {
-            _weaponSelectPanel.Hide();
-            _moduleSelectPanel.Hide();
+            _weaponSelectPanel.HideAsync().Forget();
+            _moduleSelectPanel.HideAsync().Forget();
         }
 
         private void ShowSelectWeaponPanel(OpponentId opponentId, int index)
         {
-            _moduleSelectPanel.Hide();
+            _moduleSelectPanel.HideAsync().Forget();
             var anchor = _shipPanels[opponentId].GetEquipmentSelectAnchor(EquipmentType.Weapon, index);
-            _weaponSelectPanel.Show(opponentId, index, anchor.position);
+            _weaponSelectPanel.ShowAsync(opponentId, index, anchor.position).Forget();
         }
 
         private void ShowSelectModulePanel(OpponentId opponentId, int index)
         {
-            _weaponSelectPanel.Hide();
+            _weaponSelectPanel.HideAsync().Forget();
             var anchor = _shipPanels[opponentId].GetEquipmentSelectAnchor(EquipmentType.Module, index);
-            _moduleSelectPanel.Show(opponentId, index, anchor.position);
+            _moduleSelectPanel.ShowAsync(opponentId, index, anchor.position).Forget();
         }
     }
 }

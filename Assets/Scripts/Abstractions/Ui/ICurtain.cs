@@ -1,13 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 
-namespace Abstractions.Services
+namespace Abstractions.Ui
 {
     public interface ICurtain
     {
-        Task InitAsync();
-        void ShowCurtain(bool isAnimated = true, Action callback = null);
-        void HideCurtain(bool isAnimated = true, Action callback = null);
-        void HideCurtain(float startDelay, Action callback = null);
+        UniTask InitAsync();
+        UniTask SetCurtainVisibleAsync(bool isVisible, CancellationToken token);
+        void ShowCurtainInstantly();
     }
 }

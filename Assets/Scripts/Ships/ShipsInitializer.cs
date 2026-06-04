@@ -1,10 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
 using Abstractions;
+using Abstractions.Infrastructure;
 using Abstractions.Services;
 using Abstractions.Ships;
 using Enums;
-using Infrastructure;
 using Sounds;
 using Zenject;
 
@@ -56,7 +56,7 @@ namespace Ships
             Ships.Clear();
         }
 
-        public async Task PrepareShipsAsync()
+        public async UniTask PrepareShipsAsync()
         {
             _shipsFactory.PrepareRoot();
             _shipModels = _configurationsHolder.ShipModels;

@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Abstractions.Infrastructure;
 using Abstractions.Services;
+using Cysharp.Threading.Tasks;
 using Enums;
-using Infrastructure;
 using Ships;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -65,7 +65,7 @@ namespace Ui.ShipSetup
             _moduleSlots.Clear();
         }
 
-        public async Task InitAsync(ShipModel shipModel, int weaponsAmount, int modulesAmount)
+        public async UniTask InitAsync(ShipModel shipModel, int weaponsAmount, int modulesAmount)
         {
             _shipModel = shipModel;
             _shipModel.OnWeaponChange += SwitchWeaponIcon;
@@ -88,7 +88,7 @@ namespace Ui.ShipSetup
             }
         }
 
-        private async Task SetupWeaponSlotsAsync(int weaponsAmount)
+        private async UniTask SetupWeaponSlotsAsync(int weaponsAmount)
         {
             await CheckSlotsAmountAsync(weaponsAmount, _weaponSlots, _shipPanelView.WeaponSlotsContent, EquipmentType.Weapon);
 
@@ -102,7 +102,7 @@ namespace Ui.ShipSetup
             }
         }
 
-        private async Task SetupModuleSlotsAsync(int modulesAmount)
+        private async UniTask SetupModuleSlotsAsync(int modulesAmount)
         {
             await CheckSlotsAmountAsync(modulesAmount, _moduleSlots, _shipPanelView.ModuleSlotsContent, EquipmentType.Module);
             
@@ -146,7 +146,7 @@ namespace Ui.ShipSetup
                 slot.SetIcon(icon);
         }
 
-        private async Task CheckSlotsAmountAsync(int amount, List<ShipSlotUiView> currentSlots,
+        private async UniTask CheckSlotsAmountAsync(int amount, List<ShipSlotUiView> currentSlots,
             Transform content, EquipmentType equipmentType)
         {
             currentSlots.ForEach(view => view.gameObject.SetActive(true));

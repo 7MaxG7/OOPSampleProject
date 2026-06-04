@@ -1,4 +1,4 @@
-﻿using Services;
+﻿using Abstractions.Infrastructure;
 using Zenject;
 
 
@@ -10,24 +10,19 @@ namespace Infrastructure
         public ICleaner Cleaner { get; }
 
         private readonly IGameStateMachine _gameStateMachine;
-        private readonly ISceneLoader _sceneLoader;
-        
         
         [Inject]
-        public Game(IUpdater updater, ICleaner cleaner, IGameStateMachine gameStateMachine
-            , ISceneLoader sceneLoader)
+        public Game(IUpdater updater, ICleaner cleaner, IGameStateMachine gameStateMachine)
         {
             Updater = updater;
             Cleaner = cleaner;
             _gameStateMachine = gameStateMachine;
-            _sceneLoader = sceneLoader;
             Cleaner.AddCleanable(Updater);
         }
 
-        public void Init(ICoroutineRunner coroutineRunner)
+        public void Init()
         {
-            _sceneLoader.Init(coroutineRunner);
-            _gameStateMachine.Init(coroutineRunner);
+            _gameStateMachine.Init();
             _gameStateMachine.Enter<GameBootstrapState>();
         }
     }

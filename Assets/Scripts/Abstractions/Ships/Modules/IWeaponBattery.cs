@@ -1,7 +1,7 @@
-﻿using System;
-using System.Threading.Tasks;
+using System;
+using Cysharp.Threading.Tasks;
+using Abstractions.Infrastructure;
 using Enums;
-using Infrastructure;
 using UnityEngine;
 
 namespace Abstractions.Ships
@@ -12,7 +12,7 @@ namespace Abstractions.Ships
         float ReloadRate { get; }
 
         void Init(IShip ship);
-        Task SetEquipmentAsync(int index, WeaponType weaponType);
+        UniTask SetEquipmentAsync(int index, WeaponType weaponType);
         void SetSlots(Transform[] weaponSlots);
         void ToggleShooting(bool isActive);
         void SetEquipmentSync(int index, WeaponType weaponType);

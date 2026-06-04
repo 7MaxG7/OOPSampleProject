@@ -17,7 +17,7 @@ MonoBehaviour:
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
-  _fadeAnimDuration: 0.6
+  _fadeAnimDuration: 0.3
   _curtainPrefab:
     m_AssetGUID: 5e55d30347debec44be9b11a869f4a92
     m_SubObjectName: 

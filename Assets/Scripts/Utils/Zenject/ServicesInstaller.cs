@@ -1,9 +1,12 @@
 ﻿using Abstractions;
+using Abstractions.Infrastructure;
 using Abstractions.Services;
+using Abstractions.Ui;
 using Infrastructure;
 using Services;
 using Ships;
 using Sounds;
+using Ui;
 using Zenject;
 
 namespace Utils.Zenject
@@ -13,6 +16,7 @@ namespace Utils.Zenject
         public override void InstallBindings()
         {
             Container.Bind<Game>().AsSingle();
+            Container.Bind<ICancellationTokenProvider>().To<CancellationTokenProvider>().AsSingle();
             Container.Bind<ICurtain>().To<Curtain>().AsSingle();
             Container.Bind<IUpdater>().To<Updater>().AsSingle();
             Container.Bind<ICleaner>().To<Cleaner>().AsSingle();

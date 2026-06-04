@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Abstractions.Services;
 using Abstractions.Ships;
 using Enums;
@@ -22,7 +22,7 @@ namespace Services
             _assetsProvider = assetsProvider;
         }
         
-        public async Task<IModule> CreateEquipment(ModuleType moduleType, Transform parent)
+        public async UniTask<IModule> CreateEquipment(ModuleType moduleType, Transform parent)
         {
             var moduleData = _staticDataService.GetModuleData(moduleType);
             var module = new Module(moduleData.EffectType, moduleData.MathType, moduleData.Value, moduleData.ModuleType);

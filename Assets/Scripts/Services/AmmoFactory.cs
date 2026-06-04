@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using Abstractions.Infrastructure;
 using Abstractions.Services;
 using Abstractions.Ships;
 using Enums;
-using Infrastructure;
 using Ships.Views;
 using UnityEngine;
 using Utils;
@@ -45,7 +45,7 @@ namespace Services
                 _ammosParent = new GameObject(Constants.AMMOS_PARENT_NAME).transform;
         }
 
-        public async Task<IAmmo> SpawnAmmo(IWeapon weapon)
+        public async UniTask<IAmmo> SpawnAmmo(IWeapon weapon)
         {
             var weaponType = weapon.WeaponType;
             if (!_ammoPools.ContainsKey(weaponType)) 
@@ -54,7 +54,7 @@ namespace Services
             return _ammoPools[weaponType].SpawnAmmo(weapon) ?? await CreateAmmo(weapon);
         }
 
-        private async Task<IAmmo> CreateAmmo(IWeapon weapon)
+        private async UniTask<IAmmo> CreateAmmo(IWeapon weapon)
         {
             var ammoData = _staticDataService.GetWeaponData(weapon.WeaponType);
             if (ammoData == null)

@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Threading;
+using Abstractions.Infrastructure;
 using Abstractions.Services;
-using DG.Tweening;
+using Cysharp.Threading.Tasks;
 using Enums;
-using Infrastructure;
 using Ui.ShipSetup.Data;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,11 +21,20 @@ namespace Ui.ShipSetup
         
         protected IUiFactory UiFactory;
         protected Transform EquipmentsContent => _equipmentsContent;
-        private ICoroutineRunner _coroutineRunner;
         
         private readonly List<SlotUiView> _equipmentsSlots = new();
         private float _fadeAnimDuration;
 
+        protected abstract UniTask<SlotUiView> CreateSelectUiSlot(TType equipmentType);
+
+        public void Init(IUiFactory uiFactory, float fadeAnimDuration)
+        {
+            UiFactory = uiFactory;
+            _fadeAnimDuration = fadeAnimDuration;
+            
+            _canvasGroup.alpha = 0f;
+            gameObject.SetActive(false);
+        }
 
         public void CleanUp()
         {
@@ -39,13 +47,6 @@ namespace Ui.ShipSetup
             _equipmentsSlots.Clear();
         }
 
-        public void Init(IUiFactory uiFactory, ICoroutineRunner coroutineRunner, float fadeAnimDuration)
-        {
-            UiFactory = uiFactory;
-            _coroutineRunner = coroutineRunner;
-            _fadeAnimDuration = fadeAnimDuration;
-        }
-
         public void Locate(OpponentId opponentId, Vector3 position)
         {
             var anchors = _opponentAnchors.FirstOrDefault(data => data.OpponentId == opponentId);
@@ -55,51 +56,23 @@ namespace Ui.ShipSetup
                 _rectTransform.anchorMax = anchors.Max;
                 _rectTransform.pivot = anchors.Pivot;
             }
+            else
+                Debug.LogWarning($"Cannot find equipment anchor for {opponentId}");
 
             _rectTransform.position = position;
         }
 
-        public void Show(bool isAnimated = true)
-        {
-            _canvasGroup.DOKill();
-            gameObject.SetActive(true);
-            if (isAnimated)
-                _canvasGroup.DOFade(1, _fadeAnimDuration);
-            else
-                _canvasGroup.alpha = 1;
-        }
+        public async UniTask SetVisibleAsync(bool isVisible, CancellationToken token, float durationRate = 1f)
+            => await _canvasGroup.SetCanvasGroupVisibilityAsync(isVisible, _fadeAnimDuration * durationRate, token);
 
-        public void Hide(bool isAnimated = true)
-        {
-            _canvasGroup.DOKill();
-            if (isAnimated)
-                _canvasGroup.DOFade(0, _fadeAnimDuration)
-                    .OnComplete(() => gameObject.SetActive(false));
-            else
-            {
-                _canvasGroup.alpha = 0;
-                gameObject.SetActive(false);
-            }
-        }
-
-        public async Task<Button> AddEquipmentSelectSlot(TType equipmentType)
+        public async UniTask<Button> AddEquipmentSelectSlot(TType equipmentType)
         {
             var selectUiSlot = await CreateSelectUiSlot(equipmentType);
             _equipmentsSlots.Add(selectUiSlot);
             return selectUiSlot.SelectButton;
         }
 
-        public void AjustSize() 
-            => _coroutineRunner.StartCoroutine(AjustSizeCoroutine());
-
-        protected abstract Task<SlotUiView> CreateSelectUiSlot(TType equipmentType);
-
-        private IEnumerator AjustSizeCoroutine()
-        {
-            _canvasGroup.alpha = 0;
-            yield return new WaitForEndOfFrame();
-            _rectTransform.sizeDelta = _equipmentsContent.sizeDelta;
-            Hide(false);
-        }
+        public bool IsVisible()
+            => gameObject.activeSelf;
     }
 }

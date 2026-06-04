@@ -1,21 +1,21 @@
-﻿using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Enums;
 using Ui;
 using Ui.Battle;
 using Ui.ShipSetup;
-using Ui.ShipSetup.Controllers;
+using UI.ShipSetup;
 using UnityEngine;
 
 namespace Abstractions.Services
 {
     public interface IUiFactory
     {
-        Task PrepareCanvasAsync();
-        Task<CurtainView> CreateCurtainAsync();
-        Task<ShipSetupMenuController> CreateShipSetupMenuAsync();
-        Task<BattleUiController> CreateBattleUiAsync();
-        Task<SlotUiView> CreateSelectWeaponUiSlotAsync(WeaponType weaponType, Transform parent);
-        Task<SlotUiView> CreateSelectModuleUiSlotAsync(ModuleType moduleType, Transform parent);
-        Task<ShipSlotUiView> CreateEquipmentUiSlotAsync(Transform parent);
+        UniTask PrepareCanvasAsync();
+        UniTask<CurtainView> CreateCurtainAsync();
+        UniTask<ShipSetupMenuController> CreateShipSetupMenuAsync();
+        UniTask<BattleUiController> CreateBattleUiAsync();
+        UniTask<SlotUiView> CreateSelectWeaponUiSlotAsync(WeaponType weaponType, Transform parent);
+        UniTask<SlotUiView> CreateSelectModuleUiSlotAsync(ModuleType moduleType, Transform parent);
+        UniTask<ShipSlotUiView> CreateEquipmentUiSlotAsync(Transform parent);
     }
 }

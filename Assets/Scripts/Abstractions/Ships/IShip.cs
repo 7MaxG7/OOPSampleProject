@@ -1,5 +1,5 @@
 ﻿using System;
-using Infrastructure;
+using Abstractions.Infrastructure;
 using Ships;
 
 namespace Abstractions.Ships

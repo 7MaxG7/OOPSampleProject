@@ -1,4 +1,4 @@
-﻿namespace Infrastructure
+﻿namespace Abstractions.Infrastructure
 {
     public interface IUpdatable
     {

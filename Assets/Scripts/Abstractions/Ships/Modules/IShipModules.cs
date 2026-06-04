@@ -1,5 +1,5 @@
-﻿using System;
-using System.Threading.Tasks;
+using System;
+using Cysharp.Threading.Tasks;
 using Enums;
 using UnityEngine;
 
@@ -11,7 +11,7 @@ namespace Abstractions.Ships
         event Action<IModule> OnModuleUnequip;
 
         void SetSlots(Transform[] moduleSlots);
-        Task SetEquipmentAsync(int slot, ModuleType moduleType);
+        UniTask SetEquipmentAsync(int slot, ModuleType moduleType);
         void SetEquipmentSync(int slot, ModuleType moduleType);
     }
 }

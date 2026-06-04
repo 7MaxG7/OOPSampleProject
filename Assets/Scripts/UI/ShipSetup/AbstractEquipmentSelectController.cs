@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using Abstractions.Infrastructure;
 using Abstractions.Services;
+using Cysharp.Threading.Tasks;
 using Enums;
-using Infrastructure;
 using Ships;
 using UnityEngine;
 
@@ -12,21 +13,20 @@ namespace Ui.ShipSetup
     {
         protected readonly AbstractEquipmentSelectView<TType> EquipmentSelectView;
         protected readonly Dictionary<OpponentId, ShipModel> ShipModels;
+        private readonly ICancellationTokenProvider _tokenProvider;
 
         protected OpponentId OpponentId;
         protected int SlotIndex;
         
         private IUiFactory _uiFactory;
-        private ICoroutineRunner _coroutineRunner;
         private float _fadeAnimDuration;
 
-
-
         protected AbstractEquipmentSelectController(AbstractEquipmentSelectView<TType> equipmentSelectView
-            , Dictionary<OpponentId,ShipModel> shipModels)
+            , Dictionary<OpponentId,ShipModel> shipModels, ICancellationTokenProvider tokenProvider)
         {
             EquipmentSelectView = equipmentSelectView;
             ShipModels = shipModels;
+            _tokenProvider = tokenProvider;
         }
 
         public void CleanUp()
@@ -34,15 +34,25 @@ namespace Ui.ShipSetup
             EquipmentSelectView.CleanUp();
         }
 
-        public void Show(OpponentId opponentId, int slotIndex, Vector3 position)
+        public async UniTaskVoid ShowAsync(OpponentId opponentId, int slotIndex, Vector3 position)
         {
+            if (opponentId == OpponentId && slotIndex == SlotIndex && EquipmentSelectView.IsVisible())
+                return;
+            
+            using var cts = _tokenProvider.CreateLocalCts();
+            
             OpponentId = opponentId;
             SlotIndex = slotIndex;
+            
+            await EquipmentSelectView.SetVisibleAsync(false, cts.Token, 0.3f);
             EquipmentSelectView.Locate(opponentId, position);
-            EquipmentSelectView.Show();
+            await EquipmentSelectView.SetVisibleAsync(true, cts.Token);
         }
 
-        public void Hide() 
-            => EquipmentSelectView.Hide();
+        public async UniTaskVoid HideAsync()
+        {
+            using var cts = _tokenProvider.CreateLocalCts();
+            await EquipmentSelectView.SetVisibleAsync(false, cts.Token);
+        }
     }
 }

@@ -1,10 +1,8 @@
-﻿namespace Infrastructure
+﻿namespace Abstractions.Infrastructure
 {
     public interface IGameStateMachine : ICleanable
     {
-        ICoroutineRunner CoroutineRunner { get; }
-        
         void Enter<TState>() where TState : class, IGameState;
-        void Init(ICoroutineRunner coroutineRunner);
+        void Init();
     }
 }

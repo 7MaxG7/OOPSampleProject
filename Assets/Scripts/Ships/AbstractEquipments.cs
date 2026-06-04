@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Abstractions.Services;
 using Abstractions.Ships;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace Ships
@@ -52,7 +52,7 @@ namespace Ships
             }
         }
 
-        public virtual async Task SetEquipmentAsync(int index, TEquipType equipType)
+        public virtual async UniTask SetEquipmentAsync(int index, TEquipType equipType)
         {
             if (index >= MaxEquipmentsAmount)
                 return;

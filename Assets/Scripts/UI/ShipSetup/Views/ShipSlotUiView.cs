@@ -11,7 +11,6 @@ namespace Ui.ShipSetup
         
         public int Index { get; private set; }
         public Transform SelectPanelAnchor { get; private set; }
-
         
         public void Init(OpponentId opponentId, int index)
         {

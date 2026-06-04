@@ -1,13 +1,11 @@
-﻿using System;
-using Infrastructure;
+﻿using System.Threading;
+using Cysharp.Threading.Tasks;
 
-
-namespace Services
+namespace Abstractions.Services
 {
     public interface ISceneLoader
     {
-        void Init(ICoroutineRunner coroutineRunner);
-        void LoadScene(string sceneName, Action onSceneLoadedCallback = null);
+        UniTask LoadSceneAsync(string sceneName, CancellationTokenSource cts);
         string GetCurrentSceneName();
     }
 }

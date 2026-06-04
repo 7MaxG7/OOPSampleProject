@@ -10,7 +10,6 @@ namespace Ui.ShipSetup
         
         public Button SelectButton => _selectButton;
 
-
         public void SetIcon(Sprite icon)
         {
             _icon.gameObject.SetActive(icon != null);

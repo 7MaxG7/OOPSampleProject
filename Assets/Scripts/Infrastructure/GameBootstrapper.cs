@@ -3,10 +3,9 @@ using Zenject;
 
 namespace Infrastructure
 {
-    public sealed class GameBootstrapper : MonoBehaviour, ICoroutineRunner
+    public sealed class GameBootstrapper : MonoBehaviour
     {
         private Game _game;
-
 
         [Inject]
         private void InjectDependencies(Game game)
@@ -16,7 +15,7 @@ namespace Infrastructure
 
         private void Awake()
         {
-            _game.Init(this);
+            _game.Init();
             DontDestroyOnLoad(this);
         }
 

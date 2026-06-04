@@ -1,11 +1,11 @@
-﻿using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Enums;
 
 namespace Sounds
 {
     public interface ISoundPlayer
     {
-        Task InitAsync();
+        UniTask InitAsync();
         void PlayMusic();
         void PlayShoot(WeaponType weaponType);
         void StopAll();

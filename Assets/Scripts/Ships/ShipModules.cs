@@ -1,6 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
+using System;
 using Abstractions.Ships;
+using Cysharp.Threading.Tasks;
 using Enums;
 using Services;
 
@@ -14,7 +14,7 @@ namespace Ships
 
         public ShipModules(int amount, IModuleFactory moduleFactory) : base(amount, moduleFactory) { }
 
-        public override async Task SetEquipmentAsync(int index, ModuleType equipType)
+        public override async UniTask SetEquipmentAsync(int index, ModuleType equipType)
         {
             await base.SetEquipmentAsync(index, equipType);
             Equipments[index].OnModuleUnequip += InvokeModuleUninstall;

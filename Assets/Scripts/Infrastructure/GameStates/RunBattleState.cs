@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Abstractions;
+using Abstractions.Infrastructure;
 using Abstractions.Services;
 using Abstractions.Ships;
+using Abstractions.Ui;
 using Ui.Battle;
 using Zenject;
 
@@ -15,6 +17,7 @@ namespace Infrastructure
         private readonly IShipsInitializer _shipsInitializer;
         private readonly IUpdater _updater;
         private readonly IUiFactory _uiFactory;
+        private readonly ICancellationTokenProvider _tokenProvider;
         private IGameStateMachine _stateMachine;
         
         private BattleUiController _battleUi;
@@ -22,20 +25,28 @@ namespace Infrastructure
 
         [Inject]
         public RunBattleState(ICurtain curtain, IBattleObserver battleObserver, IShipsInitializer shipsInitializer
-            , IUpdater updater, IUiFactory uiFactory)
+            , IUpdater updater, IUiFactory uiFactory, ICancellationTokenProvider tokenProvider)
         {
             _curtain = curtain;
             _battleObserver = battleObserver;
             _shipsInitializer = shipsInitializer;
             _updater = updater;
             _uiFactory = uiFactory;
+            _tokenProvider = tokenProvider;
         }
         
-        public async void Enter()
+        public void Enter()
         {
-            await SetupUi();
+            InitAndStartAsync().Forget();
+        }
+
+        private async UniTaskVoid InitAndStartAsync()
+        {
+            using var cts = _tokenProvider.CreateLocalCts();
+            await SetupUIAsync();
             _battleObserver.OnWinnerDefined += HandleBattleStop;
-            _curtain.HideCurtain(callback: StartBattle);
+            await _curtain.SetCurtainVisibleAsync(false, cts.Token);
+            StartBattle();
         }
 
         public void Exit()
@@ -50,7 +61,7 @@ namespace Infrastructure
             _stateMachine = stateMachine;
         }
 
-        private async Task SetupUi()
+        private async UniTask SetupUIAsync()
         {
             _battleUi = await _uiFactory.CreateBattleUiAsync();
             _battleUi.SetupUi(_shipsInitializer.Ships);
@@ -80,6 +91,13 @@ namespace Infrastructure
         }
 
         private void LeaveBattle()
-            => _curtain.ShowCurtain(callback: _stateMachine.Enter<LeaveBattleState>);
+            => LeaveBattleAsync().Forget();
+
+        private async UniTaskVoid LeaveBattleAsync()
+        {
+            using var cts = _tokenProvider.CreateLocalCts();
+            await _curtain.SetCurtainVisibleAsync(true, cts.Token);
+            _stateMachine.Enter<LeaveBattleState>();
+        }
     }
 }

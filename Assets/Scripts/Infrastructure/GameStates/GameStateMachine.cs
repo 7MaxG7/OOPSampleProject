@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Abstractions.Infrastructure;
 using Zenject;
 
 
@@ -8,8 +9,6 @@ namespace Infrastructure
 {
     internal sealed class GameStateMachine : IGameStateMachine
     {
-        public ICoroutineRunner CoroutineRunner { get; private set; }
-
         private readonly Dictionary<Type, IGameState> _states;
         private IGameState _currentState;
 
@@ -43,9 +42,8 @@ namespace Infrastructure
             _states.Clear();
         }
 
-        public void Init(ICoroutineRunner coroutineRunner)
+        public void Init()
         {
-            CoroutineRunner = coroutineRunner;
             _states[typeof(GameBootstrapState)].Init(this);
             _states[typeof(ShipSetupState)].Init(this);
             _states[typeof(LoadBattleState)].Init(this);

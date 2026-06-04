@@ -1,6 +1,6 @@
-﻿using System;
+using System;
 using System.Linq;
-using System.Threading.Tasks;
+using Cysharp.Threading.Tasks;
 using Abstractions.Services;
 using Abstractions.Ships;
 using Enums;
@@ -42,7 +42,7 @@ namespace Ships
             _owner = owner;
         }
 
-        public override async Task SetEquipmentAsync(int index, WeaponType equipType)
+        public override async UniTask SetEquipmentAsync(int index, WeaponType equipType)
         {
             await base.SetEquipmentAsync(index, equipType);
             Equipments[index].Init(_owner);

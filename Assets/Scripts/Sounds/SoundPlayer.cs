@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Collections.Generic;
 using Abstractions.Services;
 using Configs;
+using Cysharp.Threading.Tasks;
 using Enums;
 using UnityEngine;
 using Zenject;
@@ -28,7 +28,7 @@ namespace Sounds
             _servicesFactory = servicesFactory;
         }
 
-        public async Task InitAsync()
+        public async UniTask InitAsync()
         {
             await InitPlayerAsync();
             InitClips();
@@ -58,7 +58,7 @@ namespace Sounds
                 _soundPlayer.PlaySound(clip);
         }
 
-        private async Task InitPlayerAsync()
+        private async UniTask InitPlayerAsync()
         {
             if (_soundPlayer == null)
                 _soundPlayer = await _servicesFactory.CreateSoundPlayerAsync();

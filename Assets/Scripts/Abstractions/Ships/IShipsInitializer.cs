@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+using System.Collections.Generic;
+using Cysharp.Threading.Tasks;
+using Abstractions.Infrastructure;
 using Abstractions.Ships;
 using Enums;
-using Infrastructure;
 
 namespace Abstractions
 {
@@ -10,6 +10,6 @@ namespace Abstractions
     {
         Dictionary<OpponentId, IShip> Ships { get; }
         
-        Task PrepareShipsAsync();
+        UniTask PrepareShipsAsync();
     }
 }
