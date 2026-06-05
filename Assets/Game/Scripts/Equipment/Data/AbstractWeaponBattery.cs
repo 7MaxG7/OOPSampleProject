@@ -30,7 +30,7 @@ namespace Equipment.Data
 
             foreach (var weapon in Equipments.Values.Where(weapon => weapon.IsReady))
             {
-                weapon.Shoot();
+                weapon.ShootAsync().Forget();
                 OnShoot?.Invoke(weapon.WeaponType);
             }
         }

@@ -1,6 +1,8 @@
 ﻿using System;
+using Cysharp.Threading.Tasks;
 using Equipment.Data;
 using Ships;
+using UnityEngine;
 
 namespace Equipment
 {
@@ -12,9 +14,9 @@ namespace Equipment
         WeaponType WeaponType { get; }
 
         void Init(IShip owner);
-        void Shoot();
+        UniTaskVoid ShootAsync();
         void ReduceCooldown(float deltaTime);
-        void TryDealDamage(IAmmo ammo, IDamagableView target);
+        void TryDealDamage(IAmmo ammo, Collider2D collider);
         void Reload();
     }
 }

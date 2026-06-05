@@ -6,6 +6,6 @@ namespace Equipment
     public interface IAmmoFactory : ISceneCleanable
     {
         void PrepareRoot();
-        UniTask<IAmmo> SpawnAmmo(IWeapon weapon);
+        UniTask<IAmmo> SpawnAmmoAsync(IWeapon weapon);
     }
 }

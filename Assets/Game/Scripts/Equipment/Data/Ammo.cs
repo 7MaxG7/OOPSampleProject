@@ -1,5 +1,4 @@
-﻿using Ships;
-using Ships.Views;
+﻿using Ships.Views;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -43,8 +42,7 @@ namespace Equipment.Data
 
         private void HandleCollision(Collider2D collider)
         {
-            if (collider.TryGetComponent<IDamagableView>(out var damageTaker))
-                _shooter.TryDealDamage(this, damageTaker);
+            _shooter.TryDealDamage(this, collider);
         }
     }
 }

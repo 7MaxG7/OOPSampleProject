@@ -4,7 +4,6 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using Equipment.Data;
 using Infrastructure.ControllersHolder;
-using Ships;
 using Ships.Data;
 using Ui;
 using UI.Ship.Models;

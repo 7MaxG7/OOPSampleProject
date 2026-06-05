@@ -1,7 +1,9 @@
 ﻿using System;
 using Battle;
+using Cysharp.Threading.Tasks;
 using Ships;
 using Ships.Views;
+using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace Equipment.Data
@@ -44,18 +46,18 @@ namespace Equipment.Data
         public void SetView(WeaponView view)
             => _weaponView = view;
 
-        public void TryDealDamage(IAmmo ammo, IDamagableView target)
+        public void TryDealDamage(IAmmo ammo, Collider2D collider)
         {
-            if (_damageHandler.TryDealDamage(_owner, target, _damage))
+            if (_damageHandler.TryDealDamage(_owner, collider, _damage))
                 OnBulletHit?.Invoke(ammo);
         }
 
         public void Reload() 
             => _cooldownTimer = 0;
 
-        public async void Shoot()
+        public async UniTaskVoid ShootAsync()
         {
-            var ammo = await _ammoFactory.SpawnAmmo(this);
+            var ammo = await _ammoFactory.SpawnAmmoAsync(this);
             ammo.Activate(_weaponView.Barrel, this);
             ammo.Rigidbody.AddForce(_weaponView.Barrel.up * _ammoSpeed);
             RestoreCooldown();

@@ -3,7 +3,6 @@ using Cysharp.Threading.Tasks;
 using Equipment;
 using Equipment.Data;
 using Infrastructure;
-using Ships;
 using Ships.Data;
 using UI.Ship.Models;
 using UI.Ship.Views;

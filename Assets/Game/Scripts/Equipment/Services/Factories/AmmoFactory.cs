@@ -44,16 +44,16 @@ namespace Equipment
                 _ammosParent = new GameObject(Constants.AMMOS_PARENT_NAME).transform;
         }
 
-        public async UniTask<IAmmo> SpawnAmmo(IWeapon weapon)
+        public async UniTask<IAmmo> SpawnAmmoAsync(IWeapon weapon)
         {
             var weaponType = weapon.WeaponType;
             if (!_ammoPools.ContainsKey(weaponType)) 
                 _ammoPools.Add(weaponType, new AmmoPool());
 
-            return _ammoPools[weaponType].SpawnAmmo(weapon) ?? await CreateAmmo(weapon);
+            return _ammoPools[weaponType].SpawnAmmo(weapon) ?? await CreateAmmoAsync(weapon);
         }
 
-        private async UniTask<IAmmo> CreateAmmo(IWeapon weapon)
+        private async UniTask<IAmmo> CreateAmmoAsync(IWeapon weapon)
         {
             var ammoData = _staticDataService.GetWeapon(weapon.WeaponType);
             if (ammoData == null)
