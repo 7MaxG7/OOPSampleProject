@@ -1,4 +1,4 @@
-﻿namespace Infrastructure
+﻿namespace Infrastructure.GameStates
 {
     public interface IGameState
     {

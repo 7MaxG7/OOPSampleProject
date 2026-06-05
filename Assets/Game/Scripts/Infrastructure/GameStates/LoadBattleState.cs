@@ -1,11 +1,12 @@
-﻿using Cysharp.Threading.Tasks;
-using Services;
+﻿using Battle;
+using Cysharp.Threading.Tasks;
+using Equipment;
 using Ships;
+using Ui;
 using Utils;
 using Zenject;
 
-
-namespace Infrastructure
+namespace Infrastructure.GameStates
 {
     internal sealed class LoadBattleState : IGameState
     {

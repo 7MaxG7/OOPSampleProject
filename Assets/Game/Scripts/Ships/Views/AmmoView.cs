@@ -10,7 +10,6 @@ namespace Ships.Views
         public event Action<Collider2D> OnTriggerEntered;
 
         public Rigidbody2D Rigidbody => _rigidbody;
-  
         
         private void OnTriggerEnter2D(Collider2D other) 
             => OnTriggerEntered?.Invoke(other);

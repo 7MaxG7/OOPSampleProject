@@ -1,5 +1,6 @@
 ﻿using System;
-using Infrastructure;
+using Equipment;
+using Infrastructure.ControllersHolder;
 using Ships.Views;
 
 namespace Ships

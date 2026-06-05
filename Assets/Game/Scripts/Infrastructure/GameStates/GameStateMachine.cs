@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Infrastructure.ControllersHolder;
 using Zenject;
 
-
-namespace Infrastructure
+namespace Infrastructure.GameStates
 {
     internal sealed class GameStateMachine : IGameStateMachine
     {

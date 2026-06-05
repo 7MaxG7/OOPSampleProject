@@ -1,12 +1,12 @@
+using Battle;
 using Cysharp.Threading.Tasks;
-using Services;
+using Infrastructure.ControllersHolder;
 using Ships;
 using Ui;
 using UI.Battle;
 using Zenject;
 
-
-namespace Infrastructure
+namespace Infrastructure.GameStates
 {
     internal sealed class RunBattleState : IGameState
     {

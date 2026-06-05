@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _moduleType: 1
   _isActive: 1
-  _effectType: 1
-  _mathType: 1
+  _buffParamType: 1
+  _buffRelativenessType: 1
   _value: 50
   _prefab:
     m_AssetGUID: 819631039aae11044b354e9be09102cc

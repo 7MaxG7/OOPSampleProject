@@ -1,7 +1,8 @@
 using System.Threading;
+using Infrastructure.ControllersHolder;
 using Zenject;
 
-namespace Infrastructure
+namespace Infrastructure.Wrappers
 {
 	public sealed class CancellationTokenProvider : ICancellationTokenProvider, ICleanable
 	{

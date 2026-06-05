@@ -1,10 +1,8 @@
 ﻿using Cysharp.Threading.Tasks;
-using Services;
 using Utils;
 using Zenject;
 
-
-namespace Infrastructure
+namespace Infrastructure.GameStates
 {
     internal sealed class LeaveBattleState : IGameState
     {

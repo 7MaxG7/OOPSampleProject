@@ -1,15 +1,13 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Configs;
 using DG.Tweening;
-using Services;
+using Ships;
 using Sounds;
 using Ui;
 using Utils;
 using Zenject;
 
-
-namespace Infrastructure
+namespace Infrastructure.GameStates
 {
     internal sealed class GameBootstrapState : IGameState
     {

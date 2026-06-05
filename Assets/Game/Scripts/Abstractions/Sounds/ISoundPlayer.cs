@@ -1,5 +1,5 @@
 using Cysharp.Threading.Tasks;
-using Enums;
+using Equipment.Data;
 
 namespace Sounds
 {

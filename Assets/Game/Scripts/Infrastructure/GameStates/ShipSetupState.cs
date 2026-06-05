@@ -1,14 +1,13 @@
-using Configs;
 using Cysharp.Threading.Tasks;
-using Services;
+using Infrastructure.ControllersHolder;
 using Ships;
 using Sounds;
 using Ui;
-using UI.ShipSetup;
+using UI;
+using UI.Ship;
 using Zenject;
 
-
-namespace Infrastructure
+namespace Infrastructure.GameStates
 {
     internal sealed class ShipSetupState : IGameState
     {

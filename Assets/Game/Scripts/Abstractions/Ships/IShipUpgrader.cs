@@ -1,4 +1,7 @@
-﻿namespace Ships
+﻿using Equipment;
+using Ships.Data;
+
+namespace Ships
 {
     public interface IShipUpgrader
     {

@@ -1,6 +1,6 @@
 ﻿using System.Linq;
-using Enums;
 using Ships;
+using Ships.Data;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
