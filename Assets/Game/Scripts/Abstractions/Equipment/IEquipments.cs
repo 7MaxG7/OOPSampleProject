@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Equipment
 {
-    public interface IAbstractEquipments<TEquipment, in TEquipType>
+    public interface IEquipments<TEquipment, in TEquipType>
     {
         int MaxEquipmentsAmount { get; }
         Dictionary<int,TEquipment> Equipments { get; }

@@ -9,7 +9,7 @@ using UI.Ship.Views;
 
 namespace UI.Ship
 {
-    public sealed class WeaponSelectPanelController : AbstractEquipmentSelectController<WeaponType>
+    public sealed class WeaponSelectPanelController : BaseEquipmentSelectController<WeaponType>
     {
         public WeaponSelectPanelController(WeaponSelectView weaponSelectView, Dictionary<OpponentId, ShipModel> shipModels,
             ICancellationTokenProvider tokenProvider) : base(weaponSelectView, shipModels, tokenProvider) { }

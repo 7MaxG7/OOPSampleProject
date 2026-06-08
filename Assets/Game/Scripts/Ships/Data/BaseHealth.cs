@@ -2,7 +2,7 @@
 
 namespace Ships.Data
 {
-    public abstract class AbstractHealth : IHealth
+    public abstract class BaseHealth : IHealth
     {
         public event Action<float, float> OnHpChanged;
         public event Action<float, float> OnShieldChanged;

@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Equipment.Data
 {
-    public sealed class UpgradedWeaponsBattery : AbstractWeaponBattery, IDowngradable<IWeaponBattery>
+    public sealed class UpgradedWeaponsBattery : BaseWeaponBattery, IDowngradable<IWeaponBattery>
     {
         private IWeaponBattery _baseWeaponBattery;
         private readonly IModule _module;

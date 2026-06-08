@@ -13,7 +13,7 @@ using Utils;
 
 namespace UI.Ship.Views
 {
-    public abstract class AbstractEquipmentSelectView<TType> : MonoBehaviour, ICleanable where TType : Enum
+    public abstract class BaseEquipmentSelectView<TType> : MonoBehaviour, ICleanable where TType : Enum
     {
         [SerializeField] private RectTransform _rectTransform;
         [SerializeField] private RectTransform _equipmentsContent;

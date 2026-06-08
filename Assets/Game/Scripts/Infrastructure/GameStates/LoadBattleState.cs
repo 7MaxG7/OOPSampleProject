@@ -11,7 +11,7 @@ namespace Infrastructure.GameStates
     internal sealed class LoadBattleState : IGameState
     {
         private readonly ISceneLoader _sceneLoader;
-        private readonly IBattleObserver _battleObserver;
+        private readonly IWinnerDefiner _winnerDefiner;
         private readonly IAssetsProvider _assetsProvider;
         private readonly IShipsInitializer _shipsInitializer;
         private readonly IAmmoFactory _ammoFactory;
@@ -22,12 +22,12 @@ namespace Infrastructure.GameStates
 
 
         [Inject]
-        public LoadBattleState(ISceneLoader sceneLoader, IBattleObserver battleObserver, IAssetsProvider assetsProvider
+        public LoadBattleState(ISceneLoader sceneLoader, IWinnerDefiner winnerDefiner, IAssetsProvider assetsProvider
             , IShipsInitializer shipsInitializer, IAmmoFactory ammoFactory, IUiFactory uiFactory, IDamageHandler damageHandler,
             ICancellationTokenProvider tokenProvider)
         {
             _sceneLoader = sceneLoader;
-            _battleObserver = battleObserver;
+            _winnerDefiner = winnerDefiner;
             _assetsProvider = assetsProvider;
             _shipsInitializer = shipsInitializer;
             _ammoFactory = ammoFactory;
@@ -67,7 +67,7 @@ namespace Infrastructure.GameStates
             foreach (var ship in _shipsInitializer.Ships.Values)
             {
                 ship.PrepareToBattle();
-                _battleObserver.AddShip(ship);
+                _winnerDefiner.AddShip(ship);
                 _damageHandler.AddShip(ship);
             }
         }

@@ -3,7 +3,7 @@ using Cysharp.Threading.Tasks;
 
 namespace Equipment.Data
 {
-    public sealed class ShipModules : AbstractEquipments<IModule, ModuleType>, IShipModules
+    public sealed class ShipModules : BaseEquipmentBattery<IModule, ModuleType>, IShipModules
     {
         public event Action<IModule> OnModuleEquipped;
         public event Action<IModule> OnModuleUnequip;

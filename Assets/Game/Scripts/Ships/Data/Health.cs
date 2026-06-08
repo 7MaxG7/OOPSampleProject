@@ -1,6 +1,6 @@
 ﻿namespace Ships.Data
 {
-    internal sealed class Health : AbstractHealth
+    internal sealed class Health : BaseHealth
     {
         public Health(float hp, float shield, float shieldRecovery, float shieldRecoveryInterval)
         {

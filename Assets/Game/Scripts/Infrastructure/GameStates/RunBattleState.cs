@@ -11,7 +11,7 @@ namespace Infrastructure.GameStates
     internal sealed class RunBattleState : IGameState
     {
         private readonly ICurtain _curtain;
-        private readonly IBattleObserver _battleObserver;
+        private readonly IWinnerDefiner _winnerDefiner;
         private readonly IShipsInitializer _shipsInitializer;
         private readonly IUpdater _updater;
         private readonly IUiFactory _uiFactory;
@@ -21,11 +21,11 @@ namespace Infrastructure.GameStates
         private BattleUiController _battleUi;
 
         [Inject]
-        public RunBattleState(ICurtain curtain, IBattleObserver battleObserver, IShipsInitializer shipsInitializer
+        public RunBattleState(ICurtain curtain, IWinnerDefiner winnerDefiner, IShipsInitializer shipsInitializer
             , IUpdater updater, IUiFactory uiFactory, ICancellationTokenProvider tokenProvider)
         {
             _curtain = curtain;
-            _battleObserver = battleObserver;
+            _winnerDefiner = winnerDefiner;
             _shipsInitializer = shipsInitializer;
             _updater = updater;
             _uiFactory = uiFactory;
@@ -39,7 +39,7 @@ namespace Infrastructure.GameStates
         {
             using var cts = _tokenProvider.CreateLocalCts();
             await SetupUIAsync();
-            _battleObserver.OnWinnerDefined += HandleBattleStop;
+            _winnerDefiner.OnWinnerDefined += HandleBattleStop;
             await _curtain.SetCurtainVisibleAsync(false, cts.Token);
             StartBattle();
         }
@@ -47,7 +47,7 @@ namespace Infrastructure.GameStates
         public void Exit()
         {
             _battleUi.CleanUp();
-            _battleObserver.OnWinnerDefined -= HandleBattleStop;
+            _winnerDefiner.OnWinnerDefined -= HandleBattleStop;
             _battleUi.OnBattleLeft -= LeaveBattle;
         }
 
@@ -65,7 +65,7 @@ namespace Infrastructure.GameStates
 
         private void StartBattle()
         {
-            foreach (var ship in _battleObserver.Ships)
+            foreach (var ship in _winnerDefiner.Ships)
             {
                 _updater.AddUpdatable(ship.Health);
                 _updater.AddUpdatable(ship.WeaponBattery);
@@ -75,7 +75,7 @@ namespace Infrastructure.GameStates
 
         private void HandleBattleStop(IShip winner)
         {
-            foreach (var ship in _battleObserver.Ships)
+            foreach (var ship in _winnerDefiner.Ships)
             {
                 ship.WeaponBattery.ToggleShooting(false);
                 _updater.RemoveController(ship.Health);

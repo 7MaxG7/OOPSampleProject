@@ -5,7 +5,7 @@ using Ships;
 
 namespace Battle
 {
-    public interface IBattleObserver : ISceneCleanable
+    public interface IWinnerDefiner : ISceneCleanable
     {
         event Action<IShip> OnWinnerDefined;
         

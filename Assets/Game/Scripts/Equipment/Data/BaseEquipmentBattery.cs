@@ -6,7 +6,7 @@ using UnityEngine;
 namespace Equipment.Data
 {
 
-    public abstract class AbstractEquipments<TEquipment, TEquipType> : IAbstractEquipments<TEquipment, TEquipType>
+    public abstract class BaseEquipmentBattery<TEquipment, TEquipType> : IEquipments<TEquipment, TEquipType>
         where TEquipment : IEquipment where TEquipType : Enum
     {
         public int MaxEquipmentsAmount { get; }
@@ -14,13 +14,13 @@ namespace Equipment.Data
         public Dictionary<int, TEquipment> Equipments { get; } = new();
         public Dictionary<int, Transform> Slots { get; } = new();
 
-        protected AbstractEquipments(int amount, IEquipmentFactory<TEquipment, TEquipType> equipmentFactory)
+        protected BaseEquipmentBattery(int amount, IEquipmentFactory<TEquipment, TEquipType> equipmentFactory)
         {
             MaxEquipmentsAmount = amount;
             EquipmentsFactory = equipmentFactory;
         }
 
-        protected AbstractEquipments(IAbstractEquipments<TEquipment, TEquipType> baseEquipments)
+        protected BaseEquipmentBattery(IEquipments<TEquipment, TEquipType> baseEquipments)
         {
             MaxEquipmentsAmount = baseEquipments.MaxEquipmentsAmount;
             Equipments = baseEquipments.Equipments;
@@ -32,7 +32,7 @@ namespace Equipment.Data
         {
             if (slots.Length < MaxEquipmentsAmount)
             {
-                Debug.LogError($"{this}: Not enought weapon slots in ship view");
+                Debug.LogError($"{this}: Not enough weapon slots in ship view");
                 return;
             }
 

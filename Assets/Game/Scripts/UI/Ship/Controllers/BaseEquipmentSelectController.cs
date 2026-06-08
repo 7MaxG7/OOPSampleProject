@@ -11,9 +11,9 @@ using UnityEngine;
 
 namespace UI.Ship
 {
-    public class AbstractEquipmentSelectController<TType> : ICleanable where TType : Enum
+    public class BaseEquipmentSelectController<TType> : ICleanable where TType : Enum
     {
-        protected readonly AbstractEquipmentSelectView<TType> EquipmentSelectView;
+        protected readonly BaseEquipmentSelectView<TType> EquipmentSelectView;
         protected readonly Dictionary<OpponentId, ShipModel> ShipModels;
         private readonly ICancellationTokenProvider _tokenProvider;
 
@@ -23,7 +23,7 @@ namespace UI.Ship
         private IUiFactory _uiFactory;
         private float _fadeAnimDuration;
 
-        protected AbstractEquipmentSelectController(AbstractEquipmentSelectView<TType> equipmentSelectView
+        protected BaseEquipmentSelectController(BaseEquipmentSelectView<TType> equipmentSelectView
             , Dictionary<OpponentId,ShipModel> shipModels, ICancellationTokenProvider tokenProvider)
         {
             EquipmentSelectView = equipmentSelectView;

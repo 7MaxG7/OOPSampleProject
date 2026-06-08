@@ -6,7 +6,7 @@ using Zenject;
 
 namespace Battle
 {
-    public sealed class BattleObserver : IBattleObserver
+    public sealed class WinnerDefiner : IWinnerDefiner
     {
         public event Action<IShip> OnWinnerDefined;
 
@@ -14,7 +14,7 @@ namespace Battle
         private bool _isCleaned = true;
 
         [Inject]
-        public BattleObserver(ICleaner cleaner)
+        public WinnerDefiner(ICleaner cleaner)
         {
             cleaner.AddCleanable(this);
         }

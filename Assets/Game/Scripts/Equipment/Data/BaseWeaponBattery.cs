@@ -5,7 +5,7 @@ using Ships;
 
 namespace Equipment.Data
 {
-    public abstract class AbstractWeaponBattery : AbstractEquipments<IWeapon, WeaponType>, IWeaponBattery
+    public abstract class BaseWeaponBattery : BaseEquipmentBattery<IWeapon, WeaponType>, IWeaponBattery
     {
         public event Action<WeaponType> OnShoot;
 
@@ -15,9 +15,9 @@ namespace Equipment.Data
         private bool _isActive;
 
 
-        protected AbstractWeaponBattery(IWeaponBattery baseWeaponBattery) : base(baseWeaponBattery) { }
+        protected BaseWeaponBattery(IWeaponBattery baseWeaponBattery) : base(baseWeaponBattery) { }
 
-        protected AbstractWeaponBattery(int amount, IWeaponFactory weaponFactory) : base(amount, weaponFactory) { }
+        protected BaseWeaponBattery(int amount, IWeaponFactory weaponFactory) : base(amount, weaponFactory) { }
 
         public void OnUpdate(float deltaTime)
         {
