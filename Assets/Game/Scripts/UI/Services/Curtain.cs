@@ -17,9 +17,9 @@ namespace UI
             _uiFactory = uiFactory;
         }
 
-        public async UniTask InitAsync()
+        public void Init()
         {
-            _curtainView = await _uiFactory.CreateCurtainAsync();
+            _curtainView = _uiFactory.CreateCurtain();
         }
 
         public async UniTask SetCurtainVisibleAsync(bool isVisible, CancellationToken token)

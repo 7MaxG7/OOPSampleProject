@@ -17,73 +17,79 @@ MonoBehaviour:
     m_SerializedData: []
   m_GUID: 74dbf055eeb7a114a9959d5b9ddba0c8
   m_SerializeEntries:
-  - m_GUID: 819631039aae11044b354e9be09102cc
-    m_Address: FakeModule
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: c2b67005207bc964d89ccf6a161f2590
-    m_Address: AmmoC
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 7429d32f6ba4df343b490dd1c75a1478
-    m_Address: AmmoA
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: fa05c9b2b92ce044b81e94743d403652
-    m_Address: AmmoB
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 2a984e003b7f80f479b749e07c863ed9
-    m_Address: GunB
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 7a389b75393666a498c63d1dc6b90475
-    m_Address: GunA
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: be4152a665323e54cad9c6e4a3e6a9b7
-    m_Address: GunC
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: b218683e126883c4b9dd6ffb50ba2b0c
-    m_Address: ShipB
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: cee7ae8a9b9d78a47b8356b85c53b936
-    m_Address: ShipA
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: acc056fe4f6ebe44c889537c1229fdf8
-    m_Address: UiCanvas
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 5e55d30347debec44be9b11a869f4a92
-    m_Address: Curtain
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: 5be8fc0d052d5cf4a954cd74c026ada9
-    m_Address: BattleUi
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: c6c38ef2697dcd641b1615c572bc72cb
-    m_Address: ShipSetupMenu
-    m_ReadOnly: 0
-    m_SerializedLabels: []
-  - m_GUID: a226fd78abc3cab4a85ff4d85ada2e14
-    m_Address: ShipEquipSlotUi
-    m_ReadOnly: 0
-    m_SerializedLabels: []
   - m_GUID: 1b9a7255ee876f34f83c9e486046c353
     m_Address: EquipSlotUi
     m_ReadOnly: 0
     m_SerializedLabels: []
-  - m_GUID: 49db03f700a229545b3b79e02b5862f3
-    m_Address: SoundPlayer
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2a984e003b7f80f479b749e07c863ed9
+    m_Address: GunB
     m_ReadOnly: 0
     m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5be8fc0d052d5cf4a954cd74c026ada9
+    m_Address: BattleUi
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7429d32f6ba4df343b490dd1c75a1478
+    m_Address: AmmoA
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 7a389b75393666a498c63d1dc6b90475
+    m_Address: GunA
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 819631039aae11044b354e9be09102cc
+    m_Address: FakeModule
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a226fd78abc3cab4a85ff4d85ada2e14
+    m_Address: ShipEquipSlotUi
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: acc056fe4f6ebe44c889537c1229fdf8
+    m_Address: UiCanvas
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b218683e126883c4b9dd6ffb50ba2b0c
+    m_Address: ShipB
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: be4152a665323e54cad9c6e4a3e6a9b7
+    m_Address: GunC
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c2b67005207bc964d89ccf6a161f2590
+    m_Address: AmmoC
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c6c38ef2697dcd641b1615c572bc72cb
+    m_Address: ShipSetupMenu
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cee7ae8a9b9d78a47b8356b85c53b936
+    m_Address: ShipA
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fa05c9b2b92ce044b81e94743d403652
+    m_Address: AmmoB
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: a761c4c99b8b5f942a4748c648b92a45, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 8cc81eaa8173d91419157f4b13ed2457, type: 2}
     - {fileID: 11400000, guid: 01b0abaa6f087fa40a7ae7eb38da0db8, type: 2}
+    - {fileID: 11400000, guid: 8cc81eaa8173d91419157f4b13ed2457, type: 2}

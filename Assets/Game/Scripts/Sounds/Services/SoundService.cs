@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
 using Equipment.Data;
 using Infrastructure;
 using UnityEngine;
@@ -9,26 +8,26 @@ using Object = UnityEngine.Object;
 
 namespace Sounds
 {
-    internal sealed class SoundPlayer : ISoundPlayer
+    internal sealed class SoundService : ISoundService
     {
-        private readonly IServicesFactory _servicesFactory;
         private readonly SoundConfig _soundConfig;
-        
+        private readonly ISoundFactory _soundFactory;
+
         private SoundPlayerView _soundPlayer;
         private Dictionary<WeaponType, AudioClip> _weaponShootClips;
         private AudioClip _musicClip;
         private bool _musicIsPlaying;
 
         [Inject]
-        public SoundPlayer(SoundConfig soundConfig, IServicesFactory servicesFactory)
+        public SoundService(SoundConfig soundConfig, ISoundFactory soundFactory)
         {
             _soundConfig = soundConfig;
-            _servicesFactory = servicesFactory;
+            _soundFactory = soundFactory;
         }
 
-        public async UniTask InitAsync()
+        public void Init()
         {
-            await InitPlayerAsync();
+            InitPlayer();
             InitClips();
         }
 
@@ -56,10 +55,10 @@ namespace Sounds
                 _soundPlayer.PlaySound(clip);
         }
 
-        private async UniTask InitPlayerAsync()
+        private void InitPlayer()
         {
             if (_soundPlayer == null)
-                _soundPlayer = await _servicesFactory.CreateSoundPlayerAsync();
+                _soundPlayer = _soundFactory.CreateSoundPlayer();
             _soundPlayer.MusicLoop = true;
             Object.DontDestroyOnLoad(_soundPlayer);
         }

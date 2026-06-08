@@ -13,7 +13,7 @@ namespace Infrastructure.GameStates
     {
         private readonly ICurtain _curtain;
         private readonly IShipsInitializer _shipsInitializer;
-        private readonly ISoundPlayer _soundPlayer;
+        private readonly ISoundService _soundService;
         private readonly IStaticDataService _staticDataService;
         private readonly IAssetsProvider _assetsProvider;
         private readonly IUiFactory _uiFactory;
@@ -26,12 +26,12 @@ namespace Infrastructure.GameStates
 
         [Inject]
         public ShipSetupState(ICurtain curtain, IShipsInitializer shipsInitializer, IStaticDataService staticDataService
-            , ISoundPlayer soundPlayer, IAssetsProvider assetsProvider, IUiFactory uiFactory, ICleaner cleaner, UiConfig uiConfig,
+            , ISoundService soundService, IAssetsProvider assetsProvider, IUiFactory uiFactory, ICleaner cleaner, UiConfig uiConfig,
             ICancellationTokenProvider tokenProvider)
         {
             _curtain = curtain;
             _shipsInitializer = shipsInitializer;
-            _soundPlayer = soundPlayer;
+            _soundService = soundService;
             _staticDataService = staticDataService;
             _assetsProvider = assetsProvider;
             _uiFactory = uiFactory;
@@ -60,7 +60,7 @@ namespace Infrastructure.GameStates
 
             await _assetsProvider.WarmUpCurrentSceneAsync();
             await InitSceneAsync();
-            _soundPlayer.PlayMusic();
+            _soundService.PlayMusic();
             await _curtain.SetCurtainVisibleAsync(false, cts.Token);
         }
 

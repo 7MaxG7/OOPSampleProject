@@ -14,18 +14,18 @@ namespace Ships.Data
 
         private readonly IShipsFactory _shipsFactory;
         private readonly ILocationFinder _locationFinder;
-        private readonly ISoundPlayer _soundPlayer;
+        private readonly ISoundService _soundService;
         private readonly IShipConfigurationsHolder _configurationsHolder;
         private Dictionary<OpponentId,ShipModel> _shipModels;
 
 
         [Inject]
         public ShipsInitializer(IShipsFactory shipsFactory, IShipConfigurationsHolder configurationsHolder
-            , ILocationFinder locationFinder, ISoundPlayer soundPlayer, ICleaner cleaner)
+            , ILocationFinder locationFinder, ISoundService soundService, ICleaner cleaner)
         {
             _shipsFactory = shipsFactory;
             _locationFinder = locationFinder;
-            _soundPlayer = soundPlayer;
+            _soundService = soundService;
             _configurationsHolder = configurationsHolder;
             cleaner.AddCleanable(this);
         }
@@ -46,7 +46,7 @@ namespace Ships.Data
                     continue;
 
                 var ship = await _shipsFactory.CreateShipAsync(_shipModels[opponentId], position.Value, rotation);
-                ship.WeaponBattery.OnShoot += _soundPlayer.PlayShoot;
+                ship.WeaponBattery.OnShoot += _soundService.PlayShoot;
                 _shipModels[opponentId].OnWeaponChange += ship.WeaponBattery.SetEquipment;
                 _shipModels[opponentId].OnModuleChange += ship.ShipModules.SetEquipment;
                 Ships.Add(opponentId, ship);
@@ -57,7 +57,7 @@ namespace Ships.Data
         {
             foreach (var (opponentId, ship) in Ships)
             {
-                ship.WeaponBattery.OnShoot -= _soundPlayer.PlayShoot;
+                ship.WeaponBattery.OnShoot -= _soundService.PlayShoot;
                 _shipModels[opponentId].OnWeaponChange -= ship.WeaponBattery.SetEquipment;
                 _shipModels[opponentId].OnModuleChange -= ship.ShipModules.SetEquipment;
                 cleanUpShip.Invoke(ship);

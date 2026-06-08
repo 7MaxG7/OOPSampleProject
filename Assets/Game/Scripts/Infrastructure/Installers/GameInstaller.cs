@@ -22,7 +22,7 @@ namespace Infrastructure
             Container.Bind<ILocationFinder>().To<LocationFinder>().AsSingle();
             Container.Bind<IShipConfigurationsHolder>().To<ShipConfigurationsHolder>().AsSingle();
             
-            Container.Bind<ISoundPlayer>().To<SoundPlayer>().AsSingle();
+            Container.Bind<ISoundService>().To<SoundService>().AsSingle();
         }
     }
 }

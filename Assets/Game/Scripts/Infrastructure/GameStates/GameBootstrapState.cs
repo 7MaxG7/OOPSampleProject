@@ -14,7 +14,7 @@ namespace Infrastructure.GameStates
         private readonly ISceneLoader _sceneLoader;
         private readonly ICurtain _curtain;
         private readonly IAssetsProvider _assetsProvider;
-        private readonly ISoundPlayer _soundPlayer;
+        private readonly ISoundService _soundService;
         private readonly RulesConfig _rulesConfig;
         private readonly ICancellationTokenProvider _tokenProvider;
         private readonly IShipConfigurationsHolder _configurationsHolder;
@@ -22,14 +22,14 @@ namespace Infrastructure.GameStates
 
         [Inject]
         public GameBootstrapState(IStaticDataService staticDataService, ISceneLoader sceneLoader, ICurtain curtain
-            , IAssetsProvider assetsProvider, ISoundPlayer soundPlayer, RulesConfig rulesConfig, ICancellationTokenProvider tokenProvider
+            , IAssetsProvider assetsProvider, ISoundService soundService, RulesConfig rulesConfig, ICancellationTokenProvider tokenProvider
             , IShipConfigurationsHolder configurationsHolder)
         {
             _staticDataService = staticDataService;
             _sceneLoader = sceneLoader;
             _curtain = curtain;
             _assetsProvider = assetsProvider;
-            _soundPlayer = soundPlayer;
+            _soundService = soundService;
             _rulesConfig = rulesConfig;
             _tokenProvider = tokenProvider;
             _configurationsHolder = configurationsHolder;
@@ -50,22 +50,22 @@ namespace Infrastructure.GameStates
         private async UniTaskVoid InitAndStartAsync()
         {
             _tokenProvider.Init();
-            await InitServicesAsync();
+            InitServices();
 
             var cts = _tokenProvider.CreateLocalCts();
             await _sceneLoader.LoadSceneAsync(Constants.SETUP_SCENE_NAME, cts);
             _stateMachine.Enter<ShipSetupState>();
         }
 
-        private async UniTask InitServicesAsync()
+        private void InitServices()
         {
             DOTween.Init();
             _assetsProvider.Init();
-            await _curtain.InitAsync();
+            _curtain.Init();
             _curtain.ShowCurtainInstantly();
             _staticDataService.Init();
             _configurationsHolder.Init(_rulesConfig.Opponents);
-            await _soundPlayer.InitAsync();
+            _soundService.Init();
         }
     }
 }

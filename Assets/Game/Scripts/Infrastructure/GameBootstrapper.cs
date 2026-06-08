@@ -15,8 +15,12 @@ namespace Infrastructure
 
         private void Awake()
         {
-            _game.Init();
             DontDestroyOnLoad(this);
+        }
+
+        private void Start()
+        {
+            _game.Init();
         }
 
         private void Update() 

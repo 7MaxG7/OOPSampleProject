@@ -14,47 +14,47 @@ namespace UI
 {
     public sealed class UiFactory : IUiFactory
     {
-        private readonly IAssetsProvider _assetsProvider;
         private readonly IStaticDataService _staticDataService;
+        private readonly IAssetsInstantiator _instantiator;
         private readonly IShipConfigurationsHolder _configurationsHolder;
         private readonly ICancellationTokenProvider _tokenProvider;
         private readonly UiConfig _uiConfig;
-        
+
         private Transform _rootCanvas;
 
         [Inject]
-        public UiFactory(IAssetsProvider assetsProvider, IStaticDataService staticDataService
-            , IShipConfigurationsHolder configurationsHolder, UiConfig uiConfig, ICancellationTokenProvider tokenProvider)
+        public UiFactory(IStaticDataService staticDataService, IShipConfigurationsHolder configurationsHolder, UiConfig uiConfig,
+            IAssetsInstantiator instantiator, ICancellationTokenProvider tokenProvider)
         {
-            _assetsProvider = assetsProvider;
             _staticDataService = staticDataService;
+            _instantiator = instantiator;
             _configurationsHolder = configurationsHolder;
             _uiConfig = uiConfig;
             _tokenProvider = tokenProvider;
         }
-        
+
         public async UniTask CreateRootAsync()
         {
             if (_rootCanvas == null)
-                _rootCanvas = (await _assetsProvider.CreateInstanceAsync(_uiConfig.RootCanvas)).transform;
+                _rootCanvas = (await _instantiator.CreateAsync(_uiConfig.RootCanvas)).transform;
         }
 
-        public async UniTask<CurtainView> CreateCurtainAsync()
+        public CurtainView CreateCurtain()
         {
-            var curtainView = await _assetsProvider.CreateInstanceAsync<CurtainView>(_uiConfig.CurtainPrefab, isDontDestroyAsset: true);
+            var curtainView = _instantiator.Create(_uiConfig.CurtainPrefab);
             curtainView.Init(_uiConfig.CurtainAnimDuration);
             return curtainView;
         }
 
         public async UniTask<ShipSetupMenuController> CreateShipSetupMenuAsync()
         {
-            var view = await _assetsProvider.CreateInstanceAsync<ShipSetupMenuView>(_uiConfig.ShipSetupMenu, _rootCanvas);
+            var view = await _instantiator.CreateAsync<ShipSetupMenuView>(_uiConfig.ShipSetupMenu, _rootCanvas);
             return new ShipSetupMenuController(view, _configurationsHolder.ShipModels, _tokenProvider);
         }
 
         public async UniTask<BattleUiController> CreateBattleUiAsync()
         {
-            var view = await _assetsProvider.CreateInstanceAsync<BattleUiView>(_uiConfig.BattleUiPrefab, _rootCanvas);
+            var view = await _instantiator.CreateAsync<BattleUiView>(_uiConfig.BattleUiPrefab, _rootCanvas);
             return new BattleUiController(view);
         }
 
@@ -72,10 +72,10 @@ namespace UI
             return slot;
         }
 
-        public async UniTask<ShipSlotUiView> CreateEquipmentUiSlotAsync(Transform parent) 
-            => await _assetsProvider.CreateInstanceAsync<ShipSlotUiView>(_uiConfig.ShipSlotUiPrefab, parent);
+        public async UniTask<ShipSlotUiView> CreateEquipmentUiSlotAsync(Transform parent)
+            => await _instantiator.CreateAsync<ShipSlotUiView>(_uiConfig.ShipSlotUiPrefab, parent);
 
-        private async UniTask<SlotUiView> CreateSelectEquipmentUiSlotAsync(Transform parent) 
-            => await _assetsProvider.CreateInstanceAsync<SlotUiView>(_uiConfig.SlotUiPrefab, parent);
+        private async UniTask<SlotUiView> CreateSelectEquipmentUiSlotAsync(Transform parent)
+            => await _instantiator.CreateAsync<SlotUiView>(_uiConfig.SlotUiPrefab, parent);
     }
 }

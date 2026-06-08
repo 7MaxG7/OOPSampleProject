@@ -5,7 +5,6 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
 using Zenject;
-using static UnityEngine.Object;
 
 
 namespace Infrastructure
@@ -16,9 +15,7 @@ namespace Infrastructure
         private readonly AssetsConfig _assetsConfig;
 
         private readonly Dictionary<string, AsyncOperationHandle> _loadedAssets = new();
-        private readonly Dictionary<string, AsyncOperationHandle> _loadedDontDestroyAssets = new();
         private readonly List<AsyncOperationHandle> _handles = new();
-        private readonly List<AsyncOperationHandle> _dontDestroyHandles = new();
         private bool _isCleaned;
 
         [Inject]
@@ -28,15 +25,15 @@ namespace Infrastructure
             _assetsConfig = assetsConfig;
             cleaner.AddCleanable(this);
         }
-                
+
+        public void Init()
+        {
+            Addressables.InitializeAsync();
+        }
+
         public void CleanUp()
         {
             SceneCleanUp();
-            
-            foreach (var handle in _dontDestroyHandles) 
-                Addressables.Release(handle);
-            _dontDestroyHandles.Clear();
-            _loadedDontDestroyAssets.Clear();
         }
 
         public void SceneCleanUp()
@@ -51,11 +48,6 @@ namespace Infrastructure
             _loadedAssets.Clear();
         }
 
-        public void Init()
-        {
-            Addressables.InitializeAsync();
-        }
-
         public async UniTask WarmUpCurrentSceneAsync()
         {
             var sceneName = _sceneLoader.GetCurrentSceneName();
@@ -64,39 +56,18 @@ namespace Infrastructure
                 await LoadAsync(reference);
         }
 
-        public async UniTask<T> CreateInstanceAsync<T>(AssetReference assetReference,
-            Transform parent = null, bool isDontDestroyAsset = false) where T : MonoBehaviour
-            => await CreateInstanceAsync<T>(assetReference, Vector3.zero, Quaternion.identity, parent, false, isDontDestroyAsset);
-
-        public async UniTask<T> CreateInstanceAsync<T>(AssetReference assetReference, Vector3 position, Quaternion rotation
-            , Transform parent = null, bool isPositioned = true, bool isDontDestroyAsset = false) where T : MonoBehaviour
-        {
-            var prefab = await LoadAsync(assetReference, isDontDestroyAsset);
-            return isPositioned
-                ? Instantiate(prefab, position, rotation, parent).GetComponent<T>()
-                : Instantiate(prefab, parent).GetComponent<T>();
-        }
-
-        public async UniTask<GameObject> CreateInstanceAsync(AssetReference assetReference, Transform parent = null)
-        {
-            var prefab = await LoadAsync(assetReference);
-            return Instantiate(prefab, parent);
-        }
-
-        private async UniTask<GameObject> LoadAsync(AssetReference assetReference, bool isDontDestroyAsset = false)
+        public async UniTask<GameObject> LoadAsync(AssetReference assetReference)
         {
             _isCleaned = false;
-            var loadedAssets = isDontDestroyAsset ? _loadedDontDestroyAssets : _loadedAssets;
-            var handles = isDontDestroyAsset ? _dontDestroyHandles : _handles;
-            
-            if (loadedAssets.TryGetValue(assetReference.AssetGUID, out var loadedHandle))
+
+            if (_loadedAssets.TryGetValue(assetReference.AssetGUID, out var loadedHandle))
                 return loadedHandle.Result as GameObject;
             
             var handle = Addressables.LoadAssetAsync<GameObject>(assetReference);
             handle.Completed += resultHandle =>
             {
-                loadedAssets[assetReference.AssetGUID] = resultHandle;
-                handles.Add(handle);
+                _loadedAssets[assetReference.AssetGUID] = resultHandle;
+                _handles.Add(handle);
             };
             return await handle.Task;
         }

@@ -5,7 +5,7 @@ namespace Ui
 {
     public interface ICurtain
     {
-        UniTask InitAsync();
+        void Init();
         UniTask SetCurtainVisibleAsync(bool isVisible, CancellationToken token);
         void ShowCurtainInstantly();
     }

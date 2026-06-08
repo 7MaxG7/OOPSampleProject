@@ -13,10 +13,6 @@ MonoBehaviour:
   m_Name: AssetsConfig
   m_EditorClassIdentifier: 
   _setupSceneAssets:
-  - m_AssetGUID: 49db03f700a229545b3b79e02b5862f3
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
   - m_AssetGUID: 7a389b75393666a498c63d1dc6b90475
     m_SubObjectName: 
     m_SubObjectType: 
@@ -38,10 +34,6 @@ MonoBehaviour:
     m_SubObjectType: 
     m_EditorAssetChanged: 0
   _battleSceneAssets:
-  - m_AssetGUID: 49db03f700a229545b3b79e02b5862f3
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
   - m_AssetGUID: 7429d32f6ba4df343b490dd1c75a1478
     m_SubObjectName: 
     m_SubObjectType: 

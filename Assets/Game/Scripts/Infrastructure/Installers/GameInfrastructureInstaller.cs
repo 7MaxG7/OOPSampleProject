@@ -22,13 +22,16 @@ namespace Infrastructure
             Container.Bind<IUpdater>().To<Updater>().AsSingle();
             Container.Bind<ICleaner>().To<Cleaner>().AsSingle();
    
-            // Other
-            Container.Bind<ICancellationTokenProvider>().To<CancellationTokenProvider>().AsSingle();
+            // Assets
             Container.Bind<IStaticDataService>().To<StaticDataService>().AsSingle();
             Container.Bind<IAssetsProvider>().To<AssetsProvider>().AsSingle();
+            Container.Bind<IAssetsInstantiator>().To<AssetsInstantiator>().AsSingle();
+             
+            // Other
             Container.Bind<ISceneLoader>().To<SceneLoader>().AsSingle();
+            Container.Bind<ICancellationTokenProvider>().To<CancellationTokenProvider>().AsSingle();
             
-            Container.Bind<IServicesFactory>().To<ServicesFactory>().AsSingle();
+            Container.Bind<ISoundFactory>().To<SoundFactory>().AsSingle();
         }
     }
 }

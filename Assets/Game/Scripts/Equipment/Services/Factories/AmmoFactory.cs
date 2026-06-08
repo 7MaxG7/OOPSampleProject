@@ -13,16 +13,16 @@ namespace Equipment
 {
     public sealed class AmmoFactory : IAmmoFactory
     {
-        private readonly IAssetsProvider _assetsProvider;
+        private readonly IAssetsInstantiator _instantiator;
         private readonly IStaticDataService _staticDataService;
         
         private readonly Dictionary<WeaponType, IAmmoPool> _ammoPools = new();
         private Transform _ammosParent;
 
         [Inject]
-        public AmmoFactory(IAssetsProvider assetsProvider, IStaticDataService staticDataService, ICleaner cleaner)
+        public AmmoFactory(IAssetsInstantiator instantiator, IStaticDataService staticDataService, ICleaner cleaner)
         {
-            _assetsProvider = assetsProvider;
+            _instantiator = instantiator;
             _staticDataService = staticDataService;
             cleaner.AddCleanable(this);
         }
@@ -52,7 +52,7 @@ namespace Equipment
             if (ammoData == null)
                 return null;
             
-            var ammoView = await _assetsProvider.CreateInstanceAsync<AmmoView>(ammoData.AmmoPrefab, GetContent());
+            var ammoView = await _instantiator.CreateAsync<AmmoView>(ammoData.AmmoPrefab, GetContent());
             var ammo = new Ammo(ammoView);
             _ammoPools[weapon.WeaponType].RegisterSpawn(ammo, weapon);
             return ammo;

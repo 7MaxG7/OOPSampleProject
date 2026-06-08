@@ -12,11 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 201642e43eb8417297535a8025a25db3, type: 3}
   m_Name: SoundConfig
   m_EditorClassIdentifier: 
-  _soundPlayerPrefab:
-    m_AssetGUID: 49db03f700a229545b3b79e02b5862f3
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
+  _soundPlayerPrefab: {fileID: 5276261444807397937, guid: 49db03f700a229545b3b79e02b5862f3, type: 3}
   _weaponSounds:
   - _weaponType: 1
     _audioClip: {fileID: 8300000, guid: e10ee5f3586d6d841b71d32492168ed1, type: 3}

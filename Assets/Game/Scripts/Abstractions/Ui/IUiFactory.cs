@@ -10,8 +10,8 @@ namespace Ui
 {
     public interface IUiFactory
     {
+        CurtainView CreateCurtain();
         UniTask CreateRootAsync();
-        UniTask<CurtainView> CreateCurtainAsync();
         UniTask<ShipSetupMenuController> CreateShipSetupMenuAsync();
         UniTask<BattleUiController> CreateBattleUiAsync();
         UniTask<SlotUiView> CreateSelectWeaponUiSlotAsync(WeaponType weaponType, Transform parent);

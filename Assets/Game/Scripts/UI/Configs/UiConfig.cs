@@ -9,7 +9,7 @@ namespace UI
         [SerializeField] private AssetReference _rootCanvas;
         [SerializeField] private float _fadeAnimDuration;
         [Header("Curtain")]
-        [SerializeField] private AssetReference _curtainPrefab;
+        [SerializeField] private CurtainView _curtainPrefab;
         [SerializeField] private float _curtainAnimDuration;
         [Header("Ship setup scene")]
         [SerializeField] private AssetReference _shipSetupMenu;
@@ -23,7 +23,7 @@ namespace UI
         public AssetReference SlotUiPrefab => _slotUiPrefab;
         public AssetReference BattleUiPrefab => _battleUiPrefab;
         public AssetReference RootCanvas => _rootCanvas;
-        public AssetReference CurtainPrefab => _curtainPrefab;
+        public CurtainView CurtainPrefab => _curtainPrefab;
         public float CurtainAnimDuration => _curtainAnimDuration;
         public float FadeAnimDuration => _fadeAnimDuration;
     }

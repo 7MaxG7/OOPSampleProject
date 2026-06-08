@@ -18,11 +18,7 @@ MonoBehaviour:
     m_SubObjectType: 
     m_EditorAssetChanged: 0
   _fadeAnimDuration: 0.3
-  _curtainPrefab:
-    m_AssetGUID: 5e55d30347debec44be9b11a869f4a92
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
+  _curtainPrefab: {fileID: 8468764024276898291, guid: 5e55d30347debec44be9b11a869f4a92, type: 3}
   _curtainAnimDuration: 1
   _shipSetupMenu:
     m_AssetGUID: c6c38ef2697dcd641b1615c572bc72cb

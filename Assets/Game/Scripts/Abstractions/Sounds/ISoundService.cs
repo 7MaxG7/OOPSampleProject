@@ -1,11 +1,10 @@
-using Cysharp.Threading.Tasks;
 using Equipment.Data;
 
 namespace Sounds
 {
-    public interface ISoundPlayer
+    public interface ISoundService
     {
-        UniTask InitAsync();
+        void Init();
         void PlayMusic();
         void PlayShoot(WeaponType weaponType);
         void StopAll();

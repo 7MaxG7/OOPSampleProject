@@ -15,7 +15,7 @@ namespace Ships
 {
     public sealed class ShipsFactory : IShipsFactory
     {
-        private readonly IAssetsProvider _assetsProvider;
+        private readonly IAssetsInstantiator _instantiator;
         private readonly IWeaponFactory _weaponFactory;
         private readonly IModuleFactory _moduleFactory;
         private readonly IShipUpgrader _shipUpgrader;
@@ -24,10 +24,10 @@ namespace Ships
         private Transform _shipsParent;
 
         [Inject]
-        public ShipsFactory(IAssetsProvider assetsProvider, IWeaponFactory weaponFactory, IModuleFactory moduleFactory
+        public ShipsFactory(IAssetsInstantiator instantiator, IWeaponFactory weaponFactory, IModuleFactory moduleFactory
             , IShipUpgrader shipUpgrader, IStaticDataService staticDataService)
         {
-            _assetsProvider = assetsProvider;
+            _instantiator = instantiator;
             _weaponFactory = weaponFactory;
             _moduleFactory = moduleFactory;
             _shipUpgrader = shipUpgrader;
@@ -51,7 +51,7 @@ namespace Ships
             var modules = new ShipModules(shipData.ModuleSlotsAmount, _moduleFactory);
             
             var ship = new Ship(shipData.ShipType, health, weapons, modules, _shipUpgrader);
-            var shipView = await _assetsProvider.CreateInstanceAsync<ShipView>(shipData.Prefab, position, rotation, GetShipsContent());
+            var shipView = await _instantiator.CreateAsync<ShipView>(shipData.Prefab, position, rotation, GetShipsContent());
             ship.SetView(shipView);
             return ship;
         }
