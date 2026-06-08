@@ -24,7 +24,6 @@ namespace Infrastructure.GameStates
         private IGameStateMachine _stateMachine;
         private ShipSetupMenuController _shipSetupMenu;
 
-
         [Inject]
         public ShipSetupState(ICurtain curtain, IShipsInitializer shipsInitializer, IStaticDataService staticDataService
             , ISoundPlayer soundPlayer, IAssetsProvider assetsProvider, IUiFactory uiFactory, ICleaner cleaner, UiConfig uiConfig,
@@ -44,16 +43,6 @@ namespace Infrastructure.GameStates
         public void Enter()
             => StartSetupAsync().Forget();
 
-        private async UniTaskVoid StartSetupAsync()
-        {
-            using var cts = _tokenProvider.CreateLocalCts();
-
-            await _assetsProvider.WarmUpCurrentSceneAsync();
-            await InitSceneAsync();
-            _soundPlayer.PlayMusic();
-            await _curtain.SetCurtainVisibleAsync(false, cts.Token);
-        }
-
         public void Exit()
         {
             _shipSetupMenu.OnSetupComplete -= SwitchState;
@@ -65,15 +54,25 @@ namespace Infrastructure.GameStates
             _stateMachine = stateMachine;
         }
 
+        private async UniTaskVoid StartSetupAsync()
+        {
+            using var cts = _tokenProvider.CreateLocalCts();
+
+            await _assetsProvider.WarmUpCurrentSceneAsync();
+            await InitSceneAsync();
+            _soundPlayer.PlayMusic();
+            await _curtain.SetCurtainVisibleAsync(false, cts.Token);
+        }
+
         private async UniTask InitSceneAsync()
         {
-            await _uiFactory.PrepareCanvasAsync();
-            await _shipsInitializer.PrepareShipsAsync();
+            await _shipsInitializer.CreateShipsAsync();
             await SetupUiAsync();
         }
 
         private async UniTask SetupUiAsync()
         {
+            await _uiFactory.CreateRootAsync();
             _shipSetupMenu = await _uiFactory.CreateShipSetupMenuAsync();
             _shipSetupMenu.Init(_staticDataService, _uiFactory, _uiConfig);
             await _shipSetupMenu.SetupUiAsync(_shipsInitializer.Ships.Keys);

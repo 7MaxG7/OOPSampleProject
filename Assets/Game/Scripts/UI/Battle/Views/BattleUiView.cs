@@ -16,11 +16,10 @@ namespace UI.Battle.Views
 
         public Button LeaveButton => _leaveButton;
 
-        
         public HealthPanel GetHealthPanel(OpponentId opponent) 
             => _healthPanels.FirstOrDefault(item => item.OpponentId == opponent);
 
-        public void ShowWinnerLable(IShip winner)
+        public void ShowWinnerLabel(IShip winner)
         {
             LeaveButton.gameObject.SetActive(true);
             _winLable.gameObject.SetActive(true);

@@ -10,7 +10,6 @@ namespace Equipment
 
         private bool _isCleaned = true;
 
-
         public void CleanUp()
         {
             if (_isCleaned)
@@ -36,11 +35,11 @@ namespace Equipment
                 return null;
 
             var ammo = _ammos.Pop();
-            RegisterAsSpawned(ammo, weapon);
+            RegisterSpawn(ammo, weapon);
             return ammo;
         }
 
-        public void RegisterAsSpawned(IAmmo ammo, IWeapon weapon)
+        public void RegisterSpawn(IAmmo ammo, IWeapon weapon)
         {
             _isCleaned = false;
             if (_weapons.Add(weapon))

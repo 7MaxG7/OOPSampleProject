@@ -19,7 +19,6 @@ namespace Equipment
         private readonly Dictionary<WeaponType, IAmmoPool> _ammoPools = new();
         private Transform _ammosParent;
 
-
         [Inject]
         public AmmoFactory(IAssetsProvider assetsProvider, IStaticDataService staticDataService, ICleaner cleaner)
         {
@@ -38,12 +37,6 @@ namespace Equipment
             _ammoPools.Clear();
         }
 
-        public void PrepareRoot()
-        {
-            if (_ammosParent == null)
-                _ammosParent = new GameObject(Constants.AMMOS_PARENT_NAME).transform;
-        }
-
         public async UniTask<IAmmo> SpawnAmmoAsync(IWeapon weapon)
         {
             var weaponType = weapon.WeaponType;
@@ -59,10 +52,17 @@ namespace Equipment
             if (ammoData == null)
                 return null;
             
-            var ammoView = await _assetsProvider.CreateInstanceAsync<AmmoView>(ammoData.AmmoPrefab, _ammosParent);
+            var ammoView = await _assetsProvider.CreateInstanceAsync<AmmoView>(ammoData.AmmoPrefab, GetContent());
             var ammo = new Ammo(ammoView);
-            _ammoPools[weapon.WeaponType].RegisterAsSpawned(ammo, weapon);
+            _ammoPools[weapon.WeaponType].RegisterSpawn(ammo, weapon);
             return ammo;
+        }
+
+        private Transform GetContent()
+        {
+            if (_ammosParent == null)
+                _ammosParent = new GameObject(Constants.AMMOS_PARENT_NAME).transform;
+            return _ammosParent;
         }
     }
 }

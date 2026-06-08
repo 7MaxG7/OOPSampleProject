@@ -11,7 +11,6 @@ namespace Ships
         private readonly IStaticDataService _staticDataService;
         public Dictionary<OpponentId, ShipModel> ShipModels { get; } = new();
 
-
         [Inject]
         public ShipConfigurationsHolder(IStaticDataService staticDataService)
         {

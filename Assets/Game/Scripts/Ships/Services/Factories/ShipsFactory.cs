@@ -23,7 +23,6 @@ namespace Ships
         
         private Transform _shipsParent;
 
-
         [Inject]
         public ShipsFactory(IAssetsProvider assetsProvider, IWeaponFactory weaponFactory, IModuleFactory moduleFactory
             , IShipUpgrader shipUpgrader, IStaticDataService staticDataService)
@@ -35,12 +34,6 @@ namespace Ships
             _staticDataService = staticDataService;
         }
 
-        public void PrepareRoot()
-        {
-            if (_shipsParent == null)
-                _shipsParent = new GameObject(Constants.SHIPS_PARENT_NAME).transform;
-        }
-        
         public async UniTask<IShip> CreateShipAsync(ShipModel shipModel, Vector3 position, Quaternion rotation)
         {
             var ship = await CreateShipAsync(shipModel.ShipType, position, rotation);
@@ -58,7 +51,7 @@ namespace Ships
             var modules = new ShipModules(shipData.ModuleSlotsAmount, _moduleFactory);
             
             var ship = new Ship(shipData.ShipType, health, weapons, modules, _shipUpgrader);
-            var shipView = await _assetsProvider.CreateInstanceAsync<ShipView>(shipData.Prefab, position, rotation, _shipsParent);
+            var shipView = await _assetsProvider.CreateInstanceAsync<ShipView>(shipData.Prefab, position, rotation, GetShipsContent());
             ship.SetView(shipView);
             return ship;
         }
@@ -73,6 +66,13 @@ namespace Ships
         {
             foreach (var slotIndex in moduleTypes.Keys.Where(slotIndex => slotIndex < modules.MaxEquipmentsAmount))
                 await modules.SetEquipmentAsync(slotIndex, moduleTypes[slotIndex]);
+        }
+
+        private Transform GetShipsContent()
+        {
+            if (_shipsParent == null)
+                _shipsParent = new GameObject(Constants.SHIPS_PARENT_NAME).transform;
+            return _shipsParent;
         }
     }
 }

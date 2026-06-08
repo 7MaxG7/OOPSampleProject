@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Infrastructure.ControllersHolder;
@@ -30,32 +31,13 @@ namespace Ships.Data
         }
 
         public void CleanUp()
-        {
-            foreach (var (opponentId, ship) in Ships)
-            {
-                ship.WeaponBattery.OnShoot -= _soundPlayer.PlayShoot;
-                _shipModels[opponentId].OnWeaponChange -= ship.WeaponBattery.SetEquipmentSync;
-                _shipModels[opponentId].OnModuleChange -= ship.ShipModules.SetEquipmentSync;
-                ship.CleanUp();
-            }
-            Ships.Clear();
-        }
+            => CleanUpShips(ship => ship.CleanUp());
 
         public void SceneCleanUp()
-        {
-            foreach (var (opponentId, ship) in Ships)
-            {
-                ship.WeaponBattery.OnShoot -= _soundPlayer.PlayShoot;
-                _shipModels[opponentId].OnWeaponChange -= ship.WeaponBattery.SetEquipmentSync;
-                _shipModels[opponentId].OnModuleChange -= ship.ShipModules.SetEquipmentSync;
-                ship.SceneCleanUp();
-            }
-            Ships.Clear();
-        }
+            => CleanUpShips(ship => ship.SceneCleanUp());
 
-        public async UniTask PrepareShipsAsync()
+        public async UniTask CreateShipsAsync()
         {
-            _shipsFactory.PrepareRoot();
             _shipModels = _configurationsHolder.ShipModels;
             foreach (var opponentId in _shipModels.Keys)
             {
@@ -65,10 +47,23 @@ namespace Ships.Data
 
                 var ship = await _shipsFactory.CreateShipAsync(_shipModels[opponentId], position.Value, rotation);
                 ship.WeaponBattery.OnShoot += _soundPlayer.PlayShoot;
-                _shipModels[opponentId].OnWeaponChange += ship.WeaponBattery.SetEquipmentSync;
-                _shipModels[opponentId].OnModuleChange += ship.ShipModules.SetEquipmentSync;
+                _shipModels[opponentId].OnWeaponChange += ship.WeaponBattery.SetEquipment;
+                _shipModels[opponentId].OnModuleChange += ship.ShipModules.SetEquipment;
                 Ships.Add(opponentId, ship);
             }
+        }
+
+        private void CleanUpShips(Action<IShip> cleanUpShip)
+        {
+            foreach (var (opponentId, ship) in Ships)
+            {
+                ship.WeaponBattery.OnShoot -= _soundPlayer.PlayShoot;
+                _shipModels[opponentId].OnWeaponChange -= ship.WeaponBattery.SetEquipment;
+                _shipModels[opponentId].OnModuleChange -= ship.ShipModules.SetEquipment;
+                cleanUpShip.Invoke(ship);
+            }
+
+            Ships.Clear();
         }
     }
 }

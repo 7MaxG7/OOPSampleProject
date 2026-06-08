@@ -22,7 +22,6 @@ namespace UI
         
         private Transform _rootCanvas;
 
-
         [Inject]
         public UiFactory(IAssetsProvider assetsProvider, IStaticDataService staticDataService
             , IShipConfigurationsHolder configurationsHolder, UiConfig uiConfig, ICancellationTokenProvider tokenProvider)
@@ -34,7 +33,7 @@ namespace UI
             _tokenProvider = tokenProvider;
         }
         
-        public async UniTask PrepareCanvasAsync()
+        public async UniTask CreateRootAsync()
         {
             if (_rootCanvas == null)
                 _rootCanvas = (await _assetsProvider.CreateInstanceAsync(_uiConfig.RootCanvas)).transform;

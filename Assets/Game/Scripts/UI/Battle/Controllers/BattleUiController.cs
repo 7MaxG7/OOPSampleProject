@@ -43,7 +43,7 @@ namespace UI.Battle
         }
 
         public void ShowBattleEnd(IShip winner) 
-            => _uiView.ShowWinnerLable(winner);
+            => _uiView.ShowWinnerLabel(winner);
 
         private void InitHealthPanel(OpponentId opponentId)
         {

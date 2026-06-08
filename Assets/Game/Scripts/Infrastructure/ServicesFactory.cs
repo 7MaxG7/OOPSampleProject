@@ -9,7 +9,6 @@ namespace Infrastructure
         private readonly IAssetsProvider _assetsProvider;
         private readonly SoundConfig _soundConfig;
 
-
         [Inject]
         public ServicesFactory(IAssetsProvider assetsProvider, SoundConfig soundConfig)
         {

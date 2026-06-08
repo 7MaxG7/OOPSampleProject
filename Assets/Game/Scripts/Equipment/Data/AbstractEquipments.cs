@@ -14,7 +14,6 @@ namespace Equipment.Data
         public Dictionary<int, TEquipment> Equipments { get; } = new();
         public Dictionary<int, Transform> Slots { get; } = new();
 
-
         protected AbstractEquipments(int amount, IEquipmentFactory<TEquipment, TEquipType> equipmentFactory)
         {
             MaxEquipmentsAmount = amount;
@@ -63,11 +62,7 @@ namespace Equipment.Data
             Equipments[index] = await EquipmentsFactory.CreateEquipment(equipType, Slots[index]);
         }
   
-        public void SetEquipmentSync(int index, TEquipType equipType)
-        {
-#pragma warning disable CS4014
-            SetEquipmentAsync(index, equipType);
-#pragma warning restore CS4014
-        }
+        public void SetEquipment(int index, TEquipType equipType)
+            => SetEquipmentAsync(index, equipType).Forget();
     }
 }

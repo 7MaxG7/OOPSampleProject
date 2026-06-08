@@ -24,7 +24,6 @@ namespace Equipment.Data
         private readonly BuffRelativenessType _buffRelativenessType;
         private ModuleView _moduleView;
 
-
         public Module(BuffParamType buffParamType, BuffRelativenessType buffRelativenessType, float value, ModuleType moduleType)
         {
             BuffParamType = buffParamType;

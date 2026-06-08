@@ -15,7 +15,6 @@ namespace Equipment
         private readonly IAmmoFactory _ammoFactory;
         private readonly IDamageHandler _damageHandler;
 
-
         [Inject]
         public WeaponFactory(IStaticDataService staticDataService, IAssetsProvider assetsProvider, IAmmoFactory ammoFactory
             , IDamageHandler damageHandler)

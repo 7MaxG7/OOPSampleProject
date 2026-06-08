@@ -37,19 +37,16 @@ namespace Infrastructure.GameStates
         }
 
         public void Enter()
-        {
-            InitAndRunBattleAsync().Forget();
-        }
+            => LoadBattleAsync().Forget();
 
-        private async UniTaskVoid InitAndRunBattleAsync()
+        private async UniTaskVoid LoadBattleAsync()
         {
             using var cts = _tokenProvider.CreateLocalCts();
             await _sceneLoader.LoadSceneAsync(Constants.BATTLE_SCENE_NAME, cts);
 
             await _assetsProvider.WarmUpCurrentSceneAsync();
-            await _uiFactory.PrepareCanvasAsync();
-            _ammoFactory.PrepareRoot();
-            PrepareOpponents();
+            await _uiFactory.CreateRootAsync();
+            await CreateOpponentsAsync();
 
             _stateMachine.Enter<RunBattleState>();
         }
@@ -63,9 +60,9 @@ namespace Infrastructure.GameStates
             _stateMachine = stateMachine;
         }
 
-        private void PrepareOpponents()
+        private async UniTask CreateOpponentsAsync()
         {
-            _shipsInitializer.PrepareShipsAsync();
+            await _shipsInitializer.CreateShipsAsync();
 
             foreach (var ship in _shipsInitializer.Ships.Values)
             {

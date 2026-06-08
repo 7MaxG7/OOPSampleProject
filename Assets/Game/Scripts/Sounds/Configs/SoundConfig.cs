@@ -16,7 +16,6 @@ namespace Sounds
         public AssetReference SoundPlayerPrefab => _soundPlayerPrefab;
         public AudioClip MusicClip => _musicClip;
 
-
         public Dictionary<WeaponType, AudioClip> GetWeaponShootingClips()
             => _weaponSounds.ToDictionary(clip => clip.WeaponType, clip => clip.AudioClip);
     }

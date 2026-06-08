@@ -1,4 +1,3 @@
-using System.Threading;
 using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using Ships;
@@ -21,7 +20,6 @@ namespace Infrastructure.GameStates
         private readonly IShipConfigurationsHolder _configurationsHolder;
         private IGameStateMachine _stateMachine;
 
-
         [Inject]
         public GameBootstrapState(IStaticDataService staticDataService, ISceneLoader sceneLoader, ICurtain curtain
             , IAssetsProvider assetsProvider, ISoundPlayer soundPlayer, RulesConfig rulesConfig, ICancellationTokenProvider tokenProvider
@@ -38,7 +36,7 @@ namespace Infrastructure.GameStates
         }
 
         public void Enter()
-            => InitAndStart().Forget();
+            => InitAndStartAsync().Forget();
 
         public void Exit()
         {
@@ -49,17 +47,17 @@ namespace Infrastructure.GameStates
             _stateMachine = stateMachine;
         }
 
-        private async UniTaskVoid InitAndStart()
+        private async UniTaskVoid InitAndStartAsync()
         {
             _tokenProvider.Init();
-            using var cts = _tokenProvider.CreateLocalCts();
-            await InitServicesAsync(cts);
+            await InitServicesAsync();
 
+            var cts = _tokenProvider.CreateLocalCts();
             await _sceneLoader.LoadSceneAsync(Constants.SETUP_SCENE_NAME, cts);
             _stateMachine.Enter<ShipSetupState>();
         }
 
-        private async UniTask InitServicesAsync(CancellationTokenSource cts)
+        private async UniTask InitServicesAsync()
         {
             DOTween.Init();
             _assetsProvider.Init();

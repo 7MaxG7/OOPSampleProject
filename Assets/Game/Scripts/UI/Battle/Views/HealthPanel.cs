@@ -12,7 +12,6 @@ namespace UI.Battle.Views
 
         public OpponentId OpponentId => _opponent;
 
-        
         public void SetCurrentHp(float currentHp, float maxHp) 
             => _hpSlider.value = ModifyToSliderValue(currentHp, maxHp);
 

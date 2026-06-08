@@ -11,7 +11,6 @@ namespace Infrastructure.GameStates
         private readonly Dictionary<Type, IGameState> _states;
         private IGameState _currentState;
 
-
         [Inject]
         [SuppressMessage("ReSharper", "SuggestBaseTypeForParameterInConstructor")]
         public GameStateMachine(GameBootstrapState gameBootstrapState, ShipSetupState shipSetupState

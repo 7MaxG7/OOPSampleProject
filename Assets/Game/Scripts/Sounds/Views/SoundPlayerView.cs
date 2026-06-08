@@ -13,7 +13,6 @@ namespace Sounds
             set => _musicSource.loop = value;
         }
         
-        
         public void PlaySound(AudioClip audioClip)
             => _sfxSource.PlayOneShot(audioClip);
 

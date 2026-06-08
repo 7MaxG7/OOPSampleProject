@@ -13,7 +13,6 @@ namespace Utils
             canvasGroup.DOKill();
             if (mustVisible && !canvasGroup.IsVisible())
             {
-                canvasGroup.blocksRaycasts = true;
                 if (!canvasGroup.gameObject.activeSelf)
                 {
                     canvasGroup.gameObject.SetActive(true);
@@ -27,7 +26,6 @@ namespace Utils
             }
             else if (!mustVisible && canvasGroup.gameObject.activeSelf)
             {
-                canvasGroup.blocksRaycasts = false;
                 await canvasGroup.DOFade(0, animationDuration)
                     .SetUpdate(true)
                     .WithCancellation(token)

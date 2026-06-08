@@ -36,7 +36,7 @@ namespace Ships.Data
 
         public void SceneCleanUp()
         {
-            ShipModules.OnModuleEquiped -= UpgradeShip;
+            ShipModules.OnModuleEquipped -= UpgradeShip;
             ShipModules.OnModuleUnequip -= DowngradeShip;
             Health.OnShieldChanged -= ShipView.Shield.UpdatePower;
         }
@@ -81,7 +81,7 @@ namespace Ships.Data
         private void SetModules(IShipModules shipModules)
         {
             ShipModules = shipModules;
-            ShipModules.OnModuleEquiped += UpgradeShip;
+            ShipModules.OnModuleEquipped += UpgradeShip;
             ShipModules.OnModuleUnequip += DowngradeShip;
         }
 

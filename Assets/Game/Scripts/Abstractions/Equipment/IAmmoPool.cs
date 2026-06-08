@@ -5,6 +5,6 @@ namespace Equipment
     public interface IAmmoPool : ICleanable
     {
         IAmmo SpawnAmmo(IWeapon weapon);
-        void RegisterAsSpawned(IAmmo ammo, IWeapon weapon);
+        void RegisterSpawn(IAmmo ammo, IWeapon weapon);
     }
 }

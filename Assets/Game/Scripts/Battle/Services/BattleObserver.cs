@@ -13,7 +13,6 @@ namespace Battle
         public HashSet<IShip> Ships { get; } = new();
         private bool _isCleaned = true;
 
-
         [Inject]
         public BattleObserver(ICleaner cleaner)
         {

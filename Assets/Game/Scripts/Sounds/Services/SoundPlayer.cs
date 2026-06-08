@@ -19,7 +19,6 @@ namespace Sounds
         private AudioClip _musicClip;
         private bool _musicIsPlaying;
 
-
         [Inject]
         public SoundPlayer(SoundConfig soundConfig, IServicesFactory servicesFactory)
         {

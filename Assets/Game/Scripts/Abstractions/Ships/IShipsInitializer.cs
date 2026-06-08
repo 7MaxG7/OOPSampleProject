@@ -9,6 +9,6 @@ namespace Ships
     {
         Dictionary<OpponentId, IShip> Ships { get; }
         
-        UniTask PrepareShipsAsync();
+        UniTask CreateShipsAsync();
     }
 }

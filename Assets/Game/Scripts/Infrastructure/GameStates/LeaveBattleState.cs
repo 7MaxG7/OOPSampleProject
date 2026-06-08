@@ -10,7 +10,6 @@ namespace Infrastructure.GameStates
         private readonly ICancellationTokenProvider _tokenProvider;
         private IGameStateMachine _stateMachine;
 
-
         [Inject]
         public LeaveBattleState(ISceneLoader sceneLoader, ICancellationTokenProvider tokenProvider)
         {

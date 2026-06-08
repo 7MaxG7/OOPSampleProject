@@ -64,7 +64,11 @@ namespace UI.Ship.Views
         }
 
         public async UniTask SetVisibleAsync(bool isVisible, CancellationToken token, float durationRate = 1f)
-            => await _canvasGroup.SetCanvasGroupVisibilityAsync(isVisible, _fadeAnimDuration * durationRate, token);
+        {
+            if (isVisible != IsVisible())
+                _canvasGroup.blocksRaycasts = isVisible;
+            await _canvasGroup.SetCanvasGroupVisibilityAsync(isVisible, _fadeAnimDuration * durationRate, token);
+        }
 
         public async UniTask<Button> AddEquipmentSelectSlot(TType equipmentType)
         {

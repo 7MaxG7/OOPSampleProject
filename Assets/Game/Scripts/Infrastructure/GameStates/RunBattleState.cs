@@ -20,7 +20,6 @@ namespace Infrastructure.GameStates
         
         private BattleUiController _battleUi;
 
-
         [Inject]
         public RunBattleState(ICurtain curtain, IBattleObserver battleObserver, IShipsInitializer shipsInitializer
             , IUpdater updater, IUiFactory uiFactory, ICancellationTokenProvider tokenProvider)
@@ -34,9 +33,7 @@ namespace Infrastructure.GameStates
         }
         
         public void Enter()
-        {
-            InitAndStartAsync().Forget();
-        }
+            => InitAndStartAsync().Forget();
 
         private async UniTaskVoid InitAndStartAsync()
         {

@@ -10,7 +10,7 @@ namespace Ui
 {
     public interface IUiFactory
     {
-        UniTask PrepareCanvasAsync();
+        UniTask CreateRootAsync();
         UniTask<CurtainView> CreateCurtainAsync();
         UniTask<ShipSetupMenuController> CreateShipSetupMenuAsync();
         UniTask<BattleUiController> CreateBattleUiAsync();
