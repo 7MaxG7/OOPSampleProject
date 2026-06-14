@@ -1,10 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using Infrastructure.ControllersHolder;
+using Ships.Views;
 using Sounds;
 using UI.Ship.Models;
+using UnityEngine;
 using Zenject;
+using Object = UnityEngine.Object;
 
 namespace Ships.Data
 {
@@ -13,18 +17,15 @@ namespace Ships.Data
         public Dictionary<OpponentId, IShip> Ships { get; } = new();
 
         private readonly IShipsFactory _shipsFactory;
-        private readonly ILocationFinder _locationFinder;
         private readonly ISoundService _soundService;
         private readonly IShipConfigurationsHolder _configurationsHolder;
-        private Dictionary<OpponentId,ShipModel> _shipModels;
-
+        private Dictionary<OpponentId, ShipModel> _shipModels;
 
         [Inject]
-        public ShipsInitializer(IShipsFactory shipsFactory, IShipConfigurationsHolder configurationsHolder
-            , ILocationFinder locationFinder, ISoundService soundService, ICleaner cleaner)
+        public ShipsInitializer(IShipsFactory shipsFactory, IShipConfigurationsHolder configurationsHolder, ISoundService soundService,
+            ICleaner cleaner)
         {
             _shipsFactory = shipsFactory;
-            _locationFinder = locationFinder;
             _soundService = soundService;
             _configurationsHolder = configurationsHolder;
             cleaner.AddCleanable(this);
@@ -41,11 +42,11 @@ namespace Ships.Data
             _shipModels = _configurationsHolder.ShipModels;
             foreach (var opponentId in _shipModels.Keys)
             {
-                var position = _locationFinder.GetOpponentLocation(opponentId, out var rotation);
-                if (!position.HasValue || Ships.ContainsKey(opponentId))
+                var location = GetOpponentLocation(opponentId);
+                if (Ships.ContainsKey(opponentId))
                     continue;
 
-                var ship = await _shipsFactory.CreateShipAsync(_shipModels[opponentId], position.Value, rotation);
+                var ship = await _shipsFactory.CreateShipAsync(_shipModels[opponentId], location.Position, location.Rotation);
                 ship.WeaponBattery.OnShoot += _soundService.PlayShoot;
                 _shipModels[opponentId].OnWeaponChange += ship.WeaponBattery.SetEquipment;
                 _shipModels[opponentId].OnModuleChange += ship.ShipModules.SetEquipment;
@@ -64,6 +65,13 @@ namespace Ships.Data
             }
 
             Ships.Clear();
+        }
+
+        private (Vector3 Position, Quaternion Rotation) GetOpponentLocation(OpponentId opponentId)
+        {
+            var spawnMarker = Object.FindObjectsOfType<ShipSpawnerMarker>()
+                .FirstOrDefault(data => data.OpponentId == opponentId);
+            return spawnMarker != null ? (spawnMarker.transform.position, spawnMarker.transform.rotation) : default;
         }
     }
 }

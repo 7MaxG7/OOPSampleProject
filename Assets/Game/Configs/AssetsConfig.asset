@@ -13,18 +13,6 @@ MonoBehaviour:
   m_Name: AssetsConfig
   m_EditorClassIdentifier: 
   _setupSceneAssets:
-  - m_AssetGUID: 7a389b75393666a498c63d1dc6b90475
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
-  - m_AssetGUID: 2a984e003b7f80f479b749e07c863ed9
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
-  - m_AssetGUID: be4152a665323e54cad9c6e4a3e6a9b7
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
   - m_AssetGUID: cee7ae8a9b9d78a47b8356b85c53b936
     m_SubObjectName: 
     m_SubObjectType: 
@@ -34,34 +22,6 @@ MonoBehaviour:
     m_SubObjectType: 
     m_EditorAssetChanged: 0
   _battleSceneAssets:
-  - m_AssetGUID: 7429d32f6ba4df343b490dd1c75a1478
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
-  - m_AssetGUID: fa05c9b2b92ce044b81e94743d403652
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
-  - m_AssetGUID: c2b67005207bc964d89ccf6a161f2590
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
-  - m_AssetGUID: 819631039aae11044b354e9be09102cc
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
-  - m_AssetGUID: 7a389b75393666a498c63d1dc6b90475
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
-  - m_AssetGUID: 2a984e003b7f80f479b749e07c863ed9
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
-  - m_AssetGUID: be4152a665323e54cad9c6e4a3e6a9b7
-    m_SubObjectName: 
-    m_SubObjectType: 
-    m_EditorAssetChanged: 0
   - m_AssetGUID: cee7ae8a9b9d78a47b8356b85c53b936
     m_SubObjectName: 
     m_SubObjectType: 
@@ -70,3 +30,15 @@ MonoBehaviour:
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
+  - m_AssetGUID: 7429d32f6ba4df343b490dd1c75a1478
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 1
+  - m_AssetGUID: fa05c9b2b92ce044b81e94743d403652
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  - m_AssetGUID: c2b67005207bc964d89ccf6a161f2590
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 1

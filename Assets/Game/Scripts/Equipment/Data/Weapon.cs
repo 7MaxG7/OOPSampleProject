@@ -26,7 +26,6 @@ namespace Equipment.Data
         private readonly float _shootCooldown;
         private float _cooldownTimer;
 
-
         public Weapon(float cooldown, int damage, float ammoSpeed, WeaponType weaponType, IAmmoFactory ammoFactory,
             IDamageHandler damageHandler)
         {
@@ -57,10 +56,10 @@ namespace Equipment.Data
 
         public async UniTaskVoid ShootAsync()
         {
+            RestoreCooldown();
             var ammo = await _ammoFactory.SpawnAmmoAsync(this);
             ammo.Activate(_weaponView.Barrel, this);
             ammo.Rigidbody.AddForce(_weaponView.Barrel.up * _ammoSpeed);
-            RestoreCooldown();
         }
 
         public void ReduceCooldown(float deltaTime)

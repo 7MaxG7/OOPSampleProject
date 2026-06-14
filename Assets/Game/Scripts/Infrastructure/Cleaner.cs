@@ -8,7 +8,6 @@ namespace Infrastructure
     {
         private readonly List<ICleanable> _cleanables = new();
         private readonly List<ISceneCleanable> _sceneCleanables = new();
-        
 
         public void AddCleanable(ICleanable cleanable)
         {

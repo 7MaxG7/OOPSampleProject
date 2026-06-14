@@ -19,7 +19,6 @@ namespace Infrastructure
             Container.Bind<IShipUpgrader>().To<ShipUpgrader>().AsSingle();
             Container.Bind<IWinnerDefiner>().To<WinnerDefiner>().AsSingle();
             Container.Bind<IDamageHandler>().To<DamageHandler>().AsSingle();
-            Container.Bind<ILocationFinder>().To<LocationFinder>().AsSingle();
             Container.Bind<IShipConfigurationsHolder>().To<ShipConfigurationsHolder>().AsSingle();
             
             Container.Bind<ISoundService>().To<SoundService>().AsSingle();

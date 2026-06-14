@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using Cysharp.Threading.Tasks;
 using Ships;
 
@@ -25,14 +24,14 @@ namespace Equipment.Data
                 return;
 
             var deltaCooldown = deltaTime / ReloadRate;
-            foreach (var weapon in Equipments.Values.Where(weapon => !weapon.IsReady))
-                weapon.ReduceCooldown(deltaCooldown);
-
-            foreach (var weapon in Equipments.Values.Where(weapon => weapon.IsReady))
-            {
-                weapon.ShootAsync().Forget();
-                OnShoot?.Invoke(weapon.WeaponType);
-            }
+            foreach (var weapon in Equipments.Values)
+                if (weapon.IsReady)
+                {
+                    weapon.ShootAsync().Forget();
+                    OnShoot?.Invoke(weapon.WeaponType);
+                }
+                else
+                    weapon.ReduceCooldown(deltaCooldown);
         }
         
         public void Init(IShip owner)
