@@ -1,7 +1,7 @@
 using Cysharp.Threading.Tasks;
 using Equipment.Data;
 
-namespace UI.Ship.Views
+namespace UI.Ship
 {
     public sealed class WeaponSelectView : BaseEquipmentSelectView<WeaponType>
     {

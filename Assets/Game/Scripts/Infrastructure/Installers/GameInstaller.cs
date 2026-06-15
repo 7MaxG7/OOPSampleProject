@@ -1,7 +1,6 @@
 ﻿using Battle;
 using Equipment;
 using Ships;
-using Ships.Data;
 using Sounds;
 using Zenject;
 
@@ -19,7 +18,7 @@ namespace Infrastructure
             Container.Bind<IShipUpgrader>().To<ShipUpgrader>().AsSingle();
             Container.Bind<IWinnerDefiner>().To<WinnerDefiner>().AsSingle();
             Container.Bind<IDamageHandler>().To<DamageHandler>().AsSingle();
-            Container.Bind<IShipConfigurationsHolder>().To<ShipConfigurationsHolder>().AsSingle();
+            Container.Bind<IShipConfigurator>().To<ShipConfigurator>().AsSingle();
             
             Container.Bind<ISoundService>().To<SoundService>().AsSingle();
         }

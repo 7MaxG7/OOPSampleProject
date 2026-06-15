@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.ControllersHolder
+﻿namespace Infrastructure
 {
     public interface IUpdater : IUpdatable, ICleanable
     {

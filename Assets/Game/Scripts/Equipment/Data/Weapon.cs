@@ -2,7 +2,6 @@
 using Battle;
 using Cysharp.Threading.Tasks;
 using Ships;
-using Ships.Views;
 using UnityEngine;
 using Object = UnityEngine.Object;
 

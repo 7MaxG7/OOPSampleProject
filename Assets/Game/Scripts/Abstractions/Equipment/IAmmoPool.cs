@@ -1,4 +1,4 @@
-﻿using Infrastructure.ControllersHolder;
+﻿using Infrastructure;
 
 namespace Equipment
 {

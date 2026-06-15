@@ -4,9 +4,6 @@ using Cysharp.Threading.Tasks;
 using Equipment;
 using Equipment.Data;
 using Infrastructure;
-using Ships.Data;
-using Ships.Views;
-using UI.Ship.Models;
 using UnityEngine;
 using Utils;
 using Zenject;
@@ -34,11 +31,11 @@ namespace Ships
             _staticDataService = staticDataService;
         }
 
-        public async UniTask<IShip> CreateShipAsync(ShipModel shipModel, Vector3 position, Quaternion rotation)
+        public async UniTask<IShip> CreateShipAsync(ShipConfiguration configuration, Vector3 position, Quaternion rotation)
         {
-            var ship = await CreateShipAsync(shipModel.ShipType, position, rotation);
-            await SetWeaponsAsync(ship.WeaponBattery, shipModel.WeaponTypes);
-            await SetModulesAsync(ship.ShipModules, shipModel.ModuleTypes);
+            var ship = await CreateShipAsync(configuration.ShipType, position, rotation);
+            await SetWeaponsAsync(ship.WeaponBattery, configuration.WeaponTypes);
+            await SetModulesAsync(ship.ShipModules, configuration.ModuleTypes);
 
             return ship;
         }

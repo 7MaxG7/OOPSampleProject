@@ -1,4 +1,4 @@
-﻿using Ships.Data;
+﻿using Ships;
 using UnityEngine;
 using UnityEngine.UI;
 

@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using Equipment.Data;
 using Ships;
-using Ships.Data;
 
-namespace UI.Ship.Models
+namespace UI.Ship
 {
     public sealed class ShipModel
     {
@@ -25,22 +24,22 @@ namespace UI.Ship.Models
             _moduleSlotsAmount = shipConfig.ModuleSlotsAmount;
         }
 
-        public void SetWeapon(int slot, WeaponType weaponType)
+        public void SetWeapon(int slotIndex, WeaponType weaponType)
         {
-            if (slot >= _weaponSlotsAmount)
+            if (slotIndex >= _weaponSlotsAmount)
                 return;
 
-            WeaponTypes[slot] = weaponType;
-            OnWeaponChange?.Invoke(slot, weaponType);
+            WeaponTypes[slotIndex] = weaponType;
+            OnWeaponChange?.Invoke(slotIndex, weaponType);
         }
 
-        public void SetModule(int slot, ModuleType moduleType)
+        public void SetModule(int slotIndex, ModuleType moduleType)
         {
-            if (slot >= _moduleSlotsAmount)
+            if (slotIndex >= _moduleSlotsAmount)
                 return;
 
-            ModuleTypes[slot] = moduleType;
-            OnModuleChange?.Invoke(slot, moduleType);
+            ModuleTypes[slotIndex] = moduleType;
+            OnModuleChange?.Invoke(slotIndex, moduleType);
         }
     }
 }

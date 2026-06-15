@@ -1,5 +1,5 @@
 ﻿using System;
-using Infrastructure.ControllersHolder;
+using Infrastructure;
 
 namespace Ships
 {

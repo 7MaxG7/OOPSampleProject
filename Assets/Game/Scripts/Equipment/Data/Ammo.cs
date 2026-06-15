@@ -1,4 +1,4 @@
-﻿using Ships.Views;
+﻿using Ships;
 using UnityEngine;
 using Object = UnityEngine.Object;
 

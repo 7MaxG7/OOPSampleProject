@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Ships.Views
+namespace Ships
 {
     public sealed class AmmoView : MonoBehaviour
     {

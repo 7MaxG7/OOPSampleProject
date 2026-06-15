@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Ships.Data
+namespace Ships
 {
     public abstract class BaseHealth : IHealth
     {

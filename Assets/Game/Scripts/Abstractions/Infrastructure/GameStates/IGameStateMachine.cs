@@ -1,6 +1,4 @@
-﻿using Infrastructure.ControllersHolder;
-
-namespace Infrastructure.GameStates
+﻿namespace Infrastructure.GameStates
 {
     public interface IGameStateMachine : ICleanable
     {

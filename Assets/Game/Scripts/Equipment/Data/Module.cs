@@ -1,5 +1,5 @@
 ﻿using System;
-using Ships.Views;
+using Ships;
 using Object = UnityEngine.Object;
 
 namespace Equipment.Data

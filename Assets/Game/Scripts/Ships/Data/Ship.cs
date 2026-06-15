@@ -1,9 +1,8 @@
 ﻿using System;
 using Equipment;
-using Ships.Views;
 using Object = UnityEngine.Object;
 
-namespace Ships.Data
+namespace Ships
 {
     public sealed class Ship : IShip
     {

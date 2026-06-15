@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Infrastructure.ControllersHolder;
+using Infrastructure;
 using Ships;
-using Ships.Data;
 using UI.Battle.Views;
 using UnityEngine;
 

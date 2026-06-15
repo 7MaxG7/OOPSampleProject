@@ -4,12 +4,8 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using Equipment.Data;
 using Infrastructure;
-using Infrastructure.ControllersHolder;
 using Ships;
-using Ships.Data;
 using Ui;
-using UI.Ship.Models;
-using UI.Ship.Views;
 using UnityEngine;
 
 namespace UI.Ship
@@ -19,10 +15,10 @@ namespace UI.Ship
         public event Action OnSetupComplete;
 
         private IStaticDataService _staticDataService;
-        private readonly IShipConfigurationsHolder _configurationsHolder;
         private IUiFactory _uiFactory;
         private UiConfig _uiConfig;
         private readonly ICancellationTokenProvider _tokenProvider;
+        private readonly IShipConfigurator _shipConfigurator;
 
         private WeaponSelectPanelController _weaponSelectPanel;
         private ModuleSelectPanelController _moduleSelectPanel;
@@ -30,11 +26,12 @@ namespace UI.Ship
         private readonly Dictionary<OpponentId, ShipModel> _shipModels;
         private readonly Dictionary<OpponentId, ShipPanelController> _shipPanels = new();
 
-        public ShipSetupMenuController(ShipSetupMenuView view, Dictionary<OpponentId, ShipModel> shipModels,
+        public ShipSetupMenuController(ShipSetupMenuView view, IShipConfigurator shipConfigurator,
             ICancellationTokenProvider tokenProvider)
         {
             _shipSetupMenuView = view;
-            _shipModels = shipModels;
+            _shipConfigurator = shipConfigurator;
+            _shipModels = shipConfigurator.ShipModels;
             _tokenProvider = tokenProvider;
         }
 
@@ -80,14 +77,16 @@ namespace UI.Ship
 
         private async UniTask SetupModuleSelectPanelAsync()
         {
-            _moduleSelectPanel = new ModuleSelectPanelController(_shipSetupMenuView.ModuleSelectPanel, _shipModels, _tokenProvider);
+            _moduleSelectPanel = new ModuleSelectPanelController(_shipSetupMenuView.ModuleSelectPanel, _shipConfigurator,
+                _tokenProvider);
             _shipSetupMenuView.ModuleSelectPanel.Init(_uiFactory, _uiConfig.FadeAnimDuration);
             await _moduleSelectPanel.SetupModuledSelectPanelAsync(_staticDataService.GetAllEnabledModules());
         }
 
         private async UniTask SetupWeaponSelectPanelAsync()
         {
-            _weaponSelectPanel = new WeaponSelectPanelController(_shipSetupMenuView.WeaponSelectPanel, _shipModels, _tokenProvider);
+            _weaponSelectPanel = new WeaponSelectPanelController(_shipSetupMenuView.WeaponSelectPanel, _shipConfigurator,
+                _tokenProvider);
             _shipSetupMenuView.WeaponSelectPanel.Init(_uiFactory, _uiConfig.FadeAnimDuration);
             await _weaponSelectPanel.SetupWeaponSelectPanelAsync(_staticDataService.GetAllEnabledWeapons());
         }

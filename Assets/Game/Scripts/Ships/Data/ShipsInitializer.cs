@@ -2,15 +2,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
-using Infrastructure.ControllersHolder;
-using Ships.Views;
+using Infrastructure;
 using Sounds;
-using UI.Ship.Models;
 using UnityEngine;
 using Zenject;
 using Object = UnityEngine.Object;
 
-namespace Ships.Data
+namespace Ships
 {
     public sealed class ShipsInitializer : IShipsInitializer
     {
@@ -18,16 +16,15 @@ namespace Ships.Data
 
         private readonly IShipsFactory _shipsFactory;
         private readonly ISoundService _soundService;
-        private readonly IShipConfigurationsHolder _configurationsHolder;
-        private Dictionary<OpponentId, ShipModel> _shipModels;
+        private readonly IShipConfigurator _shipConfigurator;
 
         [Inject]
-        public ShipsInitializer(IShipsFactory shipsFactory, IShipConfigurationsHolder configurationsHolder, ISoundService soundService,
+        public ShipsInitializer(IShipsFactory shipsFactory, IShipConfigurator shipConfigurator, ISoundService soundService,
             ICleaner cleaner)
         {
             _shipsFactory = shipsFactory;
             _soundService = soundService;
-            _configurationsHolder = configurationsHolder;
+            _shipConfigurator = shipConfigurator;
             cleaner.AddCleanable(this);
         }
 
@@ -39,17 +36,17 @@ namespace Ships.Data
 
         public async UniTask CreateShipsAsync()
         {
-            _shipModels = _configurationsHolder.ShipModels;
-            foreach (var opponentId in _shipModels.Keys)
+            foreach (var opponentId in _shipConfigurator.ShipConfigurations.Keys)
             {
                 var location = GetOpponentLocation(opponentId);
                 if (Ships.ContainsKey(opponentId))
                     continue;
 
-                var ship = await _shipsFactory.CreateShipAsync(_shipModels[opponentId], location.Position, location.Rotation);
+                var ship = await _shipsFactory.CreateShipAsync(_shipConfigurator.ShipConfigurations[opponentId], location.Position,
+                    location.Rotation);
                 ship.WeaponBattery.OnShoot += _soundService.PlayShoot;
-                _shipModels[opponentId].OnWeaponChange += ship.WeaponBattery.SetEquipment;
-                _shipModels[opponentId].OnModuleChange += ship.ShipModules.SetEquipment;
+                _shipConfigurator.ShipModels[opponentId].OnWeaponChange += ship.WeaponBattery.SetEquipment;
+                _shipConfigurator.ShipModels[opponentId].OnModuleChange += ship.ShipModules.SetEquipment;
                 Ships.Add(opponentId, ship);
             }
         }
@@ -59,8 +56,8 @@ namespace Ships.Data
             foreach (var (opponentId, ship) in Ships)
             {
                 ship.WeaponBattery.OnShoot -= _soundService.PlayShoot;
-                _shipModels[opponentId].OnWeaponChange -= ship.WeaponBattery.SetEquipment;
-                _shipModels[opponentId].OnModuleChange -= ship.ShipModules.SetEquipment;
+                _shipConfigurator.ShipModels[opponentId].OnWeaponChange -= ship.WeaponBattery.SetEquipment;
+                _shipConfigurator.ShipModels[opponentId].OnModuleChange -= ship.ShipModules.SetEquipment;
                 cleanUpShip.Invoke(ship);
             }
 

@@ -6,7 +6,6 @@ using Ui;
 using UI.Battle;
 using UI.Battle.Views;
 using UI.Ship;
-using UI.Ship.Views;
 using UnityEngine;
 using Zenject;
 
@@ -16,19 +15,19 @@ namespace UI
     {
         private readonly IStaticDataService _staticDataService;
         private readonly IAssetsInstantiator _instantiator;
-        private readonly IShipConfigurationsHolder _configurationsHolder;
+        private readonly IShipConfigurator _shipConfigurator;
         private readonly ICancellationTokenProvider _tokenProvider;
         private readonly UiConfig _uiConfig;
 
         private Transform _rootCanvas;
 
         [Inject]
-        public UiFactory(IStaticDataService staticDataService, IShipConfigurationsHolder configurationsHolder, UiConfig uiConfig,
+        public UiFactory(IStaticDataService staticDataService, IShipConfigurator shipConfigurator, UiConfig uiConfig,
             IAssetsInstantiator instantiator, ICancellationTokenProvider tokenProvider)
         {
             _staticDataService = staticDataService;
             _instantiator = instantiator;
-            _configurationsHolder = configurationsHolder;
+            _shipConfigurator = shipConfigurator;
             _uiConfig = uiConfig;
             _tokenProvider = tokenProvider;
         }
@@ -49,7 +48,7 @@ namespace UI
         public async UniTask<ShipSetupMenuController> CreateShipSetupMenuAsync()
         {
             var view = await _instantiator.CreateAsync<ShipSetupMenuView>(_uiConfig.ShipSetupMenu, _rootCanvas);
-            return new ShipSetupMenuController(view, _configurationsHolder.ShipModels, _tokenProvider);
+            return new ShipSetupMenuController(view, _shipConfigurator, _tokenProvider);
         }
 
         public async UniTask<BattleUiController> CreateBattleUiAsync()

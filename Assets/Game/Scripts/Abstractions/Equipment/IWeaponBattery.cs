@@ -1,6 +1,6 @@
 using System;
 using Equipment.Data;
-using Infrastructure.ControllersHolder;
+using Infrastructure;
 using Ships;
 
 namespace Equipment

@@ -3,7 +3,6 @@ using Equipment.Data;
 using UI;
 using UI.Battle;
 using UI.Ship;
-using UI.Ship.Views;
 using UnityEngine;
 
 namespace Ui

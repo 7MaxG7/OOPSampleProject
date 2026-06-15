@@ -1,5 +1,4 @@
 ﻿using System;
-using Ships.Data;
 using UnityEngine;
 
 namespace Ships

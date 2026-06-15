@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using Infrastructure.ControllersHolder;
-using Ships.Data;
+using Infrastructure;
+using Ships;
 using Ui;
 using UI.Data;
 using UnityEngine;
 using UnityEngine.UI;
 using Utils;
 
-namespace UI.Ship.Views
+namespace UI.Ship
 {
     public abstract class BaseEquipmentSelectView<TType> : MonoBehaviour, ICleanable where TType : Enum
     {

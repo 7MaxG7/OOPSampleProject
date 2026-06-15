@@ -1,7 +1,6 @@
 ﻿using Equipment;
 using Equipment.Data;
 using Ships;
-using Ships.Data;
 
 namespace Infrastructure
 {

@@ -1,7 +1,7 @@
-﻿using Ships.Data;
+﻿using Ships;
 using UnityEngine;
 
-namespace UI.Ship.Views
+namespace UI.Ship
 {
     public sealed class ShipSetupPanelView : MonoBehaviour
     {

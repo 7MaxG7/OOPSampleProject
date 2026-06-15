@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using Cysharp.Threading.Tasks;
 using Infrastructure;
-using Infrastructure.ControllersHolder;
-using Ships.Data;
-using Ui;
-using UI.Ship.Models;
-using UI.Ship.Views;
+using Ships;
 using UnityEngine;
 
 namespace UI.Ship
@@ -14,20 +9,17 @@ namespace UI.Ship
     public class BaseEquipmentSelectController<TType> : ICleanable where TType : Enum
     {
         protected readonly BaseEquipmentSelectView<TType> EquipmentSelectView;
-        protected readonly Dictionary<OpponentId, ShipModel> ShipModels;
+        protected readonly IShipConfigurator ShipConfigurator;
         private readonly ICancellationTokenProvider _tokenProvider;
 
         protected OpponentId OpponentId;
         protected int SlotIndex;
-        
-        private IUiFactory _uiFactory;
-        private float _fadeAnimDuration;
 
-        protected BaseEquipmentSelectController(BaseEquipmentSelectView<TType> equipmentSelectView
-            , Dictionary<OpponentId,ShipModel> shipModels, ICancellationTokenProvider tokenProvider)
+        protected BaseEquipmentSelectController(BaseEquipmentSelectView<TType> equipmentSelectView,
+            IShipConfigurator shipConfigurator, ICancellationTokenProvider tokenProvider)
         {
             EquipmentSelectView = equipmentSelectView;
-            ShipModels = shipModels;
+            ShipConfigurator = shipConfigurator;
             _tokenProvider = tokenProvider;
         }
 
@@ -40,12 +32,12 @@ namespace UI.Ship
         {
             if (opponentId == OpponentId && slotIndex == SlotIndex && EquipmentSelectView.IsVisible())
                 return;
-            
+
             using var cts = _tokenProvider.CreateLocalCts();
-            
+
             OpponentId = opponentId;
             SlotIndex = slotIndex;
-            
+
             await EquipmentSelectView.SetVisibleAsync(false, cts.Token, 0.3f);
             EquipmentSelectView.Locate(opponentId, position);
             await EquipmentSelectView.SetVisibleAsync(true, cts.Token);

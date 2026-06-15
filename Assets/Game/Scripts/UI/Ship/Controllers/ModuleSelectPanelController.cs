@@ -1,18 +1,15 @@
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Equipment;
 using Equipment.Data;
 using Infrastructure;
-using Ships.Data;
-using UI.Ship.Models;
-using UI.Ship.Views;
+using Ships;
 
 namespace UI.Ship
 {
     public sealed class ModuleSelectPanelController : BaseEquipmentSelectController<ModuleType>
     {
-        public ModuleSelectPanelController(ModuleSelectView moduleSelectView, Dictionary<OpponentId, ShipModel> shipModels,
-            ICancellationTokenProvider tokenProvider) : base(moduleSelectView, shipModels, tokenProvider) { }
+        public ModuleSelectPanelController(ModuleSelectView moduleSelectView, IShipConfigurator shipConfigurator,
+            ICancellationTokenProvider tokenProvider) : base(moduleSelectView, shipConfigurator, tokenProvider) { }
 
         public async UniTask SetupModuledSelectPanelAsync(ModuleConfig[] moduleDatas)
         {
@@ -25,7 +22,7 @@ namespace UI.Ship
 
         private void SelectModule(ModuleType moduleType)
         {
-            ShipModels[OpponentId].SetModule(SlotIndex, moduleType);
+            ShipConfigurator.SetModule(OpponentId, SlotIndex, moduleType);
             HideAsync().Forget();
         }
     }

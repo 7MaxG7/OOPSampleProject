@@ -1,9 +1,9 @@
 ﻿using System.Linq;
-using Ships.Data;
+using Ships;
 using UI.Data;
 using UnityEngine;
 
-namespace UI.Ship.Views
+namespace UI.Ship
 {
     public sealed class ShipSlotUiView : SlotUiView
     {

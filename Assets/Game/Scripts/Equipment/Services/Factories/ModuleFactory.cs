@@ -1,7 +1,7 @@
 using Cysharp.Threading.Tasks;
 using Equipment.Data;
 using Infrastructure;
-using Ships.Views;
+using Ships;
 using UnityEngine;
 using Zenject;
 

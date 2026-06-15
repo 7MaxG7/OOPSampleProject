@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Equipment.Data;
-using Infrastructure.ControllersHolder;
-using Ships.Data;
+using Infrastructure;
+using Ships;
 using Ui;
-using UI.Ship.Models;
-using UI.Ship.Views;
 using UnityEngine;
 using Object = UnityEngine.Object;
 

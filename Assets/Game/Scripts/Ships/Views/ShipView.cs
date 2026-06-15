@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Ships.Views
+namespace Ships
 {
     public sealed class ShipView : MonoBehaviour, IDamageableView
     {

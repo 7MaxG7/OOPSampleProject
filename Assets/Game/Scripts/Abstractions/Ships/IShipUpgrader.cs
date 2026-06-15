@@ -1,5 +1,4 @@
 ﻿using Equipment;
-using Ships.Data;
 
 namespace Ships
 {

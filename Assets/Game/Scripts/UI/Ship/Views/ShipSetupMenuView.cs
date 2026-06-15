@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace UI.Ship.Views
+namespace UI.Ship
 {
     public sealed class ShipSetupMenuView : MonoBehaviour
     {
