@@ -1,22 +1,31 @@
 using Cysharp.Threading.Tasks;
 using Equipment;
-using Equipment.Data;
 using Infrastructure;
 using Ships;
+using Ui;
 
 namespace UI.Ship
 {
-    public sealed class ModuleSelectPanelController : BaseEquipmentSelectController<ModuleType>
+    public sealed class ModuleSelectPanelController : BaseEquipmentSelectController
     {
-        public ModuleSelectPanelController(ModuleSelectView moduleSelectView, IShipConfigurator shipConfigurator,
-            ICancellationTokenProvider tokenProvider) : base(moduleSelectView, shipConfigurator, tokenProvider) { }
+        private readonly IShipSetupUIService _shipSetupUIService;
+        private readonly IStaticDataService _staticDataService;
 
-        public async UniTask SetupModuledSelectPanelAsync(ModuleConfig[] moduleDatas)
+        public ModuleSelectPanelController(IShipConfigurator shipConfigurator, IUiFactory uiFactory, IShipSetupUIService shipSetupUIService
+            , ICancellationTokenProvider tokenProvider, IStaticDataService staticDataService, UiConfig uiConfig) : base(shipConfigurator
+            , tokenProvider, uiFactory, uiConfig)
         {
-            foreach (var data in moduleDatas)
+            _shipSetupUIService = shipSetupUIService;
+            _staticDataService = staticDataService;
+        }
+
+        protected override async UniTask SetupEquipSelectPanelAsync()
+        {
+            foreach (var config in _staticDataService.GetAllEnabledModules())
             {
-                var button = await EquipmentSelectView.AddEquipmentSelectSlot(data.ModuleType);
-                button.onClick.AddListener(() => SelectModule(data.ModuleType));
+                var slot = await CreateEquipmentSelectSlotAsync();
+                slot.SetIcon(_shipSetupUIService.GetModuleIcon(config.ModuleType));
+                slot.SelectButton.onClick.AddListener(() => SelectModule(config.ModuleType));
             }
         }
 

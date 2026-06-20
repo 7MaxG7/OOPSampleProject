@@ -1,6 +1,5 @@
 ﻿using Battle;
 using Cysharp.Threading.Tasks;
-using Equipment;
 using Ships;
 using Ui;
 using Utils;
@@ -14,26 +13,31 @@ namespace Infrastructure.GameStates
         private readonly IWinnerDefiner _winnerDefiner;
         private readonly IAssetsProvider _assetsProvider;
         private readonly IShipsInitializer _shipsInitializer;
-        private readonly IAmmoFactory _ammoFactory;
         private readonly IUiFactory _uiFactory;
         private readonly IDamageHandler _damageHandler;
         private readonly ICancellationTokenProvider _tokenProvider;
+        private readonly IShipConfigurator _shipConfigurator;
         private IGameStateMachine _stateMachine;
 
 
         [Inject]
         public LoadBattleState(ISceneLoader sceneLoader, IWinnerDefiner winnerDefiner, IAssetsProvider assetsProvider
-            , IShipsInitializer shipsInitializer, IAmmoFactory ammoFactory, IUiFactory uiFactory, IDamageHandler damageHandler,
+            , IShipsInitializer shipsInitializer, IUiFactory uiFactory, IDamageHandler damageHandler, IShipConfigurator shipConfigurator,
             ICancellationTokenProvider tokenProvider)
         {
             _sceneLoader = sceneLoader;
             _winnerDefiner = winnerDefiner;
             _assetsProvider = assetsProvider;
             _shipsInitializer = shipsInitializer;
-            _ammoFactory = ammoFactory;
             _uiFactory = uiFactory;
             _damageHandler = damageHandler;
             _tokenProvider = tokenProvider;
+            _shipConfigurator = shipConfigurator;
+        }
+
+        public void Init(IGameStateMachine stateMachine)
+        {
+            _stateMachine = stateMachine;
         }
 
         public void Enter()
@@ -55,16 +59,11 @@ namespace Infrastructure.GameStates
         {
         }
 
-        public void Init(IGameStateMachine stateMachine)
-        {
-            _stateMachine = stateMachine;
-        }
-
         private async UniTask CreateOpponentsAsync()
         {
             await _shipsInitializer.CreateShipsAsync();
 
-            foreach (var ship in _shipsInitializer.Ships.Values)
+            foreach (var ship in _shipConfigurator.Ships.Values)
             {
                 ship.PrepareToBattle();
                 _winnerDefiner.AddShip(ship);

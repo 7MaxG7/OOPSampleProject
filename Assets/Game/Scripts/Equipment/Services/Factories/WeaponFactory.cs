@@ -1,6 +1,5 @@
 using Battle;
 using Cysharp.Threading.Tasks;
-using Equipment.Data;
 using Infrastructure;
 using Ships;
 using UnityEngine;
@@ -27,10 +26,10 @@ namespace Equipment
         
         public async UniTask<IWeapon> CreateEquipment(WeaponType weaponType, Transform parent)
         {
-            var weaponData = _staticDataService.GetWeapon(weaponType);
-            var weapon = new Weapon(weaponData.Cooldown, weaponData.Damage, weaponData.AmmoSpeed, weaponType, _ammoFactory
+            var config = _staticDataService.GetWeapon(weaponType);
+            var weapon = new Weapon(config.Cooldown, config.Damage, config.AmmoSpeed, weaponType, _ammoFactory
                 , _damageHandler);
-            var view = await _instantiator.CreateAsync<WeaponView>(weaponData.Prefab, parent);
+            var view = await _instantiator.CreateAsync<WeaponView>(config.Prefab, parent);
             weapon.SetView(view);
             return weapon;
         }

@@ -1,22 +1,31 @@
 using Cysharp.Threading.Tasks;
 using Equipment;
-using Equipment.Data;
 using Infrastructure;
 using Ships;
+using Ui;
 
 namespace UI.Ship
 {
-    public sealed class WeaponSelectPanelController : BaseEquipmentSelectController<WeaponType>
+    public sealed class WeaponSelectPanelController : BaseEquipmentSelectController
     {
-        public WeaponSelectPanelController(WeaponSelectView weaponSelectView, IShipConfigurator shipConfigurator,
-            ICancellationTokenProvider tokenProvider) : base(weaponSelectView, shipConfigurator, tokenProvider) { }
+        private readonly IShipSetupUIService _shipSetupUIService;
+        private readonly IStaticDataService _staticDataService;
 
-        public async UniTask SetupWeaponSelectPanelAsync(WeaponConfig[] weaponDatas)
+        public WeaponSelectPanelController(IShipConfigurator shipConfigurator, IUiFactory uiFactory, IShipSetupUIService shipSetupUIService,
+            ICancellationTokenProvider tokenProvider, IStaticDataService staticDataService, UiConfig uiConfig) : base(shipConfigurator,
+            tokenProvider, uiFactory, uiConfig)
         {
-            foreach (var data in weaponDatas)
+            _shipSetupUIService = shipSetupUIService;
+            _staticDataService = staticDataService;
+        }
+
+        protected override async UniTask SetupEquipSelectPanelAsync()
+        {
+            foreach (var config in _staticDataService.GetAllEnabledWeapons())
             {
-                var button = await EquipmentSelectView.AddEquipmentSelectSlot(data.WeaponType);
-                button.onClick.AddListener(() => SelectWeapon(data.WeaponType));
+                var slot = await CreateEquipmentSelectSlotAsync();
+                slot.SetIcon(_shipSetupUIService.GetWeaponIcon(config.WeaponType));
+                slot.SelectButton.onClick.AddListener(() => SelectWeapon(config.WeaponType));
             }
         }
 

@@ -17,16 +17,16 @@ namespace Infrastructure.GameStates
             _tokenProvider = tokenProvider;
         }
 
+        public void Init(IGameStateMachine stateMachine)
+        {
+            _stateMachine = stateMachine;
+        }
+
         public void Enter()
             => LoadShipSetupAsync().Forget();
 
         public void Exit()
         {
-        }
-
-        public void Init(IGameStateMachine stateMachine)
-        {
-            _stateMachine = stateMachine;
         }
 
         private async UniTaskVoid LoadShipSetupAsync()

@@ -1,7 +1,7 @@
 ﻿using Ships;
 using UnityEngine;
 
-namespace Equipment.Data
+namespace Equipment
 {
     public sealed class UpgradedWeaponsBattery : BaseWeaponBattery, IDowngradable<IWeaponBattery>
     {

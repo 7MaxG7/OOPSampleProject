@@ -1,7 +1,7 @@
 using System;
 using Cysharp.Threading.Tasks;
 
-namespace Equipment.Data
+namespace Equipment
 {
     public sealed class ShipModules : BaseEquipmentBattery<IModule, ModuleType>, IShipModules
     {
@@ -10,11 +10,11 @@ namespace Equipment.Data
 
         public ShipModules(int amount, IModuleFactory moduleFactory) : base(amount, moduleFactory) { }
 
-        public override async UniTask SetEquipmentAsync(int index, ModuleType equipType)
+        public override async UniTask SetEquipmentAsync(int slotIndex, ModuleType equipType)
         {
-            await base.SetEquipmentAsync(index, equipType);
-            Equipments[index].OnModuleUnequip += InvokeModuleUninstall;
-            OnModuleEquipped?.Invoke(Equipments[index]);
+            await base.SetEquipmentAsync(slotIndex, equipType);
+            Equipments[slotIndex].OnModuleUnequip += InvokeModuleUninstall;
+            OnModuleEquipped?.Invoke(Equipments[slotIndex]);
         }
 
         private void InvokeModuleUninstall(IModule module)

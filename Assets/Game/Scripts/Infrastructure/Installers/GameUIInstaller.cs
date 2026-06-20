@@ -10,6 +10,7 @@ namespace Infrastructure
         {
             Container.Bind<ICurtain>().To<Curtain>().AsSingle();
             Container.Bind<IUiFactory>().To<UiFactory>().AsSingle();
+            Container.Bind<IShipSetupUIService>().To<ShipSetupUIService>().AsSingle();
         }
     }
 }

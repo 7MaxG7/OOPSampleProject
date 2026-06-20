@@ -5,6 +5,6 @@ namespace Ships
 {
     public interface IShipsFactory
     {
-        UniTask<IShip> CreateShipAsync(ShipConfiguration configuration, Vector3 position, Quaternion rotation);
+        UniTask<IShip> CreateShipAsync(ShipType shipType, Vector3 position, Quaternion rotation);
     }
 }

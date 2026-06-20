@@ -1,5 +1,4 @@
 using Cysharp.Threading.Tasks;
-using Equipment.Data;
 using UI;
 using UI.Battle;
 using UI.Ship;
@@ -11,10 +10,9 @@ namespace Ui
     {
         CurtainView CreateCurtain();
         UniTask CreateRootAsync();
-        UniTask<ShipSetupMenuController> CreateShipSetupMenuAsync();
-        UniTask<BattleUiController> CreateBattleUiAsync();
-        UniTask<SlotUiView> CreateSelectWeaponUiSlotAsync(WeaponType weaponType, Transform parent);
-        UniTask<SlotUiView> CreateSelectModuleUiSlotAsync(ModuleType moduleType, Transform parent);
-        UniTask<ShipSlotUiView> CreateEquipmentUiSlotAsync(Transform parent);
+        UniTask<ShipSetupController> CreateShipSetupUIAsync();
+        UniTask<BattleUiController> CreateBattleUIAsync();
+        UniTask<SlotUiView> CreateSelectEquipmentSlotAsync(Transform parent);
+        UniTask<ShipSlotUiView> CreateShipEquipmentSlotAsync(Transform parent);
     }
 }

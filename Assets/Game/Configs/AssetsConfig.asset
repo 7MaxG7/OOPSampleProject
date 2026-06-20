@@ -21,6 +21,18 @@ MonoBehaviour:
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
+  - m_AssetGUID: 7a389b75393666a498c63d1dc6b90475
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 0
+  - m_AssetGUID: b218683e126883c4b9dd6ffb50ba2b0c
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 1
+  - m_AssetGUID: be4152a665323e54cad9c6e4a3e6a9b7
+    m_SubObjectName: 
+    m_SubObjectType: 
+    m_EditorAssetChanged: 1
   _battleSceneAssets:
   - m_AssetGUID: cee7ae8a9b9d78a47b8356b85c53b936
     m_SubObjectName: 

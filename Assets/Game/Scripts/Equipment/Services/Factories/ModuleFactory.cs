@@ -1,5 +1,4 @@
 using Cysharp.Threading.Tasks;
-using Equipment.Data;
 using Infrastructure;
 using Ships;
 using UnityEngine;
@@ -21,9 +20,9 @@ namespace Equipment
         
         public async UniTask<IModule> CreateEquipment(ModuleType moduleType, Transform parent)
         {
-            var moduleData = _staticDataService.GetModule(moduleType);
-            var module = new Module(moduleData.BuffParamType, moduleData.BuffRelativenessType, moduleData.Value, moduleData.ModuleType);
-            var view = await _instantiator.CreateAsync<ModuleView>(moduleData.Prefab, parent);
+            var config = _staticDataService.GetModule(moduleType);
+            var module = new Module(config.BuffParamType, config.BuffRelativenessType, config.Value, config.ModuleType);
+            var view = await _instantiator.CreateAsync<ModuleView>(config.Prefab, parent);
             module.SetView(view);
             return module;
         }

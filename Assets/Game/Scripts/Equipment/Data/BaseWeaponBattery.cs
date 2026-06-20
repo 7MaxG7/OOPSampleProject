@@ -2,7 +2,7 @@ using System;
 using Cysharp.Threading.Tasks;
 using Ships;
 
-namespace Equipment.Data
+namespace Equipment
 {
     public abstract class BaseWeaponBattery : BaseEquipmentBattery<IWeapon, WeaponType>, IWeaponBattery
     {
@@ -39,10 +39,10 @@ namespace Equipment.Data
             _owner = owner;
         }
 
-        public override async UniTask SetEquipmentAsync(int index, WeaponType equipType)
+        public override async UniTask SetEquipmentAsync(int slotIndex, WeaponType equipType)
         {
-            await base.SetEquipmentAsync(index, equipType);
-            Equipments[index].Init(_owner);
+            await base.SetEquipmentAsync(slotIndex, equipType);
+            Equipments[slotIndex].Init(_owner);
         }
 
         public void ToggleShooting(bool isActive)

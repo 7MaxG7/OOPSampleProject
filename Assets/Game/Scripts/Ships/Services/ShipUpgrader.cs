@@ -1,5 +1,4 @@
 ﻿using Equipment;
-using Equipment.Data;
 using UnityEngine;
 
 namespace Ships

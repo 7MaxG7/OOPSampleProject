@@ -5,7 +5,7 @@ using Ships;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Equipment.Data
+namespace Equipment
 {
     public sealed class Weapon : IWeapon
     {

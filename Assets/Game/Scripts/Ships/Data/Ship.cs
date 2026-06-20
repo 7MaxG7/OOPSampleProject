@@ -14,26 +14,20 @@ namespace Ships
         public string Name { get; }
 
         public ShipView ShipView { get; private set; }
-        private ShipType ShipType { get; }
         private bool IsDead => Health.CurrentHp <= 0;
         private readonly IShipUpgrader _shipUpgrader;
-
 
         public Ship(ShipType shipType, IHealth health, IWeaponBattery weaponBattery, IShipModules shipModules,
             IShipUpgrader shipUpgrader)
         {
             _shipUpgrader = shipUpgrader;
-            ShipType = shipType;
             SetHealth(health);
             SetWeapons(weaponBattery);
             SetModules(shipModules);
-            Name = ShipType.ToString();
+            Name = shipType.ToString();
         }
 
         public void CleanUp() 
-            => SceneCleanUp();
-
-        public void SceneCleanUp()
         {
             ShipModules.OnModuleEquipped -= UpgradeShip;
             ShipModules.OnModuleUnequip -= DowngradeShip;

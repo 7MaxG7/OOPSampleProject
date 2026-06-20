@@ -1,5 +1,4 @@
-﻿using Equipment.Data;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 namespace Equipment

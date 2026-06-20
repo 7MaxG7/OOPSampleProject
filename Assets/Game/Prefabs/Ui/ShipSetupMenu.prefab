@@ -306,8 +306,8 @@ MonoBehaviour:
   _shipPanels:
   - {fileID: 8586985522984481639}
   - {fileID: 4337989171856889916}
-  _weaponSelectPanel: {fileID: 5679216944915619399}
-  _moduleSelectPanel: {fileID: 965750797894758653}
+  _weaponSelectPanel: {fileID: 1646758840119684491}
+  _moduleSelectPanel: {fileID: 7885460163974139394}
   _setupCompleteButton: {fileID: 2775481057410875318}
   _hideAllButton: {fileID: 853440046607656462}
 --- !u!1 &1033247475550891605
@@ -381,7 +381,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 773927454580570888}
-  - component: {fileID: 965750797894758653}
+  - component: {fileID: 7885460163974139394}
   - component: {fileID: 5871355196001198639}
   - component: {fileID: 7646226435412256171}
   - component: {fileID: 3607133004225340000}
@@ -413,7 +413,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &965750797894758653
+--- !u!114 &7885460163974139394
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -422,7 +422,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1319559908941883739}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9b928d9a8b064090836ae61310c8e66a, type: 3}
+  m_Script: {fileID: 11500000, guid: 8b1862e29bd648539d7a67dfed914695, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _rectTransform: {fileID: 773927454580570888}
@@ -560,7 +560,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4876756401421030961}
-  - component: {fileID: 5679216944915619399}
+  - component: {fileID: 1646758840119684491}
   - component: {fileID: 8281068300536435510}
   - component: {fileID: 2065501477981247697}
   - component: {fileID: 1279941199542127834}
@@ -592,7 +592,7 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &5679216944915619399
+--- !u!114 &1646758840119684491
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -601,7 +601,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2095905919233197874}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 36686def562d46b8b8c2c72d1f79833f, type: 3}
+  m_Script: {fileID: 11500000, guid: 8b1862e29bd648539d7a67dfed914695, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _rectTransform: {fileID: 4876756401421030961}

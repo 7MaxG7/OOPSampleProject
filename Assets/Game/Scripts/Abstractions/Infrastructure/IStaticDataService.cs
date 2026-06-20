@@ -1,5 +1,4 @@
 ﻿using Equipment;
-using Equipment.Data;
 using Ships;
 
 namespace Infrastructure

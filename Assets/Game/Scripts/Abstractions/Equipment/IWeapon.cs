@@ -1,6 +1,5 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
-using Equipment.Data;
 using Ships;
 using UnityEngine;
 

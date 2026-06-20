@@ -1,12 +1,10 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using Equipment.Data;
 using Infrastructure;
 using Ships;
 using UnityEngine;
 using Utils;
 using Zenject;
-using Ammo = Equipment.Data.Ammo;
 
 namespace Equipment
 {
@@ -27,9 +25,6 @@ namespace Equipment
         }
 
         public void CleanUp() 
-            => SceneCleanUp();
-
-        public void SceneCleanUp()
         {
             foreach (var pool in _ammoPools.Values) 
                 pool.CleanUp();
@@ -47,11 +42,11 @@ namespace Equipment
 
         private async UniTask<IAmmo> CreateAmmoAsync(IWeapon weapon)
         {
-            var ammoData = _staticDataService.GetWeapon(weapon.WeaponType);
-            if (ammoData == null)
+            var weaponConfig = _staticDataService.GetWeapon(weapon.WeaponType);
+            if (weaponConfig == null)
                 return null;
             
-            var ammoView = await _instantiator.CreateAsync<AmmoView>(ammoData.AmmoPrefab, GetContent());
+            var ammoView = await _instantiator.CreateAsync<AmmoView>(weaponConfig.AmmoPrefab, GetContent());
             var ammo = new Ammo(ammoView);
             _ammoPools[weapon.WeaponType].RegisterSpawn(ammo, weapon);
             return ammo;

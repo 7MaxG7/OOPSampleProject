@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Equipment;
-using Equipment.Data;
 using Ships;
 using UnityEngine;
 using Utils;

@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Infrastructure;
 using Sounds;
-using UnityEngine;
 using Zenject;
 using Object = UnityEngine.Object;
 
@@ -12,8 +10,6 @@ namespace Ships
 {
     public sealed class ShipsInitializer : IShipsInitializer
     {
-        public Dictionary<OpponentId, IShip> Ships { get; } = new();
-
         private readonly IShipsFactory _shipsFactory;
         private readonly ISoundService _soundService;
         private readonly IShipConfigurator _shipConfigurator;
@@ -29,46 +25,31 @@ namespace Ships
         }
 
         public void CleanUp()
-            => CleanUpShips(ship => ship.CleanUp());
-
-        public void SceneCleanUp()
-            => CleanUpShips(ship => ship.SceneCleanUp());
+        {
+            foreach (var ship in _shipConfigurator.Ships.Values)
+            {
+                ship.WeaponBattery.OnShoot -= _soundService.PlayShoot;
+                ship.CleanUp();
+            }
+        }
 
         public async UniTask CreateShipsAsync()
         {
-            foreach (var opponentId in _shipConfigurator.ShipConfigurations.Keys)
+            var spawnLocations = Object.FindObjectsOfType<ShipSpawnerMarker>()
+                .ToDictionary(data => data.OpponentId, data => (data.transform.position, data.transform.rotation));
+            
+            foreach (var (opponentId, configuration) in _shipConfigurator.ShipConfigurations)
             {
-                var location = GetOpponentLocation(opponentId);
-                if (Ships.ContainsKey(opponentId))
-                    continue;
+                var location = spawnLocations.GetValueOrDefault(opponentId);
+                var ship = await _shipsFactory.CreateShipAsync(configuration.ShipType, location.position, location.rotation);
+                foreach (var (slotIndex, weaponType) in configuration.WeaponTypes)
+                    await ship.WeaponBattery.SetEquipmentAsync(slotIndex, weaponType);
+                foreach (var (slotIndex, moduleType) in configuration.ModuleTypes)
+                    await ship.ShipModules.SetEquipmentAsync(slotIndex, moduleType);
+                _shipConfigurator.RegisterShip(opponentId, ship);
 
-                var ship = await _shipsFactory.CreateShipAsync(_shipConfigurator.ShipConfigurations[opponentId], location.Position,
-                    location.Rotation);
                 ship.WeaponBattery.OnShoot += _soundService.PlayShoot;
-                _shipConfigurator.ShipModels[opponentId].OnWeaponChange += ship.WeaponBattery.SetEquipment;
-                _shipConfigurator.ShipModels[opponentId].OnModuleChange += ship.ShipModules.SetEquipment;
-                Ships.Add(opponentId, ship);
             }
-        }
-
-        private void CleanUpShips(Action<IShip> cleanUpShip)
-        {
-            foreach (var (opponentId, ship) in Ships)
-            {
-                ship.WeaponBattery.OnShoot -= _soundService.PlayShoot;
-                _shipConfigurator.ShipModels[opponentId].OnWeaponChange -= ship.WeaponBattery.SetEquipment;
-                _shipConfigurator.ShipModels[opponentId].OnModuleChange -= ship.ShipModules.SetEquipment;
-                cleanUpShip.Invoke(ship);
-            }
-
-            Ships.Clear();
-        }
-
-        private (Vector3 Position, Quaternion Rotation) GetOpponentLocation(OpponentId opponentId)
-        {
-            var spawnMarker = Object.FindObjectsOfType<ShipSpawnerMarker>()
-                .FirstOrDefault(data => data.OpponentId == opponentId);
-            return spawnMarker != null ? (spawnMarker.transform.position, spawnMarker.transform.rotation) : default;
         }
     }
 }

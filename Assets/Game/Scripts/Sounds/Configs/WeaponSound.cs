@@ -1,5 +1,5 @@
 ﻿using System;
-using Equipment.Data;
+using Equipment;
 using UnityEngine;
 
 namespace Sounds

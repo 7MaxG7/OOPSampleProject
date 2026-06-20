@@ -1,6 +1,4 @@
-﻿using Equipment.Data;
-
-namespace Equipment
+﻿namespace Equipment
 {
     public interface IWeaponFactory : IEquipmentFactory<IWeapon, WeaponType>
     {

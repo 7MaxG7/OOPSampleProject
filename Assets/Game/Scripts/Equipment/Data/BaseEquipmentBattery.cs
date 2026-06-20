@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace Equipment.Data
+namespace Equipment
 {
 
-    public abstract class BaseEquipmentBattery<TEquipment, TEquipType> : IEquipments<TEquipment, TEquipType>
+    public abstract class BaseEquipmentBattery<TEquipment, TEquipType> : IEquipmentBattery<TEquipment, TEquipType>
         where TEquipment : IEquipment where TEquipType : Enum
     {
+        public event Action<int, TEquipType> OnEquipmentChanged;
+
         public int MaxEquipmentsAmount { get; }
         public IEquipmentFactory<TEquipment, TEquipType> EquipmentsFactory { get; }
         public Dictionary<int, TEquipment> Equipments { get; } = new();
@@ -20,12 +22,12 @@ namespace Equipment.Data
             EquipmentsFactory = equipmentFactory;
         }
 
-        protected BaseEquipmentBattery(IEquipments<TEquipment, TEquipType> baseEquipments)
+        protected BaseEquipmentBattery(IEquipmentBattery<TEquipment, TEquipType> baseEquipmentBattery)
         {
-            MaxEquipmentsAmount = baseEquipments.MaxEquipmentsAmount;
-            Equipments = baseEquipments.Equipments;
-            EquipmentsFactory = baseEquipments.EquipmentsFactory;
-            Slots = baseEquipments.Slots;
+            MaxEquipmentsAmount = baseEquipmentBattery.MaxEquipmentsAmount;
+            Equipments = baseEquipmentBattery.Equipments;
+            EquipmentsFactory = baseEquipmentBattery.EquipmentsFactory;
+            Slots = baseEquipmentBattery.Slots;
         }
         
         public void SetSlots(Transform[] slots)
@@ -49,20 +51,19 @@ namespace Equipment.Data
             }
         }
 
-        public virtual async UniTask SetEquipmentAsync(int index, TEquipType equipType)
+        public virtual async UniTask SetEquipmentAsync(int slotIndex, TEquipType equipType)
         {
-            if (index >= MaxEquipmentsAmount)
+            if (slotIndex >= MaxEquipmentsAmount)
+            {
+                Debug.LogError($"{this}: Cannot equip {equipType} to slot index {slotIndex} cause maximum amount is {MaxEquipmentsAmount}");
                 return;
+            }
 
-            if (!Equipments.TryGetValue(index, out var equipment))
-                Equipments.Add(index, default);
-            else
+            if (Equipments.TryGetValue(slotIndex, out var equipment))
                 equipment?.Unequip();
 
-            Equipments[index] = await EquipmentsFactory.CreateEquipment(equipType, Slots[index]);
+            Equipments[slotIndex] = await EquipmentsFactory.CreateEquipment(equipType, Slots[slotIndex]);
+            OnEquipmentChanged?.Invoke(slotIndex, equipType);
         }
-  
-        public void SetEquipment(int index, TEquipType equipType)
-            => SetEquipmentAsync(index, equipType).Forget();
     }
 }

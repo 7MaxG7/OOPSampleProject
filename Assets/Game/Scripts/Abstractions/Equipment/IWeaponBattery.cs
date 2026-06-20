@@ -1,11 +1,10 @@
 using System;
-using Equipment.Data;
 using Infrastructure;
 using Ships;
 
 namespace Equipment
 {
-    public interface IWeaponBattery : IEquipments<IWeapon, WeaponType>, IUpdatable
+    public interface IWeaponBattery : IEquipmentBattery<IWeapon, WeaponType>, IUpdatable
     {
         event Action<WeaponType> OnShoot;
         float ReloadRate { get; }

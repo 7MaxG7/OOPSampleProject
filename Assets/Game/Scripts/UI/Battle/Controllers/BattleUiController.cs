@@ -12,7 +12,7 @@ namespace UI.Battle
         public event Action OnBattleLeft;
         
         private readonly BattleUiView _uiView;
-        private Dictionary<OpponentId,IShip> _ships = new();
+        private IReadOnlyDictionary<OpponentId, IShip> _ships;
 
 
         public BattleUiController(BattleUiView uiView)
@@ -31,7 +31,7 @@ namespace UI.Battle
             }
         }
 
-        public void SetupUi(Dictionary<OpponentId, IShip> ships)
+        public void SetupUi(IReadOnlyDictionary<OpponentId, IShip> ships)
         {
             _ships = ships;
             foreach (var opponentId in _ships.Keys) 

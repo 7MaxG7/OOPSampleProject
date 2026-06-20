@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using Ships;
-using UI.Data;
+﻿using UI.Data;
 using UnityEngine;
 
 namespace UI.Ship
@@ -9,14 +7,6 @@ namespace UI.Ship
     {
         [SerializeField] private SelectPanelAnchor[] _selectPanelAnchor;
         
-        public int Index { get; private set; }
-        public Transform SelectPanelAnchor { get; private set; }
-        
-        public void Init(OpponentId opponentId, int index)
-        {
-            Index = index;
-            SelectPanelAnchor = _selectPanelAnchor.FirstOrDefault(anchor => anchor.OpponentId == opponentId)?.Anchor;
-            SetIcon(null);
-        }
+        public SelectPanelAnchor[] SelectPanelAnchor => _selectPanelAnchor;
     }
 }

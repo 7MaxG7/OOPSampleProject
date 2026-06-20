@@ -11,28 +11,40 @@ namespace Infrastructure.GameStates
     {
         private readonly ICurtain _curtain;
         private readonly IWinnerDefiner _winnerDefiner;
-        private readonly IShipsInitializer _shipsInitializer;
         private readonly IUpdater _updater;
         private readonly IUiFactory _uiFactory;
         private readonly ICancellationTokenProvider _tokenProvider;
+        private readonly IShipConfigurator _shipConfigurator;
         private IGameStateMachine _stateMachine;
-        
+
         private BattleUiController _battleUi;
 
         [Inject]
-        public RunBattleState(ICurtain curtain, IWinnerDefiner winnerDefiner, IShipsInitializer shipsInitializer
-            , IUpdater updater, IUiFactory uiFactory, ICancellationTokenProvider tokenProvider)
+        public RunBattleState(ICurtain curtain, IWinnerDefiner winnerDefiner, IShipsInitializer shipsInitializer, IUiFactory uiFactory,
+            ICancellationTokenProvider tokenProvider, IShipConfigurator shipConfigurator, IUpdater updater)
         {
             _curtain = curtain;
             _winnerDefiner = winnerDefiner;
-            _shipsInitializer = shipsInitializer;
             _updater = updater;
             _uiFactory = uiFactory;
             _tokenProvider = tokenProvider;
+            _shipConfigurator = shipConfigurator;
         }
-        
+
+        public void Init(IGameStateMachine stateMachine)
+        {
+            _stateMachine = stateMachine;
+        }
+
         public void Enter()
             => InitAndStartAsync().Forget();
+
+        public void Exit()
+        {
+            _battleUi.CleanUp();
+            _winnerDefiner.OnWinnerDefined -= HandleBattleStop;
+            _battleUi.OnBattleLeft -= LeaveBattle;
+        }
 
         private async UniTaskVoid InitAndStartAsync()
         {
@@ -43,22 +55,10 @@ namespace Infrastructure.GameStates
             StartBattle();
         }
 
-        public void Exit()
-        {
-            _battleUi.CleanUp();
-            _winnerDefiner.OnWinnerDefined -= HandleBattleStop;
-            _battleUi.OnBattleLeft -= LeaveBattle;
-        }
-
-        public void Init(IGameStateMachine stateMachine)
-        {
-            _stateMachine = stateMachine;
-        }
-
         private async UniTask SetupUIAsync()
         {
-            _battleUi = await _uiFactory.CreateBattleUiAsync();
-            _battleUi.SetupUi(_shipsInitializer.Ships);
+            _battleUi = await _uiFactory.CreateBattleUIAsync();
+            _battleUi.SetupUi(_shipConfigurator.Ships);
             _battleUi.OnBattleLeft += LeaveBattle;
         }
 
