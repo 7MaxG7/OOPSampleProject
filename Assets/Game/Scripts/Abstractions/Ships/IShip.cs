@@ -12,10 +12,6 @@ namespace Ships
         IWeaponBattery WeaponBattery { get; }
         IShipModules ShipModules { get; }
         string Name { get; }
-        ShipView ShipView { get; }
-
-        void PrepareToBattle();
         void TakeDamage(int damage);
-        void Kill();
     }
 }

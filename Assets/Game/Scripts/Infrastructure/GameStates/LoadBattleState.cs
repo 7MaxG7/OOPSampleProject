@@ -1,5 +1,4 @@
-﻿using Battle;
-using Cysharp.Threading.Tasks;
+﻿using Cysharp.Threading.Tasks;
 using Ships;
 using Ui;
 using Utils;
@@ -10,29 +9,22 @@ namespace Infrastructure.GameStates
     internal sealed class LoadBattleState : IGameState
     {
         private readonly ISceneLoader _sceneLoader;
-        private readonly IWinnerDefiner _winnerDefiner;
         private readonly IAssetsProvider _assetsProvider;
         private readonly IShipsInitializer _shipsInitializer;
         private readonly IUiFactory _uiFactory;
-        private readonly IDamageHandler _damageHandler;
         private readonly ICancellationTokenProvider _tokenProvider;
-        private readonly IShipConfigurator _shipConfigurator;
         private IGameStateMachine _stateMachine;
 
 
         [Inject]
-        public LoadBattleState(ISceneLoader sceneLoader, IWinnerDefiner winnerDefiner, IAssetsProvider assetsProvider
-            , IShipsInitializer shipsInitializer, IUiFactory uiFactory, IDamageHandler damageHandler, IShipConfigurator shipConfigurator,
-            ICancellationTokenProvider tokenProvider)
+        public LoadBattleState(ISceneLoader sceneLoader, IAssetsProvider assetsProvider, IShipsInitializer shipsInitializer,
+            IUiFactory uiFactory, ICancellationTokenProvider tokenProvider)
         {
             _sceneLoader = sceneLoader;
-            _winnerDefiner = winnerDefiner;
             _assetsProvider = assetsProvider;
             _shipsInitializer = shipsInitializer;
             _uiFactory = uiFactory;
-            _damageHandler = damageHandler;
             _tokenProvider = tokenProvider;
-            _shipConfigurator = shipConfigurator;
         }
 
         public void Init(IGameStateMachine stateMachine)
@@ -61,14 +53,8 @@ namespace Infrastructure.GameStates
 
         private async UniTask CreateOpponentsAsync()
         {
-            await _shipsInitializer.CreateShipsAsync();
-
-            foreach (var ship in _shipConfigurator.Ships.Values)
-            {
-                ship.PrepareToBattle();
-                _winnerDefiner.AddShip(ship);
-                _damageHandler.AddShip(ship);
-            }
+            _shipsInitializer.CreateShipsAsync();
+            await _shipsInitializer.CreateShipsViewsAsync();
         }
     }
 }

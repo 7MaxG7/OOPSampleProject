@@ -25,7 +25,7 @@ namespace Infrastructure
         public void SceneCleanUp()
         {
             foreach (var cleanable in _sceneCleanables)
-                cleanable.SceneCleanUp();
+                cleanable.CleanUp();
         }
 
         public void CleanUp()

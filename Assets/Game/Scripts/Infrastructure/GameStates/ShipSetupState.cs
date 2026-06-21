@@ -63,7 +63,8 @@ namespace Infrastructure.GameStates
 
         private async UniTask InitSceneAsync()
         {
-            await _shipsInitializer.CreateShipsAsync();
+            _shipsInitializer.CreateShipsAsync();
+            await _shipsInitializer.CreateShipsViewsAsync();
             await SetupUiAsync();
         }
 

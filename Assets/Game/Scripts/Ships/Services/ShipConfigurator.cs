@@ -46,7 +46,8 @@ namespace Ships
                 ship.ShipModules.OnEquipmentChanged -= configuration.SetModule;
             }
             
-            _ships.Clear();
+            // TODO. Clear it after all other clearings (including UI)
+            // _ships.Clear();
         }
 
         public void RegisterShip(OpponentId opponentId, IShip ship)

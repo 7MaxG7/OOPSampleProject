@@ -32,19 +32,14 @@ namespace Infrastructure
 
         public void CleanUp()
         {
-            SceneCleanUp();
-        }
-
-        public void SceneCleanUp()
-        {
             if (_isCleaned)
                 return;
 
-            _isCleaned = true;
             foreach (var handle in _handles) 
                 Addressables.Release(handle);
             _handles.Clear();
             _loadedAssets.Clear();
+            _isCleaned = true;
         }
 
         public async UniTask WarmUpCurrentSceneAsync()

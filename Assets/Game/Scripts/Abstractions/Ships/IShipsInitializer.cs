@@ -5,6 +5,7 @@ namespace Ships
 {
     public interface IShipsInitializer : ISceneCleanable
     {
-        UniTask CreateShipsAsync();
+        void CreateShipsAsync();
+        UniTask CreateShipsViewsAsync();
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using Equipment;
-using Object = UnityEngine.Object;
 
 namespace Ships
 {
@@ -13,7 +12,6 @@ namespace Ships
         public IShipModules ShipModules { get; private set; }
         public string Name { get; }
 
-        public ShipView ShipView { get; private set; }
         private bool IsDead => Health.CurrentHp <= 0;
         private readonly IShipUpgrader _shipUpgrader;
 
@@ -31,20 +29,6 @@ namespace Ships
         {
             ShipModules.OnModuleEquipped -= UpgradeShip;
             ShipModules.OnModuleUnequip -= DowngradeShip;
-            Health.OnShieldChanged -= ShipView.Shield.UpdatePower;
-        }
-
-        public void SetView(ShipView shipView)
-        {
-            ShipView = shipView;
-            WeaponBattery.SetSlots(ShipView.WeaponSlots);
-            ShipModules.SetSlots(ShipView.ModuleSlots);
-        }
-
-        public void PrepareToBattle()
-        {
-            Health.OnShieldChanged += ShipView.Shield.UpdatePower;
-            ShipView.Shield.UpdatePower(Health.CurrentShield, Health.MaxShield);
         }
 
         public void TakeDamage(int damage)
@@ -55,11 +39,6 @@ namespace Ships
             Health.TakeDamage(damage);
             if (IsDead)
                 OnDied?.Invoke(this);
-        }
-
-        public void Kill()
-        {
-            Object.Destroy(ShipView.gameObject);
         }
 
         public void SetHealth(IHealth health)
