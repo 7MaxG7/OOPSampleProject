@@ -19,13 +19,14 @@ namespace Ships
         private readonly IDamageableIdentifier _damageableIdentifier;
         private readonly IWeaponShotService _weaponShotService;
         private readonly IEquipmentIdentifier _equipmentIdentifier;
+        private readonly IEquipmentViewFactory _equipmentViewFactory;
 
         private readonly Dictionary<OpponentId, ShipView> _shipViews = new();
 
         [Inject]
         public ShipsViewInitializer(IShipViewFactory shipViewFactory, IShipConfigurator shipConfigurator,
             ISoundService soundService, IDamageableIdentifier damageableIdentifier, IWeaponShotService weaponShotService,
-            IEquipmentIdentifier equipmentIdentifier, ICleaner cleaner)
+            IEquipmentIdentifier equipmentIdentifier, IEquipmentViewFactory equipmentViewFactory, ICleaner cleaner)
         {
             _shipViewFactory = shipViewFactory;
             _shipConfigurator = shipConfigurator;
@@ -33,6 +34,7 @@ namespace Ships
             _damageableIdentifier = damageableIdentifier;
             _weaponShotService = weaponShotService;
             _equipmentIdentifier = equipmentIdentifier;
+            _equipmentViewFactory = equipmentViewFactory;
 
             cleaner.AddCleanable(this);
         }
@@ -72,7 +74,7 @@ namespace Ships
                 foreach (var (slotIndex, weapon) in ship.WeaponBattery.Equipments)
                     await CreateWeaponViewAsync(shipView, slotIndex, weapon);
                 foreach (var (slotIndex, module) in ship.ModuleBattery.Equipments)
-                    await shipView.CreateModuleViewAsync(slotIndex, module.ModuleType);
+                    await CreateModuleViewAsync(shipView, slotIndex, module);
 
                 ship.WeaponBattery.OnShoot += _soundService.PlayShoot;
                 ship.OnDied += DestroyShipView;
@@ -101,14 +103,20 @@ namespace Ships
         {
             module.OnUnequip += UnequipModule;
             if (TryGetShipView(ship, out var shipView, out _))
-                shipView.CreateModuleViewAsync(slotIndex, module.ModuleType).Forget();
+                CreateModuleViewAsync(shipView, slotIndex, module).Forget();
         }
 
         private async UniTask CreateWeaponViewAsync(ShipView shipView, int slotIndex, IWeapon weapon)
         {
-            var weaponView = await shipView.CreateWeaponViewAsync(slotIndex, weapon.WeaponType);
-            if (weaponView != null)
-                _weaponShotService.RegisterWeapon(weapon, weaponView);
+            var weaponView = await _equipmentViewFactory.CreateWeaponViewAsync(weapon.WeaponType);
+            shipView.SetWeaponView(slotIndex, weaponView);
+            _weaponShotService.RegisterWeapon(weapon, weaponView);
+        }
+
+        private async UniTask CreateModuleViewAsync(ShipView shipView, int slotIndex, IModule module)
+        {
+            var moduleView = await _equipmentViewFactory.CreateModuleViewAsync(module.ModuleType);
+            shipView.SetModuleView(slotIndex, moduleView);
         }
 
         private void UnequipWeapon(IWeapon weapon)

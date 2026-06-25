@@ -1,5 +1,3 @@
-﻿using Cysharp.Threading.Tasks;
-using Equipment;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,26 +13,33 @@ namespace Ships
         public ShieldView Shield => _shield;
         public Collider2D[] DamageColliders => _damageColliders;
 
-        private IEquipmentViewFactory _equipmentViewFactory;
         private readonly Dictionary<int, WeaponView> _weaponViews = new();
         private readonly Dictionary<int, ModuleView> _moduleViews = new();
 
-        public void Init(int weaponSlotsAmount, int moduleSlotsAmount, IEquipmentViewFactory equipmentViewFactory)
+        public void Init(int weaponSlotsAmount, int moduleSlotsAmount)
         {
-            _equipmentViewFactory = equipmentViewFactory;
-
             UpdateSlotsVisibility(_weaponSlots, weaponSlotsAmount);
             UpdateSlotsVisibility(_moduleSlots, moduleSlotsAmount);
         }
 
-        public async UniTask<WeaponView> CreateWeaponViewAsync(int slotIndex, WeaponType weaponType)
+        public void SetWeaponView(int slotIndex, WeaponView weaponView)
         {
-            if (slotIndex >= _weaponSlots.Length)
-                return null;
+            if (slotIndex < _weaponSlots.Length)
+                weaponView.transform.SetParent(_weaponSlots[slotIndex], false);
+            else
+                Debug.LogError($"{this}: Cannot get weapon slot {slotIndex}!");
 
-            var weaponView = await _equipmentViewFactory.CreateWeaponViewAsync(weaponType, _weaponSlots[slotIndex]);
             _weaponViews[slotIndex] = weaponView;
-            return weaponView;
+        }
+
+        public void SetModuleView(int slotIndex, ModuleView moduleView)
+        {
+            if (slotIndex < _moduleSlots.Length)
+                moduleView.transform.SetParent(_moduleSlots[slotIndex], false);
+            else
+                Debug.LogError($"{this}: Cannot get module slot {slotIndex}!");
+
+            _moduleViews[slotIndex] = moduleView;
         }
 
         public void UnequipWeaponView(int slotIndex)
@@ -43,16 +48,6 @@ namespace Ships
                 return;
 
             Destroy(weaponView.gameObject);
-        }
-
-        public async UniTask<ModuleView> CreateModuleViewAsync(int slotIndex, ModuleType moduleType)
-        {
-            if (slotIndex >= _moduleSlots.Length)
-                return null;
-
-            var moduleView = await _equipmentViewFactory.CreateModuleViewAsync(moduleType, _moduleSlots[slotIndex]);
-            _moduleViews[slotIndex] = moduleView;
-            return moduleView;
         }
 
         public void UnequipModuleView(int slotIndex)
