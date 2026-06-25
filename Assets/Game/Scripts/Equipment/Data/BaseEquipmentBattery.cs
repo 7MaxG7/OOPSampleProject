@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
+using Ships;
 using UnityEngine;
 
 namespace Equipment
@@ -9,12 +9,12 @@ namespace Equipment
     public abstract class BaseEquipmentBattery<TEquipment, TEquipType> : IEquipmentBattery<TEquipment, TEquipType>
         where TEquipment : IEquipment where TEquipType : Enum
     {
-        public event Action<int, TEquipType> OnEquipmentChanged;
+        public event Action<IShip, int, TEquipment> OnEquipmentChanged;
 
         public int MaxEquipmentsAmount { get; }
         public IEquipmentFactory<TEquipment, TEquipType> EquipmentsFactory { get; }
         public Dictionary<int, TEquipment> Equipments { get; } = new();
-        public Dictionary<int, Transform> Slots { get; } = new();
+        protected IShip Owner;
 
         protected BaseEquipmentBattery(int amount, IEquipmentFactory<TEquipment, TEquipType> equipmentFactory)
         {
@@ -27,31 +27,14 @@ namespace Equipment
             MaxEquipmentsAmount = baseEquipmentBattery.MaxEquipmentsAmount;
             Equipments = baseEquipmentBattery.Equipments;
             EquipmentsFactory = baseEquipmentBattery.EquipmentsFactory;
-            Slots = baseEquipmentBattery.Slots;
         }
         
-        public void SetSlots(Transform[] slots)
+        public void Init(IShip owner)
         {
-            if (slots.Length < MaxEquipmentsAmount)
-            {
-                Debug.LogError($"{this}: Not enough weapon slots in ship view");
-                return;
-            }
-
-            for (var i = 0; i < slots.Length; i++)
-            {
-                if (i >= MaxEquipmentsAmount)
-                {
-                    slots[i].gameObject.SetActive(false);
-                    continue;
-                }
-
-                slots[i].gameObject.SetActive(true);
-                Slots[i] = slots[i];
-            }
+            Owner = owner;
         }
 
-        public virtual async UniTask SetEquipmentAsync(int slotIndex, TEquipType equipType)
+        public virtual void SetEquipment(int slotIndex, TEquipType equipType)
         {
             if (slotIndex >= MaxEquipmentsAmount)
             {
@@ -62,8 +45,8 @@ namespace Equipment
             if (Equipments.TryGetValue(slotIndex, out var equipment))
                 equipment?.Unequip();
 
-            Equipments[slotIndex] = await EquipmentsFactory.CreateEquipment(equipType, Slots[slotIndex]);
-            OnEquipmentChanged?.Invoke(slotIndex, equipType);
+            Equipments[slotIndex] = EquipmentsFactory.CreateEquipment(equipType);
+            OnEquipmentChanged?.Invoke(Owner, slotIndex, Equipments[slotIndex]);
         }
     }
 }

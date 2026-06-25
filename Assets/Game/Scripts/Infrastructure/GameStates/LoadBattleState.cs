@@ -11,6 +11,7 @@ namespace Infrastructure.GameStates
         private readonly ISceneLoader _sceneLoader;
         private readonly IAssetsProvider _assetsProvider;
         private readonly IShipsInitializer _shipsInitializer;
+        private readonly IShipsViewInitializer _shipsViewInitializer;
         private readonly IUiFactory _uiFactory;
         private readonly ICancellationTokenProvider _tokenProvider;
         private IGameStateMachine _stateMachine;
@@ -18,11 +19,12 @@ namespace Infrastructure.GameStates
 
         [Inject]
         public LoadBattleState(ISceneLoader sceneLoader, IAssetsProvider assetsProvider, IShipsInitializer shipsInitializer,
-            IUiFactory uiFactory, ICancellationTokenProvider tokenProvider)
+            IShipsViewInitializer shipsViewInitializer, IUiFactory uiFactory, ICancellationTokenProvider tokenProvider)
         {
             _sceneLoader = sceneLoader;
             _assetsProvider = assetsProvider;
             _shipsInitializer = shipsInitializer;
+            _shipsViewInitializer = shipsViewInitializer;
             _uiFactory = uiFactory;
             _tokenProvider = tokenProvider;
         }
@@ -42,19 +44,14 @@ namespace Infrastructure.GameStates
 
             await _assetsProvider.WarmUpCurrentSceneAsync();
             await _uiFactory.CreateRootAsync();
-            await CreateOpponentsAsync();
+            _shipsInitializer.CreateShips();
+            await _shipsViewInitializer.CreateShipsViewsAsync();
 
             _stateMachine.Enter<RunBattleState>();
         }
 
         public void Exit()
         {
-        }
-
-        private async UniTask CreateOpponentsAsync()
-        {
-            _shipsInitializer.CreateShipsAsync();
-            await _shipsInitializer.CreateShipsViewsAsync();
         }
     }
 }

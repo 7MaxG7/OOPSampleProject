@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Equipment;
+using Ships;
 using UnityEngine;
 using Utils;
 
@@ -11,7 +12,7 @@ namespace UI.Ship
         public Dictionary<int, AsyncReactiveProperty<WeaponType>> WeaponSlots { get; } = new();
         public Dictionary<int, AsyncReactiveProperty<ModuleType>> ModuleSlots { get; } = new();
 
-        public void SetWeapon(int slotIndex, WeaponType weaponType)
+        public void SetWeapon(IShip ship, int slotIndex, IWeapon weapon)
         {
             if (!WeaponSlots.TryGetValue(slotIndex, out var slotWeapon))
             {
@@ -19,10 +20,10 @@ namespace UI.Ship
                 return;
             }
             
-            slotWeapon.Update(weaponType);
+            slotWeapon.Update(weapon.WeaponType);
         }
 
-        public void SetModule(int slotIndex, ModuleType moduleType)
+        public void SetModule(IShip ship, int slotIndex, IModule module)
         {
             if (!ModuleSlots.TryGetValue(slotIndex, out var slotModule))
             {
@@ -30,7 +31,7 @@ namespace UI.Ship
                 return;
             }
             
-            slotModule.Update(moduleType);
+            slotModule.Update(module.ModuleType);
         }
     }
 }

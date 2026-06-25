@@ -14,10 +14,10 @@ namespace Ships
             ShipType = shipConfig.ShipType;
         }
 
-        public void SetWeapon(int slotIndex, WeaponType weaponType)
-            => WeaponTypes[slotIndex] = weaponType;
+        public void SetWeapon(IShip ship, int slotIndex, IWeapon weapon)
+            => WeaponTypes[slotIndex] = weapon.WeaponType;
 
-        public void SetModule(int slotIndex, ModuleType moduleType)
-            => ModuleTypes[slotIndex] = moduleType;
+        public void SetModule(IShip ship, int slotIndex, IModule module)
+            => ModuleTypes[slotIndex] = module.ModuleType;
     }
 }

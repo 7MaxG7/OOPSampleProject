@@ -9,7 +9,6 @@ namespace Equipment
         event Action<WeaponType> OnShoot;
         float ReloadRate { get; }
 
-        void Init(IShip ship);
         void ToggleShooting(bool isActive);
     }
 }

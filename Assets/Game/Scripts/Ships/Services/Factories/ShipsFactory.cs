@@ -26,7 +26,7 @@ namespace Ships
             var config = _staticDataService.GetShip(shipType);
             var health = new Health(config.MaxHp, config.MaxShied, config.ShieldRecovery, config.ShieldRecoveryInterval);
             var weapons = new WeaponBattery(config.WeaponSlotsAmount, _weaponFactory);
-            var modules = new ShipModules(config.ModuleSlotsAmount, _moduleFactory);
+            var modules = new ShipModuleBattery(config.ModuleSlotsAmount, _moduleFactory);
 
             return new Ship(config.ShipType, health, weapons, modules, _shipUpgrader);
         }

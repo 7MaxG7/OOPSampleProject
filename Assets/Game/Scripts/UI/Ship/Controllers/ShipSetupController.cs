@@ -52,7 +52,7 @@ namespace UI.Ship
                 }
 
                 ship.WeaponBattery.OnEquipmentChanged -= shipModel.SetWeapon;
-                ship.ShipModules.OnEquipmentChanged -= shipModel.SetModule;
+                ship.ModuleBattery.OnEquipmentChanged -= shipModel.SetModule;
             }
 
             foreach (var panel in _shipPanelControllers.Values)
@@ -128,14 +128,14 @@ namespace UI.Ship
                 model.WeaponSlots.Add(i, new(weapon?.WeaponType ?? default));
             }
 
-            for (var i = 0; i < ship.ShipModules.MaxEquipmentsAmount; i++)
+            for (var i = 0; i < ship.ModuleBattery.MaxEquipmentsAmount; i++)
             {
-                var module = ship.ShipModules.Equipments.GetValueOrDefault(i);
+                var module = ship.ModuleBattery.Equipments.GetValueOrDefault(i);
                 model.ModuleSlots.Add(i, new(module?.ModuleType ?? default));
             }
 
             ship.WeaponBattery.OnEquipmentChanged += model.SetWeapon;
-            ship.ShipModules.OnEquipmentChanged += model.SetModule;
+            ship.ModuleBattery.OnEquipmentChanged += model.SetModule;
             _shipModels.Add(opponentId, model);
             return model;
         }

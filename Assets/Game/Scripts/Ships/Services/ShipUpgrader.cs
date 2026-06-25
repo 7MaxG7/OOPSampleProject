@@ -5,7 +5,7 @@ namespace Ships
 {
     public sealed class ShipUpgrader : IShipUpgrader
     {
-        public void Upgrade(Ship ship, IModule module)
+        public void Upgrade(IShip ship, IModule module)
         {
             switch (module.BuffParamType)
             {
@@ -25,7 +25,7 @@ namespace Ships
             }
         }
 
-        public void Downgrade(Ship ship, IModule module)
+        public void Downgrade(IShip ship, IModule module)
         {
             switch (module.BuffParamType)
             {

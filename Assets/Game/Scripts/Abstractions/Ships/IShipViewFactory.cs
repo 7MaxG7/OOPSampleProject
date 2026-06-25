@@ -5,6 +5,6 @@ namespace Ships
 {
     public interface IShipViewFactory
     {
-        UniTask<ShipView> CreateShipViewAsync(ShipType shipType, Vector3 position, Quaternion rotation);
+        UniTask<ShipView> CreateShipViewAsync(IShip ship, Vector3 position, Quaternion rotation);
     }
 }

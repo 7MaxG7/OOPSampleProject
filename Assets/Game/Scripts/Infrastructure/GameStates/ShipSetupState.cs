@@ -11,6 +11,7 @@ namespace Infrastructure.GameStates
     {
         private readonly ICurtain _curtain;
         private readonly IShipsInitializer _shipsInitializer;
+        private readonly IShipsViewInitializer _shipsViewInitializer;
         private readonly ISoundService _soundService;
         private readonly IAssetsProvider _assetsProvider;
         private readonly IShipSetupUIService _shipSetupUIService;
@@ -22,12 +23,13 @@ namespace Infrastructure.GameStates
         private ShipSetupController _shipSetup;
 
         [Inject]
-        public ShipSetupState(IShipsInitializer shipsInitializer, ISoundService soundService, ICancellationTokenProvider tokenProvider,
-            ICurtain curtain, IAssetsProvider assetsProvider, IShipSetupUIService shipSetupUIService, IUiFactory uiFactory,
-            ICleaner cleaner)
+        public ShipSetupState(IShipsInitializer shipsInitializer, IShipsViewInitializer shipsViewInitializer,
+            ISoundService soundService, ICancellationTokenProvider tokenProvider, ICurtain curtain, IAssetsProvider assetsProvider,
+            IShipSetupUIService shipSetupUIService, IUiFactory uiFactory, ICleaner cleaner)
         {
             _curtain = curtain;
             _shipsInitializer = shipsInitializer;
+            _shipsViewInitializer = shipsViewInitializer;
             _soundService = soundService;
             _assetsProvider = assetsProvider;
             _shipSetupUIService = shipSetupUIService;
@@ -63,8 +65,8 @@ namespace Infrastructure.GameStates
 
         private async UniTask InitSceneAsync()
         {
-            _shipsInitializer.CreateShipsAsync();
-            await _shipsInitializer.CreateShipsViewsAsync();
+            _shipsInitializer.CreateShips();
+            await _shipsViewInitializer.CreateShipsViewsAsync();
             await SetupUiAsync();
         }
 

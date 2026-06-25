@@ -4,7 +4,7 @@ namespace Ships
 {
     public interface IShipUpgrader
     {
-        void Upgrade(Ship ship, IModule module);
-        void Downgrade(Ship ship, IModule module);
+        void Upgrade(IShip ship, IModule module);
+        void Downgrade(IShip ship, IModule module);
     }
 }

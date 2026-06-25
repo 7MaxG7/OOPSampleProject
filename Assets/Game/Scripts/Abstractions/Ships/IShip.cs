@@ -8,10 +8,13 @@ namespace Ships
     {
         event Action<IShip> OnDied;
         
+        ShipType ShipType { get; }
         IHealth Health { get; }
         IWeaponBattery WeaponBattery { get; }
-        IShipModules ShipModules { get; }
+        IShipModuleBattery ModuleBattery { get; }
         string Name { get; }
         void TakeDamage(int damage);
+        void SetHealth(IHealth health);
+        void SetWeapons(IWeaponBattery weapons);
     }
 }

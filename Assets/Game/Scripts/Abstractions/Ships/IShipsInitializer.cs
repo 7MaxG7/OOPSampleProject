@@ -1,11 +1,9 @@
-using Cysharp.Threading.Tasks;
 using Infrastructure;
 
 namespace Ships
 {
     public interface IShipsInitializer : ISceneCleanable
     {
-        void CreateShipsAsync();
-        UniTask CreateShipsViewsAsync();
+        void CreateShips();
     }
 }

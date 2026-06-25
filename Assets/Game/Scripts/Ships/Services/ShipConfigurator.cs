@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
 using Equipment;
 using Infrastructure;
 using UnityEngine;
@@ -43,7 +42,7 @@ namespace Ships
                     continue;
 
                 ship.WeaponBattery.OnEquipmentChanged -= configuration.SetWeapon;
-                ship.ShipModules.OnEquipmentChanged -= configuration.SetModule;
+                ship.ModuleBattery.OnEquipmentChanged -= configuration.SetModule;
             }
             
             // TODO. Clear it after all other clearings (including UI)
@@ -57,19 +56,19 @@ namespace Ships
                 return;
 
             ship.WeaponBattery.OnEquipmentChanged += configuration.SetWeapon;
-            ship.ShipModules.OnEquipmentChanged += configuration.SetModule;
+            ship.ModuleBattery.OnEquipmentChanged += configuration.SetModule;
         }
 
         public void SetWeapon(OpponentId opponentId, int slotIndex, WeaponType weaponType)
         {
             if (TryGetShip(opponentId, out var ship))
-                ship.WeaponBattery.SetEquipmentAsync(slotIndex, weaponType).Forget();
+                ship.WeaponBattery.SetEquipment(slotIndex, weaponType);
         }
 
         public void SetModule(OpponentId opponentId, int slotIndex, ModuleType moduleType)
         {
             if (TryGetShip(opponentId, out var ship))
-                ship.ShipModules.SetEquipmentAsync(slotIndex, moduleType).Forget();
+                ship.ModuleBattery.SetEquipment(slotIndex, moduleType);
         }
 
         public bool TryGetShip(OpponentId opponentId, out IShip ship)
