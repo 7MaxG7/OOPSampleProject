@@ -7,9 +7,9 @@ namespace Ships
         public event Action<float, float> OnHpChanged;
         public event Action<float, float> OnShieldChanged;
 
-        public float ShieldRecovery { get; protected set; }
-        public float MaxHp { get; protected set; }
-        public float MaxShield { get; protected set; }
+        public float ShieldRecovery { get; set; }
+        public float MaxHp { get; set; }
+        public float MaxShield { get; set; }
 
         public float CurrentHp
         {

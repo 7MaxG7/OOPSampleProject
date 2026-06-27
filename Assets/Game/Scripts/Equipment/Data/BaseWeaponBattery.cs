@@ -6,7 +6,7 @@ namespace Equipment
     {
         public event Action<WeaponType> OnShoot;
 
-        public float ReloadRate { get; protected set; }
+        public float ReloadRate { get; set; }
 
         private bool _isActive;
 

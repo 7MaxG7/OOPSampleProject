@@ -5,36 +5,28 @@ namespace Equipment
 {
     public sealed class UpgradedWeaponsBattery : BaseWeaponBattery, IDowngradable<IWeaponBattery>
     {
-        private IWeaponBattery _baseWeaponBattery;
+        public IWeaponBattery BaseWeaponBattery { get; private set; }
         private readonly IModule _module;
 
-        
         public UpgradedWeaponsBattery(IWeaponBattery baseWeaponBattery, IModule module) : base(baseWeaponBattery)
         {
-            _baseWeaponBattery = baseWeaponBattery;
+            BaseWeaponBattery = baseWeaponBattery;
             _module = module;
-            UpdateReloadRate();
+            _module.UpdateParams(this);
         }
 
         public IWeaponBattery Downgrade(IModule module)
         {
             if (_module == module)
-                return _baseWeaponBattery;
+                return BaseWeaponBattery;
 
-            if (_baseWeaponBattery is IDowngradable<IWeaponBattery> upgradedWeaponBattery)
-                _baseWeaponBattery = upgradedWeaponBattery.Downgrade(module);
+            if (BaseWeaponBattery is IDowngradable<IWeaponBattery> upgradedWeaponBattery)
+                BaseWeaponBattery = upgradedWeaponBattery.Downgrade(module);
             else
                 Debug.LogError($"{this}: downgraded module is not found");
 
-            UpdateReloadRate();
+            _module.UpdateParams(this);
             return this;
-        }
-
-        private void UpdateReloadRate()
-        {
-            ReloadRate = _module.IsReloadRelativeReduce
-                ? _baseWeaponBattery.ReloadRate * _module.Value
-                : _baseWeaponBattery.ReloadRate;
         }
     }
 }

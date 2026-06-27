@@ -1,4 +1,6 @@
 ﻿using System;
+using Ships;
+
 namespace Equipment
 {
     public sealed class Module : IModule
@@ -7,28 +9,44 @@ namespace Equipment
 
         public ModuleType ModuleType { get; }
         public BuffParamType BuffParamType { get; }
-        public float Value { get; }
-        
-        public bool IsReloadRelativeReduce
-            => BuffParamType == BuffParamType.ShootCooldown && _buffRelativenessType == BuffRelativenessType.Relative;
-        public bool IsShieldRecoveryRelativeSpeedup
-            => BuffParamType == BuffParamType.ShieldRecovery && _buffRelativenessType == BuffRelativenessType.Relative;
-        public bool IsHpConstantIncrease
-            => BuffParamType == BuffParamType.Hp && _buffRelativenessType == BuffRelativenessType.Constant;
-        public bool IsShieldConstantIncrease
-            => BuffParamType == BuffParamType.Shield && _buffRelativenessType == BuffRelativenessType.Constant;
 
+        private readonly float _value;
         private readonly BuffRelativenessType _buffRelativenessType;
 
         public Module(BuffParamType buffParamType, BuffRelativenessType buffRelativenessType, float value, ModuleType moduleType)
         {
             BuffParamType = buffParamType;
             _buffRelativenessType = buffRelativenessType;
-            Value = value;
+            _value = value;
             ModuleType = moduleType;
         }
 
         public void Unequip()
             => OnUnequip?.Invoke(this);
+
+        public void UpdateParams(UpgradedWeaponsBattery weaponsBattery)
+        {
+            weaponsBattery.ReloadRate = CalculateUpgradedParam(BuffParamType.ShootCooldown, weaponsBattery.BaseWeaponBattery.ReloadRate);
+        }
+
+        public void UpdateParams(UpgradedHealth health)
+        {
+            health.ShieldRecovery = CalculateUpgradedParam(BuffParamType.ShieldRecovery, health.BaseHealth.ShieldRecovery);
+            health.MaxHp = CalculateUpgradedParam(BuffParamType.Hp, health.BaseHealth.MaxHp);
+            health.MaxShield = CalculateUpgradedParam(BuffParamType.Shield, health.BaseHealth.MaxShield);
+        }
+
+        private float CalculateUpgradedParam(BuffParamType buffParamType, float baseParamValue)
+            => BuffParamType == buffParamType
+                ? CalculateUpgradedParam(baseParamValue)
+                : baseParamValue;
+
+        private float CalculateUpgradedParam(float baseValue)
+            => _buffRelativenessType switch
+            {
+                BuffRelativenessType.Relative => baseValue * _value,
+                BuffRelativenessType.Constant => baseValue + _value,
+                _ => baseValue,
+            };
     }
 }

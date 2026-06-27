@@ -1,4 +1,5 @@
 ﻿using System;
+using Ships;
 
 namespace Equipment
 {
@@ -8,11 +9,8 @@ namespace Equipment
         
         ModuleType ModuleType { get; }
         BuffParamType BuffParamType { get; }
-        float Value { get; }
-        
-        bool IsReloadRelativeReduce { get; }
-        bool IsShieldRecoveryRelativeSpeedup { get; }
-        bool IsHpConstantIncrease { get; }
-        bool IsShieldConstantIncrease { get; }
+
+        void UpdateParams(UpgradedWeaponsBattery weaponsBattery);
+        void UpdateParams(UpgradedHealth health);
     }
 }
