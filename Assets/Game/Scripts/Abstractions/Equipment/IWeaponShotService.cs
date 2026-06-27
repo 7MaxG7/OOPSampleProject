@@ -1,3 +1,4 @@
+using Infrastructure;
 using Ships;
 
 namespace Equipment
@@ -6,5 +7,6 @@ namespace Equipment
     {
         void RegisterWeapon(IWeapon weapon, WeaponView weaponView);
         void UnregisterWeapon(IWeapon weapon);
+        void DeactivateShotAmmos();
     }
 }

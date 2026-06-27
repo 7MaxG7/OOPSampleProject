@@ -1,13 +1,14 @@
-﻿using Infrastructure;
+using Infrastructure;
+using Ships;
 using UnityEngine;
 
 namespace Equipment
 {
     public interface IAmmo : ICleanable
     {
-        Rigidbody2D Rigidbody { get; }
+        AmmoView AmmoView { get; }
 
-        void Activate(Transform startPosition, IWeapon shooter);
+        void Activate(Vector3 position, Quaternion rotation, Vector3 direction, float speed, IWeapon shooter);
         void Deactivate();
     }
 }

@@ -1,5 +1,6 @@
 using Battle;
 using Cysharp.Threading.Tasks;
+using Equipment;
 using Ships;
 using Ui;
 using UI.Battle;
@@ -15,13 +16,15 @@ namespace Infrastructure.GameStates
         private readonly IUiFactory _uiFactory;
         private readonly ICancellationTokenProvider _tokenProvider;
         private readonly IShipConfigurator _shipConfigurator;
+        private readonly IWeaponShotService _weaponShotService;
         private IGameStateMachine _stateMachine;
 
         private BattleUiController _battleUi;
 
         [Inject]
         public RunBattleState(ICurtain curtain, IWinnerDefiner winnerDefiner, IShipsInitializer shipsInitializer, IUiFactory uiFactory,
-            ICancellationTokenProvider tokenProvider, IShipConfigurator shipConfigurator, IUpdater updater)
+            ICancellationTokenProvider tokenProvider, IShipConfigurator shipConfigurator, IWeaponShotService weaponShotService,
+            IUpdater updater)
         {
             _curtain = curtain;
             _winnerDefiner = winnerDefiner;
@@ -29,6 +32,7 @@ namespace Infrastructure.GameStates
             _uiFactory = uiFactory;
             _tokenProvider = tokenProvider;
             _shipConfigurator = shipConfigurator;
+            _weaponShotService = weaponShotService;
         }
 
         public void Init(IGameStateMachine stateMachine)
@@ -77,9 +81,11 @@ namespace Infrastructure.GameStates
             foreach (var ship in _winnerDefiner.Ships)
             {
                 ship.WeaponBattery.ToggleShooting(false);
-                _updater.RemoveController(ship.Health);
-                _updater.RemoveController(ship.WeaponBattery);
+                _updater.RemoveUpdatable(ship.Health);
+                _updater.RemoveUpdatable(ship.WeaponBattery);
             }
+
+            _weaponShotService.DeactivateShotAmmos();
 
             _battleUi.ShowBattleEnd(winner);
         }

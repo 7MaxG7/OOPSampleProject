@@ -26,5 +26,5 @@ MonoBehaviour:
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
-  _ammoSpeed: 750
+  _ammoSpeed: 12
   _icon: {fileID: 21300000, guid: 5b52da1aaadc4de46a70336c716d1093, type: 3}
