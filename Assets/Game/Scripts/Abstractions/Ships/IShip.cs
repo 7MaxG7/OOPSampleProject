@@ -1,7 +1,6 @@
 ﻿using System;
 using Equipment;
-using Infrastructure.ControllersHolder;
-using Ships.Views;
+using Infrastructure;
 
 namespace Ships
 {
@@ -9,14 +8,13 @@ namespace Ships
     {
         event Action<IShip> OnDied;
         
+        ShipType ShipType { get; }
         IHealth Health { get; }
         IWeaponBattery WeaponBattery { get; }
-        IShipModules ShipModules { get; }
+        IShipModuleBattery ModuleBattery { get; }
         string Name { get; }
-        ShipView ShipView { get; }
-
-        void PrepareToBattle();
         void TakeDamage(int damage);
-        void Kill();
+        void SetHealth(IHealth health);
+        void SetWeapons(IWeaponBattery weapons);
     }
 }

@@ -1,7 +1,6 @@
-﻿using Ships.Data;
-using UnityEngine;
+﻿using UnityEngine;
 
-namespace Ships.Views
+namespace Ships
 {
     public sealed class ShipSpawnerMarker : MonoBehaviour
     {

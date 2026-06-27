@@ -1,8 +1,6 @@
 using System;
-using Cysharp.Threading.Tasks;
-using Ships;
 
-namespace Equipment.Data
+namespace Equipment
 {
     public abstract class BaseWeaponBattery : BaseEquipmentBattery<IWeapon, WeaponType>, IWeaponBattery
     {
@@ -10,9 +8,7 @@ namespace Equipment.Data
 
         public float ReloadRate { get; protected set; }
 
-        private IShip _owner;
         private bool _isActive;
-
 
         protected BaseWeaponBattery(IWeaponBattery baseWeaponBattery) : base(baseWeaponBattery) { }
 
@@ -27,22 +23,17 @@ namespace Equipment.Data
             foreach (var weapon in Equipments.Values)
                 if (weapon.IsReady)
                 {
-                    weapon.ShootAsync().Forget();
+                    weapon.Shoot();
                     OnShoot?.Invoke(weapon.WeaponType);
                 }
                 else
                     weapon.ReduceCooldown(deltaCooldown);
         }
-        
-        public void Init(IShip owner)
-        {
-            _owner = owner;
-        }
 
-        public override async UniTask SetEquipmentAsync(int index, WeaponType equipType)
+        public override void SetEquipment(int slotIndex, WeaponType equipType)
         {
-            await base.SetEquipmentAsync(index, equipType);
-            Equipments[index].Init(_owner);
+            base.SetEquipment(slotIndex, equipType);
+            Equipments[slotIndex].Init(Owner);
         }
 
         public void ToggleShooting(bool isActive)

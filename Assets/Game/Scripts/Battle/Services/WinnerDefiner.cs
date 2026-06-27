@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Infrastructure.ControllersHolder;
+using Infrastructure;
 using Ships;
 using Zenject;
 
@@ -20,17 +20,14 @@ namespace Battle
         }
 
         public void CleanUp() 
-            => SceneCleanUp();
-
-        public void SceneCleanUp()
         {
             if (_isCleaned)
                 return;
-            _isCleaned = true;
             
             foreach (var ship in Ships) 
                 ship.OnDied -= DefineWinner;
             Ships.Clear();
+            _isCleaned = true;
         }
 
         public void AddShip(IShip ship)
@@ -46,10 +43,7 @@ namespace Battle
             foreach (var ship in Ships)
             {
                 if (ship == looser)
-                {
-                    ship.Kill();
                     continue;
-                }
                 winner = ship;
             }
             OnWinnerDefined?.Invoke(winner);

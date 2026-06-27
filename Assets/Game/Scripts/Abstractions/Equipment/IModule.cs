@@ -1,11 +1,10 @@
 ﻿using System;
-using Equipment.Data;
 
 namespace Equipment
 {
     public interface IModule : IEquipment
     {
-        event Action<IModule> OnModuleUnequip;
+        event Action<IModule> OnUnequip;
         
         ModuleType ModuleType { get; }
         BuffParamType BuffParamType { get; }

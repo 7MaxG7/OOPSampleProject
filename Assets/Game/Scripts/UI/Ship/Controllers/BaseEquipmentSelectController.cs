@@ -1,60 +1,78 @@
-﻿using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Infrastructure;
-using Infrastructure.ControllersHolder;
-using Ships.Data;
+using Ships;
 using Ui;
-using UI.Ship.Models;
-using UI.Ship.Views;
 using UnityEngine;
 
 namespace UI.Ship
 {
-    public class BaseEquipmentSelectController<TType> : ICleanable where TType : Enum
+    public abstract class BaseEquipmentSelectController
     {
-        protected readonly BaseEquipmentSelectView<TType> EquipmentSelectView;
-        protected readonly Dictionary<OpponentId, ShipModel> ShipModels;
-        private readonly ICancellationTokenProvider _tokenProvider;
-
+        protected readonly IShipConfigurator ShipConfigurator;
+        
         protected OpponentId OpponentId;
         protected int SlotIndex;
         
-        private IUiFactory _uiFactory;
-        private float _fadeAnimDuration;
+        private readonly ICancellationTokenProvider _tokenProvider;
+        private readonly IUiFactory _uiFactory;
+        private readonly UiConfig _uiConfig;
 
-        protected BaseEquipmentSelectController(BaseEquipmentSelectView<TType> equipmentSelectView
-            , Dictionary<OpponentId,ShipModel> shipModels, ICancellationTokenProvider tokenProvider)
+        private EquipmentSelectView _equipmentSelectView;
+
+        private readonly List<SlotUiView> _equipmentsSlots = new();
+
+        protected BaseEquipmentSelectController(IShipConfigurator shipConfigurator, ICancellationTokenProvider tokenProvider,
+            IUiFactory uiFactory, UiConfig uiConfig)
         {
-            EquipmentSelectView = equipmentSelectView;
-            ShipModels = shipModels;
+            ShipConfigurator = shipConfigurator;
             _tokenProvider = tokenProvider;
+            _uiFactory = uiFactory;
+            _uiConfig = uiConfig;
         }
+
+        protected abstract UniTask SetupEquipSelectPanelAsync();
 
         public void CleanUp()
         {
-            EquipmentSelectView.CleanUp();
+            foreach (var slot in _equipmentsSlots)
+                slot.SelectButton.onClick.RemoveAllListeners();
+            _equipmentsSlots.Clear();
+        }
+
+        public async UniTask InitAsync(EquipmentSelectView view)
+        {
+            _equipmentSelectView = view;
+            _equipmentSelectView.Init(_uiConfig.FadeAnimDuration);
+            await SetupEquipSelectPanelAsync();
         }
 
         public async UniTaskVoid ShowAsync(OpponentId opponentId, int slotIndex, Vector3 position)
         {
-            if (opponentId == OpponentId && slotIndex == SlotIndex && EquipmentSelectView.IsVisible())
+            if (opponentId == OpponentId && slotIndex == SlotIndex && _equipmentSelectView.IsVisible())
                 return;
-            
+
             using var cts = _tokenProvider.CreateLocalCts();
-            
+
             OpponentId = opponentId;
             SlotIndex = slotIndex;
-            
-            await EquipmentSelectView.SetVisibleAsync(false, cts.Token, 0.3f);
-            EquipmentSelectView.Locate(opponentId, position);
-            await EquipmentSelectView.SetVisibleAsync(true, cts.Token);
+
+            await _equipmentSelectView.SetVisibleAsync(false, cts.Token, 0.3f);
+            _equipmentSelectView.Locate(opponentId, position);
+            await _equipmentSelectView.SetVisibleAsync(true, cts.Token);
         }
 
         public async UniTaskVoid HideAsync()
         {
             using var cts = _tokenProvider.CreateLocalCts();
-            await EquipmentSelectView.SetVisibleAsync(false, cts.Token);
+            await _equipmentSelectView.SetVisibleAsync(false, cts.Token);
+        }
+
+        protected async UniTask<SlotUiView> CreateEquipmentSelectSlotAsync()
+        {
+            var selectUiSlot = await _uiFactory.CreateSelectEquipmentSlotAsync(_equipmentSelectView.EquipmentsContent);
+            _equipmentsSlots.Add(selectUiSlot);
+            return selectUiSlot;
         }
     }
 }

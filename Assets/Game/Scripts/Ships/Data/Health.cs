@@ -1,4 +1,4 @@
-﻿namespace Ships.Data
+﻿namespace Ships
 {
     internal sealed class Health : BaseHealth
     {

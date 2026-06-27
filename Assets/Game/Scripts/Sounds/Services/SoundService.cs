@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Equipment.Data;
+using Equipment;
 using Infrastructure;
 using UnityEngine;
 using Zenject;

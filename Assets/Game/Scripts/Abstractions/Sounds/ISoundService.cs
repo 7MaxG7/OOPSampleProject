@@ -1,4 +1,4 @@
-using Equipment.Data;
+using Equipment;
 
 namespace Sounds
 {

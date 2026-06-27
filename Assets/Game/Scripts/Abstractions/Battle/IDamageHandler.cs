@@ -1,12 +1,9 @@
-﻿using Infrastructure.ControllersHolder;
-using Ships;
-using UnityEngine;
+﻿using Ships;
 
 namespace Battle
 {
-    public interface IDamageHandler : ISceneCleanable
+    public interface IDamageHandler
     {
-        void AddShip(IShip ship);
-        bool TryDealDamage(IShip shooter, Collider2D collider, int damage);
+        bool TryDealDamage(IShip shooter, IShip damageTaker, int damage);
     }
 }

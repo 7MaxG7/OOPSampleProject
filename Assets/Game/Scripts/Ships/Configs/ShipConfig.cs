@@ -1,5 +1,4 @@
-﻿using Ships.Data;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AddressableAssets;
 
 namespace Ships

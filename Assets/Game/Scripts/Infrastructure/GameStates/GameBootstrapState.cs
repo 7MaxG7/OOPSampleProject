@@ -15,24 +15,22 @@ namespace Infrastructure.GameStates
         private readonly ICurtain _curtain;
         private readonly IAssetsProvider _assetsProvider;
         private readonly ISoundService _soundService;
-        private readonly RulesConfig _rulesConfig;
         private readonly ICancellationTokenProvider _tokenProvider;
-        private readonly IShipConfigurationsHolder _configurationsHolder;
+        private readonly IShipConfigurator _shipConfigurator;
         private IGameStateMachine _stateMachine;
 
         [Inject]
         public GameBootstrapState(IStaticDataService staticDataService, ISceneLoader sceneLoader, ICurtain curtain
-            , IAssetsProvider assetsProvider, ISoundService soundService, RulesConfig rulesConfig, ICancellationTokenProvider tokenProvider
-            , IShipConfigurationsHolder configurationsHolder)
+            , IAssetsProvider assetsProvider, ISoundService soundService, ICancellationTokenProvider tokenProvider,
+            IShipConfigurator shipConfigurator)
         {
             _staticDataService = staticDataService;
             _sceneLoader = sceneLoader;
             _curtain = curtain;
             _assetsProvider = assetsProvider;
             _soundService = soundService;
-            _rulesConfig = rulesConfig;
             _tokenProvider = tokenProvider;
-            _configurationsHolder = configurationsHolder;
+            _shipConfigurator = shipConfigurator;
         }
 
         public void Enter()
@@ -64,7 +62,7 @@ namespace Infrastructure.GameStates
             _curtain.Init();
             _curtain.ShowCurtainInstantly();
             _staticDataService.Init();
-            _configurationsHolder.Init(_rulesConfig.Opponents);
+            _shipConfigurator.Init();
             _soundService.Init();
         }
     }

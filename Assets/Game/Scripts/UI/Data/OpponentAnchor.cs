@@ -1,5 +1,5 @@
 ﻿using System;
-using Ships.Data;
+using Ships;
 using UnityEngine;
 
 namespace UI.Data

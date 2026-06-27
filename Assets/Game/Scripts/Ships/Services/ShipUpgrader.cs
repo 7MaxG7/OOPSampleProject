@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using Equipment;
-using Equipment.Data;
-using Ships.Data;
 using UnityEngine;
 using Zenject;
 

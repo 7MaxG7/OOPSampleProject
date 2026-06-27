@@ -1,7 +1,7 @@
 ﻿using Equipment;
 using UnityEngine;
 
-namespace Ships.Data
+namespace Ships
 {
     public sealed class UpgradedHealth : BaseHealth, IDowngradable<IHealth>
     {

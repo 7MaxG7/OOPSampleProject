@@ -1,4 +1,4 @@
-﻿namespace Equipment.Data
+﻿namespace Equipment
 {
     public enum BuffParamType
     {

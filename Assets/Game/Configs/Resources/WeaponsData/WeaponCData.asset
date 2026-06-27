@@ -21,10 +21,10 @@ MonoBehaviour:
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
-  _ammoPrefab:
+  _bulletPrefab:
     m_AssetGUID: c2b67005207bc964d89ccf6a161f2590
     m_SubObjectName: 
     m_SubObjectType: 
     m_EditorAssetChanged: 0
-  _ammoSpeed: 600
+  _bulletSpeed: 10
   _icon: {fileID: 21300000, guid: 4fc93f4b521b61d4e914d0961d355400, type: 3}

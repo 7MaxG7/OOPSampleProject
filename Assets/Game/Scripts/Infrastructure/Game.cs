@@ -1,5 +1,4 @@
-﻿using Infrastructure.ControllersHolder;
-using Infrastructure.GameStates;
+﻿using Infrastructure.GameStates;
 using Zenject;
 
 

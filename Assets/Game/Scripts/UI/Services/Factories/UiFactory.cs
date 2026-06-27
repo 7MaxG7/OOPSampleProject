@@ -1,12 +1,10 @@
 using Cysharp.Threading.Tasks;
-using Equipment.Data;
 using Infrastructure;
 using Ships;
 using Ui;
 using UI.Battle;
 using UI.Battle.Views;
 using UI.Ship;
-using UI.Ship.Views;
 using UnityEngine;
 using Zenject;
 
@@ -16,21 +14,25 @@ namespace UI
     {
         private readonly IStaticDataService _staticDataService;
         private readonly IAssetsInstantiator _instantiator;
-        private readonly IShipConfigurationsHolder _configurationsHolder;
+        private readonly IShipConfigurator _shipConfigurator;
         private readonly ICancellationTokenProvider _tokenProvider;
         private readonly UiConfig _uiConfig;
+        private readonly IShipSetupUIService _shipSetupUIService;
+        private readonly ICleaner _cleaner;
 
         private Transform _rootCanvas;
 
         [Inject]
-        public UiFactory(IStaticDataService staticDataService, IShipConfigurationsHolder configurationsHolder, UiConfig uiConfig,
-            IAssetsInstantiator instantiator, ICancellationTokenProvider tokenProvider)
+        public UiFactory(IStaticDataService staticDataService, IShipConfigurator shipConfigurator, UiConfig uiConfig, ICleaner cleaner,
+            IAssetsInstantiator instantiator, ICancellationTokenProvider tokenProvider, IShipSetupUIService shipSetupUIService)
         {
             _staticDataService = staticDataService;
             _instantiator = instantiator;
-            _configurationsHolder = configurationsHolder;
+            _shipConfigurator = shipConfigurator;
             _uiConfig = uiConfig;
             _tokenProvider = tokenProvider;
+            _shipSetupUIService = shipSetupUIService;
+            _cleaner = cleaner;
         }
 
         public async UniTask CreateRootAsync()
@@ -46,36 +48,23 @@ namespace UI
             return curtainView;
         }
 
-        public async UniTask<ShipSetupMenuController> CreateShipSetupMenuAsync()
+        public async UniTask<ShipSetupController> CreateShipSetupUIAsync()
         {
-            var view = await _instantiator.CreateAsync<ShipSetupMenuView>(_uiConfig.ShipSetupMenu, _rootCanvas);
-            return new ShipSetupMenuController(view, _configurationsHolder.ShipModels, _tokenProvider);
+            var view = await _instantiator.CreateAsync<ShipSetupView>(_uiConfig.ShipSetupMenu, _rootCanvas);
+            return new ShipSetupController(view, _shipConfigurator, _tokenProvider, _staticDataService, this, _uiConfig,
+                _shipSetupUIService, _cleaner);
         }
 
-        public async UniTask<BattleUiController> CreateBattleUiAsync()
+        public async UniTask<BattleUiController> CreateBattleUIAsync()
         {
             var view = await _instantiator.CreateAsync<BattleUiView>(_uiConfig.BattleUiPrefab, _rootCanvas);
             return new BattleUiController(view);
         }
 
-        public async UniTask<SlotUiView> CreateSelectWeaponUiSlotAsync(WeaponType weaponType, Transform parent)
-        {
-            var slot = await CreateSelectEquipmentUiSlotAsync(parent);
-            slot.SetIcon(_staticDataService.GetWeapon(weaponType).Icon);
-            return slot;
-        }
-
-        public async UniTask<SlotUiView> CreateSelectModuleUiSlotAsync(ModuleType moduleType, Transform parent)
-        {
-            var slot = await CreateSelectEquipmentUiSlotAsync(parent);
-            slot.SetIcon(_staticDataService.GetModule(moduleType).Icon);
-            return slot;
-        }
-
-        public async UniTask<ShipSlotUiView> CreateEquipmentUiSlotAsync(Transform parent)
+        public async UniTask<ShipSlotUiView> CreateShipEquipmentSlotAsync(Transform parent)
             => await _instantiator.CreateAsync<ShipSlotUiView>(_uiConfig.ShipSlotUiPrefab, parent);
 
-        private async UniTask<SlotUiView> CreateSelectEquipmentUiSlotAsync(Transform parent)
+        public async UniTask<SlotUiView> CreateSelectEquipmentSlotAsync(Transform parent)
             => await _instantiator.CreateAsync<SlotUiView>(_uiConfig.SlotUiPrefab, parent);
     }
 }

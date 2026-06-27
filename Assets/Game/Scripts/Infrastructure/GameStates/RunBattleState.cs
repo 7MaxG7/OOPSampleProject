@@ -1,6 +1,6 @@
 using Battle;
 using Cysharp.Threading.Tasks;
-using Infrastructure.ControllersHolder;
+using Equipment;
 using Ships;
 using Ui;
 using UI.Battle;
@@ -12,28 +12,43 @@ namespace Infrastructure.GameStates
     {
         private readonly ICurtain _curtain;
         private readonly IWinnerDefiner _winnerDefiner;
-        private readonly IShipsInitializer _shipsInitializer;
         private readonly IUpdater _updater;
         private readonly IUiFactory _uiFactory;
         private readonly ICancellationTokenProvider _tokenProvider;
+        private readonly IShipConfigurator _shipConfigurator;
+        private readonly IWeaponShotService _weaponShotService;
         private IGameStateMachine _stateMachine;
-        
+
         private BattleUiController _battleUi;
 
         [Inject]
-        public RunBattleState(ICurtain curtain, IWinnerDefiner winnerDefiner, IShipsInitializer shipsInitializer
-            , IUpdater updater, IUiFactory uiFactory, ICancellationTokenProvider tokenProvider)
+        public RunBattleState(ICurtain curtain, IWinnerDefiner winnerDefiner, IShipsInitializer shipsInitializer, IUiFactory uiFactory,
+            ICancellationTokenProvider tokenProvider, IShipConfigurator shipConfigurator, IWeaponShotService weaponShotService,
+            IUpdater updater)
         {
             _curtain = curtain;
             _winnerDefiner = winnerDefiner;
-            _shipsInitializer = shipsInitializer;
             _updater = updater;
             _uiFactory = uiFactory;
             _tokenProvider = tokenProvider;
+            _shipConfigurator = shipConfigurator;
+            _weaponShotService = weaponShotService;
         }
-        
+
+        public void Init(IGameStateMachine stateMachine)
+        {
+            _stateMachine = stateMachine;
+        }
+
         public void Enter()
             => InitAndStartAsync().Forget();
+
+        public void Exit()
+        {
+            _battleUi.CleanUp();
+            _winnerDefiner.OnWinnerDefined -= HandleBattleStop;
+            _battleUi.OnBattleLeft -= LeaveBattle;
+        }
 
         private async UniTaskVoid InitAndStartAsync()
         {
@@ -44,22 +59,10 @@ namespace Infrastructure.GameStates
             StartBattle();
         }
 
-        public void Exit()
-        {
-            _battleUi.CleanUp();
-            _winnerDefiner.OnWinnerDefined -= HandleBattleStop;
-            _battleUi.OnBattleLeft -= LeaveBattle;
-        }
-
-        public void Init(IGameStateMachine stateMachine)
-        {
-            _stateMachine = stateMachine;
-        }
-
         private async UniTask SetupUIAsync()
         {
-            _battleUi = await _uiFactory.CreateBattleUiAsync();
-            _battleUi.SetupUi(_shipsInitializer.Ships);
+            _battleUi = await _uiFactory.CreateBattleUIAsync();
+            _battleUi.SetupUi(_shipConfigurator.Ships);
             _battleUi.OnBattleLeft += LeaveBattle;
         }
 
@@ -78,9 +81,11 @@ namespace Infrastructure.GameStates
             foreach (var ship in _winnerDefiner.Ships)
             {
                 ship.WeaponBattery.ToggleShooting(false);
-                _updater.RemoveController(ship.Health);
-                _updater.RemoveController(ship.WeaponBattery);
+                _updater.RemoveUpdatable(ship.Health);
+                _updater.RemoveUpdatable(ship.WeaponBattery);
             }
+
+            _weaponShotService.DeactivateShotBullets();
 
             _battleUi.ShowBattleEnd(winner);
         }

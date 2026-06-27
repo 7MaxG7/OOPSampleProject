@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using Infrastructure.ControllersHolder;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -33,19 +32,14 @@ namespace Infrastructure
 
         public void CleanUp()
         {
-            SceneCleanUp();
-        }
-
-        public void SceneCleanUp()
-        {
             if (_isCleaned)
                 return;
 
-            _isCleaned = true;
             foreach (var handle in _handles) 
                 Addressables.Release(handle);
             _handles.Clear();
             _loadedAssets.Clear();
+            _isCleaned = true;
         }
 
         public async UniTask WarmUpCurrentSceneAsync()

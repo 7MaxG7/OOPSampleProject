@@ -1,5 +1,4 @@
 using System.Threading;
-using Infrastructure.ControllersHolder;
 using Zenject;
 
 namespace Infrastructure.Wrappers

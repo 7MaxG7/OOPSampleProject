@@ -1,18 +1,20 @@
 using System;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
+using Ships;
 using UnityEngine;
 
-namespace Equipment.Data
+namespace Equipment
 {
 
-    public abstract class BaseEquipmentBattery<TEquipment, TEquipType> : IEquipments<TEquipment, TEquipType>
+    public abstract class BaseEquipmentBattery<TEquipment, TEquipType> : IEquipmentBattery<TEquipment, TEquipType>
         where TEquipment : IEquipment where TEquipType : Enum
     {
+        public event Action<IShip, int, TEquipment> OnEquipmentChanged;
+
         public int MaxEquipmentsAmount { get; }
         public IEquipmentFactory<TEquipment, TEquipType> EquipmentsFactory { get; }
         public Dictionary<int, TEquipment> Equipments { get; } = new();
-        public Dictionary<int, Transform> Slots { get; } = new();
+        protected IShip Owner;
 
         protected BaseEquipmentBattery(int amount, IEquipmentFactory<TEquipment, TEquipType> equipmentFactory)
         {
@@ -20,49 +22,31 @@ namespace Equipment.Data
             EquipmentsFactory = equipmentFactory;
         }
 
-        protected BaseEquipmentBattery(IEquipments<TEquipment, TEquipType> baseEquipments)
+        protected BaseEquipmentBattery(IEquipmentBattery<TEquipment, TEquipType> baseEquipmentBattery)
         {
-            MaxEquipmentsAmount = baseEquipments.MaxEquipmentsAmount;
-            Equipments = baseEquipments.Equipments;
-            EquipmentsFactory = baseEquipments.EquipmentsFactory;
-            Slots = baseEquipments.Slots;
+            MaxEquipmentsAmount = baseEquipmentBattery.MaxEquipmentsAmount;
+            Equipments = baseEquipmentBattery.Equipments;
+            EquipmentsFactory = baseEquipmentBattery.EquipmentsFactory;
         }
         
-        public void SetSlots(Transform[] slots)
+        public void Init(IShip owner)
         {
-            if (slots.Length < MaxEquipmentsAmount)
-            {
-                Debug.LogError($"{this}: Not enough weapon slots in ship view");
-                return;
-            }
-
-            for (var i = 0; i < slots.Length; i++)
-            {
-                if (i >= MaxEquipmentsAmount)
-                {
-                    slots[i].gameObject.SetActive(false);
-                    continue;
-                }
-
-                slots[i].gameObject.SetActive(true);
-                Slots[i] = slots[i];
-            }
+            Owner = owner;
         }
 
-        public virtual async UniTask SetEquipmentAsync(int index, TEquipType equipType)
+        public virtual void SetEquipment(int slotIndex, TEquipType equipType)
         {
-            if (index >= MaxEquipmentsAmount)
+            if (slotIndex >= MaxEquipmentsAmount)
+            {
+                Debug.LogError($"{this}: Cannot equip {equipType} to slot index {slotIndex} cause maximum amount is {MaxEquipmentsAmount}");
                 return;
+            }
 
-            if (!Equipments.TryGetValue(index, out var equipment))
-                Equipments.Add(index, default);
-            else
+            if (Equipments.TryGetValue(slotIndex, out var equipment))
                 equipment?.Unequip();
 
-            Equipments[index] = await EquipmentsFactory.CreateEquipment(equipType, Slots[index]);
+            Equipments[slotIndex] = EquipmentsFactory.CreateEquipment(equipType);
+            OnEquipmentChanged?.Invoke(Owner, slotIndex, Equipments[slotIndex]);
         }
-  
-        public void SetEquipment(int index, TEquipType equipType)
-            => SetEquipmentAsync(index, equipType).Forget();
     }
 }

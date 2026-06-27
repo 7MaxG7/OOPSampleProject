@@ -1,16 +1,13 @@
 using System;
-using Equipment.Data;
-using Infrastructure.ControllersHolder;
-using Ships;
+using Infrastructure;
 
 namespace Equipment
 {
-    public interface IWeaponBattery : IEquipments<IWeapon, WeaponType>, IUpdatable
+    public interface IWeaponBattery : IEquipmentBattery<IWeapon, WeaponType>, IUpdatable
     {
         event Action<WeaponType> OnShoot;
         float ReloadRate { get; }
 
-        void Init(IShip ship);
         void ToggleShooting(bool isActive);
     }
 }
