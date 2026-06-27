@@ -1,6 +1,5 @@
 using System;
 using Infrastructure;
-using Ships;
 
 namespace Equipment
 {

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Battle;
 using Cysharp.Threading.Tasks;
 using Infrastructure;
 using Ships;
@@ -9,17 +10,19 @@ namespace Equipment
 {
     public sealed class WeaponShotService : IWeaponShotService
     {
-        private readonly IAmmoFactory _ammoFactory;
+        private readonly IAmmoViewFactory _ammoViewFactory;
+        private readonly IDamageableIdentifier _damageableIdentifier;
         private readonly IUpdater _updater;
 
         private readonly Dictionary<IWeapon, WeaponView> _weaponViews = new();
-        private readonly Dictionary<IAmmo, AmmoView> _shotAmmoViews = new();
+        private readonly Dictionary<AmmoView, IWeapon> _shotAmmoViewWeapons = new();
         private bool _areAmmosDeactivated;
 
         [Inject]
-        public WeaponShotService(IAmmoFactory ammoFactory, IUpdater updater)
+        public WeaponShotService(IAmmoViewFactory ammoViewFactory, IDamageableIdentifier damageableIdentifier, IUpdater updater)
         {
-            _ammoFactory = ammoFactory;
+            _ammoViewFactory = ammoViewFactory;
+            _damageableIdentifier = damageableIdentifier;
             _updater = updater;
         }
 
@@ -27,26 +30,20 @@ namespace Equipment
         {
             _weaponViews[weapon] = weaponView;
             weapon.OnShoot += Shoot;
-            weapon.OnBulletHit += StopBullet;
         }
 
         public void UnregisterWeapon(IWeapon weapon)
         {
             weapon.OnShoot -= Shoot;
             _weaponViews.Remove(weapon);
-            weapon.OnBulletHit -= StopBullet;
         }
 
         public void DeactivateShotAmmos()
         {
-            foreach (var ammo in _shotAmmoViews.Keys)
-                if (_shotAmmoViews.TryGetValue(ammo, out var ammoView))
-                {
-                    ammoView.Deactivate();
-                    _updater.RemoveUpdatable(ammoView);
-                }
+            foreach (var ammoView in _shotAmmoViewWeapons.Keys)
+                StopBullet(ammoView);
 
-            _shotAmmoViews.Clear();
+            _shotAmmoViewWeapons.Clear();
             _areAmmosDeactivated = true;
         }
 
@@ -61,28 +58,56 @@ namespace Equipment
                 return;
             }
 
-            var ammo = await _ammoFactory.SpawnAmmoAsync(weapon);
-            if (ammo == null)
-                return;
-
-            var barrel = weaponView.Barrel;
-            ammo.Activate(barrel.position, barrel.rotation, barrel.up, weaponView.AmmoSpeed, weapon);
-            _updater.AddUpdatable(ammo.AmmoView);
-            _shotAmmoViews.Add(ammo, ammo.AmmoView);
             _areAmmosDeactivated = false;
+            var ammoView = await _ammoViewFactory.CreateAmmoViewAsync(weapon.WeaponType);
+            if (_areAmmosDeactivated) // Is bullet spawned after fight finished
+            {
+                ammoView.Deactivate();
+                return;
+            }
+
+            ShootBullet(weapon, ammoView, weaponView);
         }
 
-        private void StopBullet(IAmmo ammo)
+        private void ShootBullet(IWeapon weapon, AmmoView ammoView, WeaponView weaponView)
+        {
+            ammoView.OnTriggerEntered += HandleCollision;
+
+            var barrel = weaponView.Barrel;
+            ammoView.Activate(barrel.position, barrel.rotation, barrel.up, weaponView.AmmoSpeed);
+
+            _updater.AddUpdatable(ammoView);
+            _shotAmmoViewWeapons.Add(ammoView, weapon);
+        }
+
+        private void HandleCollision(Collider2D collider, AmmoView ammoView)
+        {
+            if (!_shotAmmoViewWeapons.TryGetValue(ammoView, out var weapon))
+            {
+                Debug.LogError($"{this}: Cannot get weapon for ammo view {ammoView.name}");
+                return;
+            }
+
+            if (!_damageableIdentifier.TryGetDamageTaker(collider, out var damageTaker))
+            {
+                Debug.LogError($"{this}: Cannot get damage taker with collider {collider.name}");
+                return;
+            }
+
+            if (weapon.TryDealDamageToEnemy(damageTaker))
+            {
+                StopBullet(ammoView);
+                _shotAmmoViewWeapons.Remove(ammoView);
+            }
+        }
+
+        private void StopBullet(AmmoView ammoView)
         {
             if (_areAmmosDeactivated)
                 return;
 
-            if (!_shotAmmoViews.Remove(ammo, out var ammoView))
-            {
-                Debug.LogError($"{this}: Cannot get ammo view");
-                return;
-            }
-
+            ammoView.OnTriggerEntered -= HandleCollision;
+            ammoView.Deactivate();
             _updater.RemoveUpdatable(ammoView);
         }
     }

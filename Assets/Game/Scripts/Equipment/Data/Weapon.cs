@@ -1,13 +1,11 @@
 ﻿using System;
 using Battle;
 using Ships;
-using UnityEngine;
 
 namespace Equipment
 {
     public sealed class Weapon : IWeapon
     {
-        public event Action<IAmmo> OnBulletHit;
         public event Action<IWeapon> OnShoot;
         public event Action<IWeapon> OnUnequip;
         
@@ -35,11 +33,8 @@ namespace Equipment
             _owner = owner;
         }
 
-        public void TryDealDamage(IAmmo ammo, Collider2D collider)
-        {
-            if (_damageHandler.TryDealDamage(_owner, collider, _damage))
-                OnBulletHit?.Invoke(ammo);
-        }
+        public bool TryDealDamageToEnemy(IShip damageTaker)
+            => _damageHandler.TryDealDamage(_owner, damageTaker, _damage);
 
         public void Reload() 
             => _cooldownTimer = 0;

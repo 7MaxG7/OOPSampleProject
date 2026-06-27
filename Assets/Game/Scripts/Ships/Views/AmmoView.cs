@@ -6,13 +6,14 @@ namespace Ships
 {
     public sealed class AmmoView : MonoBehaviour, IUpdatable
     {
-        public event Action<Collider2D> OnTriggerEntered;
+        public event Action<Collider2D, AmmoView> OnTriggerEntered;
+        public event Action<AmmoView> OnDeactivated;
 
         private Vector3 _direction;
         private float _speed;
 
         private void OnTriggerEnter2D(Collider2D other)
-            => OnTriggerEntered?.Invoke(other);
+            => OnTriggerEntered?.Invoke(other, this);
 
         public void OnUpdate(float deltaTime)
         {
@@ -34,6 +35,7 @@ namespace Ships
             _direction = Vector3.zero;
             _speed = 0;
             gameObject.SetActive(false);
+            OnDeactivated?.Invoke(this);
         }
     }
 }

@@ -1,4 +1,3 @@
-using Infrastructure;
 using Ships;
 
 namespace Equipment
