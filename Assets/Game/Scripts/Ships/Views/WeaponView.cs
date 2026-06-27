@@ -7,9 +7,9 @@ namespace Ships
         [SerializeField] private Transform _barrel;
 
         public Transform Barrel => _barrel;
-        public float AmmoSpeed { get; private set; }
+        public float BulletSpeed { get; private set; }
 
-        public void Init(float ammoSpeed)
-            => AmmoSpeed = ammoSpeed;
+        public void Init(float bulletSpeed)
+            => BulletSpeed = bulletSpeed;
     }
 }

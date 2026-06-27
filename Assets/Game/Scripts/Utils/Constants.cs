@@ -9,7 +9,7 @@
         public const string WEAPON_DATA_PATH = "WeaponsData";
         public const string MODULE_DATA_PATH = "ModulesData";
         public const string SHIPS_PARENT_NAME = "[SHIPS]";
-        public const string AMMOS_PARENT_NAME = "[AMMOS]";
+        public const string BULLETS_PARENT_NAME = "[BULLETS]";
         public const string WIN_TEXT = "Player {0} win!";
     }
 }

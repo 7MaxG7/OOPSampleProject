@@ -14,7 +14,7 @@ namespace Infrastructure
             Container.Bind<IShipsViewInitializer>().To<ShipsViewInitializer>().AsSingle();
             Container.Bind<IShipsFactory>().To<ShipsFactory>().AsSingle();
             Container.Bind<IShipViewFactory>().To<ShipViewFactory>().AsSingle();
-            Container.Bind<IAmmoViewFactory>().To<AmmoViewFactory>().AsSingle();
+            Container.Bind<IBulletViewFactory>().To<BulletViewFactory>().AsSingle();
             Container.Bind<IEquipmentViewFactory>().To<EquipmentViewFactory>().AsSingle();
             Container.Bind<IWeaponShotService>().To<WeaponShotService>().AsSingle();
             Container.Bind<IShipUpgrader>().To<ShipUpgrader>().AsSingle();

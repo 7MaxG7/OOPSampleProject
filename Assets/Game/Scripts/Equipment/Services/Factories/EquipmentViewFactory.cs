@@ -21,7 +21,7 @@ namespace Equipment
         {
             var config = _staticDataService.GetWeapon(weaponType);
             var weaponView = await _assetsInstantiator.CreateAsync<WeaponView>(config.Prefab);
-            weaponView.Init(config.AmmoSpeed);
+            weaponView.Init(config.BulletSpeed);
             return weaponView;
         }
 

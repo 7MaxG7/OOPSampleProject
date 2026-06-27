@@ -11,8 +11,8 @@ namespace Equipment
         [SerializeField] private int _damage;
         [SerializeField] private float _cooldown;
         [SerializeField] private AssetReference _prefab;
-        [SerializeField] private AssetReference _ammoPrefab;
-        [SerializeField] private float _ammoSpeed;
+        [SerializeField] private AssetReference _bulletPrefab;
+        [SerializeField] private float _bulletSpeed;
         [SerializeField] private Sprite _icon;
 
         public WeaponType WeaponType => _weaponType;
@@ -20,8 +20,8 @@ namespace Equipment
         public int Damage => _damage;
         public float Cooldown => _cooldown;
         public AssetReference Prefab => _prefab;
-        public AssetReference AmmoPrefab => _ammoPrefab;
+        public AssetReference BulletPrefab => _bulletPrefab;
         public Sprite Icon => _icon;
-        public float AmmoSpeed => _ammoSpeed;
+        public float BulletSpeed => _bulletSpeed;
     }
 }

@@ -10,18 +10,18 @@ namespace Equipment
 {
     public sealed class WeaponShotService : IWeaponShotService
     {
-        private readonly IAmmoViewFactory _ammoViewFactory;
+        private readonly IBulletViewFactory _bulletViewFactory;
         private readonly IDamageableIdentifier _damageableIdentifier;
         private readonly IUpdater _updater;
 
         private readonly Dictionary<IWeapon, WeaponView> _weaponViews = new();
-        private readonly Dictionary<AmmoView, IWeapon> _shotAmmoViewWeapons = new();
-        private bool _areAmmosDeactivated;
+        private readonly Dictionary<BulletView, IWeapon> _shotBulletViewWeapons = new();
+        private bool _areBulletsDeactivated;
 
         [Inject]
-        public WeaponShotService(IAmmoViewFactory ammoViewFactory, IDamageableIdentifier damageableIdentifier, IUpdater updater)
+        public WeaponShotService(IBulletViewFactory bulletViewFactory, IDamageableIdentifier damageableIdentifier, IUpdater updater)
         {
-            _ammoViewFactory = ammoViewFactory;
+            _bulletViewFactory = bulletViewFactory;
             _damageableIdentifier = damageableIdentifier;
             _updater = updater;
         }
@@ -38,13 +38,13 @@ namespace Equipment
             _weaponViews.Remove(weapon);
         }
 
-        public void DeactivateShotAmmos()
+        public void DeactivateShotBullets()
         {
-            foreach (var ammoView in _shotAmmoViewWeapons.Keys)
-                StopBullet(ammoView);
+            foreach (var bulletView in _shotBulletViewWeapons.Keys)
+                StopBullet(bulletView);
 
-            _shotAmmoViewWeapons.Clear();
-            _areAmmosDeactivated = true;
+            _shotBulletViewWeapons.Clear();
+            _areBulletsDeactivated = true;
         }
 
         private void Shoot(IWeapon weapon)
@@ -58,33 +58,33 @@ namespace Equipment
                 return;
             }
 
-            _areAmmosDeactivated = false;
-            var ammoView = await _ammoViewFactory.CreateAmmoViewAsync(weapon.WeaponType);
-            if (_areAmmosDeactivated) // Is bullet spawned after fight finished
+            _areBulletsDeactivated = false;
+            var bulletView = await _bulletViewFactory.CreateBulletViewAsync(weapon.WeaponType);
+            if (_areBulletsDeactivated) // Is bullet spawned after fight finished
             {
-                ammoView.Deactivate();
+                bulletView.Deactivate();
                 return;
             }
 
-            ShootBullet(weapon, ammoView, weaponView);
+            ShootBullet(weapon, bulletView, weaponView);
         }
 
-        private void ShootBullet(IWeapon weapon, AmmoView ammoView, WeaponView weaponView)
+        private void ShootBullet(IWeapon weapon, BulletView bulletView, WeaponView weaponView)
         {
-            ammoView.OnTriggerEntered += HandleCollision;
+            bulletView.OnTriggerEntered += HandleCollision;
 
             var barrel = weaponView.Barrel;
-            ammoView.Activate(barrel.position, barrel.rotation, barrel.up, weaponView.AmmoSpeed);
+            bulletView.Activate(barrel.position, barrel.rotation, barrel.up, weaponView.BulletSpeed);
 
-            _updater.AddUpdatable(ammoView);
-            _shotAmmoViewWeapons.Add(ammoView, weapon);
+            _updater.AddUpdatable(bulletView);
+            _shotBulletViewWeapons.Add(bulletView, weapon);
         }
 
-        private void HandleCollision(Collider2D collider, AmmoView ammoView)
+        private void HandleCollision(Collider2D collider, BulletView bulletView)
         {
-            if (!_shotAmmoViewWeapons.TryGetValue(ammoView, out var weapon))
+            if (!_shotBulletViewWeapons.TryGetValue(bulletView, out var weapon))
             {
-                Debug.LogError($"{this}: Cannot get weapon for ammo view {ammoView.name}");
+                Debug.LogError($"{this}: Cannot get weapon for bullet view {bulletView.name}");
                 return;
             }
 
@@ -96,19 +96,19 @@ namespace Equipment
 
             if (weapon.TryDealDamageToEnemy(damageTaker))
             {
-                StopBullet(ammoView);
-                _shotAmmoViewWeapons.Remove(ammoView);
+                StopBullet(bulletView);
+                _shotBulletViewWeapons.Remove(bulletView);
             }
         }
 
-        private void StopBullet(AmmoView ammoView)
+        private void StopBullet(BulletView bulletView)
         {
-            if (_areAmmosDeactivated)
+            if (_areBulletsDeactivated)
                 return;
 
-            ammoView.OnTriggerEntered -= HandleCollision;
-            ammoView.Deactivate();
-            _updater.RemoveUpdatable(ammoView);
+            bulletView.OnTriggerEntered -= HandleCollision;
+            bulletView.Deactivate();
+            _updater.RemoveUpdatable(bulletView);
         }
     }
 }

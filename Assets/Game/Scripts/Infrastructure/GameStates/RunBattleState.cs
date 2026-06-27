@@ -85,7 +85,7 @@ namespace Infrastructure.GameStates
                 _updater.RemoveUpdatable(ship.WeaponBattery);
             }
 
-            _weaponShotService.DeactivateShotAmmos();
+            _weaponShotService.DeactivateShotBullets();
 
             _battleUi.ShowBattleEnd(winner);
         }
