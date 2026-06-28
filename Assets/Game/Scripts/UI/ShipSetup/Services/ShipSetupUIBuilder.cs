@@ -11,11 +11,11 @@ namespace UI.ShipSetup
     public class ShipSetupUIBuilder : IShipSetupUIBuilder
     {
         private readonly ShipSetupUIModel _shipSetupUIModel;
-        private readonly IUiFactory _uiFactory;
+        private readonly IUIFactory _uiFactory;
         private readonly IShipConfigurator _shipConfigurator;
         private readonly ICancellationTokenProvider _tokenProvider;
         private readonly IStaticDataService _staticDataService;
-        private readonly UiConfig _uiConfig;
+        private readonly UIConfig _uiConfig;
         private readonly IShipSetupUIService _shipSetupUIService;
 
         private ShipSetupUIController _shipSetupUIController;
@@ -23,8 +23,8 @@ namespace UI.ShipSetup
         private bool _isInited;
 
         [Inject]
-        public ShipSetupUIBuilder(ShipSetupUIModel shipSetupUIModel, IUiFactory uiFactory, IShipConfigurator shipConfigurator,
-            ICancellationTokenProvider tokenProvider, UiConfig uiConfig, IStaticDataService staticDataService, ICleaner cleaner,
+        public ShipSetupUIBuilder(ShipSetupUIModel shipSetupUIModel, IUIFactory uiFactory, IShipConfigurator shipConfigurator,
+            ICancellationTokenProvider tokenProvider, UIConfig uiConfig, IStaticDataService staticDataService, ICleaner cleaner,
             IShipSetupUIService shipSetupUIService)
         {
             _shipSetupUIModel = shipSetupUIModel;

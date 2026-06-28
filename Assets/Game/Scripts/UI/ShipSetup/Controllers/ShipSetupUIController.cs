@@ -12,21 +12,21 @@ namespace UI.ShipSetup
     public sealed class ShipSetupUIController
     {
         private readonly IStaticDataService _staticDataService;
-        private readonly IUiFactory _uiFactory;
-        private readonly UiConfig _uiConfig;
+        private readonly IUIFactory _uiFactory;
+        private readonly UIConfig _uiConfig;
         private readonly ICancellationTokenProvider _tokenProvider;
         private readonly IShipConfigurator _shipConfigurator;
         private readonly IShipSetupUIService _shipSetupUIService;
         private ShipSetupUIModel _model;
 
-        private WeaponSelectPanelController _weaponSelectPanelController;
-        private ModuleSelectPanelController _moduleSelectPanelController;
-        private ShipSetupView _view;
+        private WeaponSelectPanelUIController _weaponSelectPanelController;
+        private ModuleSelectPanelUIController _moduleSelectPanelController;
+        private ShipSetupUIView _view;
 
         private readonly Dictionary<OpponentId, ShipSetupPanelUIController> _shipPanelControllers = new();
 
         public ShipSetupUIController(IShipConfigurator shipConfigurator, ICancellationTokenProvider tokenProvider,
-            IStaticDataService staticDataService, IUiFactory uiFactory, UiConfig uiConfig, IShipSetupUIService shipSetupUIService)
+            IStaticDataService staticDataService, IUIFactory uiFactory, UIConfig uiConfig, IShipSetupUIService shipSetupUIService)
         {
             _shipConfigurator = shipConfigurator;
             _tokenProvider = tokenProvider;
@@ -36,7 +36,7 @@ namespace UI.ShipSetup
             _shipSetupUIService = shipSetupUIService;
         }
 
-        public async UniTask InitAsync(ShipSetupUIModel model, ShipSetupView view, Action switchState)
+        public async UniTask InitAsync(ShipSetupUIModel model, ShipSetupUIView view, Action switchState)
         {
             _model = model;
             _view = view;
@@ -67,14 +67,14 @@ namespace UI.ShipSetup
 
         private async UniTask CreateWeaponSelectPanelAsync()
         {
-            _weaponSelectPanelController = new WeaponSelectPanelController(_shipConfigurator, _uiFactory, _shipSetupUIService, _tokenProvider,
+            _weaponSelectPanelController = new WeaponSelectPanelUIController(_shipConfigurator, _uiFactory, _shipSetupUIService, _tokenProvider,
                 _staticDataService, _uiConfig);
             await _weaponSelectPanelController.InitAsync(_view.WeaponSelectPanel);
         }
 
         private async UniTask CreateModuleSelectPanelAsync()
         {
-            _moduleSelectPanelController = new ModuleSelectPanelController(_shipConfigurator, _uiFactory, _shipSetupUIService, _tokenProvider,
+            _moduleSelectPanelController = new ModuleSelectPanelUIController(_shipConfigurator, _uiFactory, _shipSetupUIService, _tokenProvider,
                 _staticDataService, _uiConfig);
             await _moduleSelectPanelController.InitAsync(_view.ModuleSelectPanel);
         }

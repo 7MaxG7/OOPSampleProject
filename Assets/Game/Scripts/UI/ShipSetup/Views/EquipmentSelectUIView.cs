@@ -7,7 +7,7 @@ using Utils;
 
 namespace UI.ShipSetup
 {
-    public class EquipmentSelectView : MonoBehaviour
+    public class EquipmentSelectUIView : MonoBehaviour
     {
         [SerializeField] private RectTransform _rectTransform;
         [SerializeField] private RectTransform _equipmentsContent;

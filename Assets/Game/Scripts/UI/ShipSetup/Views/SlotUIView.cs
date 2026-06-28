@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace UI.ShipSetup
 {
-    public class SlotUiView : MonoBehaviour
+    public class SlotUIView : MonoBehaviour
     {
         [SerializeField] private Button _selectButton;
         [SerializeField] private Image _icon;

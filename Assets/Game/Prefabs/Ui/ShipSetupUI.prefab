@@ -260,7 +260,7 @@ GameObject:
   - component: {fileID: 3260484703890555038}
   - component: {fileID: 8113883743699608778}
   m_Layer: 5
-  m_Name: ShipSetupMenu
+  m_Name: ShipSetupUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

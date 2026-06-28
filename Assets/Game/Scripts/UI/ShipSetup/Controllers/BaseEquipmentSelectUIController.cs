@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace UI.ShipSetup
 {
-    public abstract class BaseEquipmentSelectController
+    public abstract class BaseEquipmentSelectUIController
     {
         protected readonly IShipConfigurator ShipConfigurator;
         
@@ -15,15 +15,15 @@ namespace UI.ShipSetup
         protected int SlotIndex;
         
         private readonly ICancellationTokenProvider _tokenProvider;
-        private readonly IUiFactory _uiFactory;
-        private readonly UiConfig _uiConfig;
+        private readonly IUIFactory _uiFactory;
+        private readonly UIConfig _uiConfig;
 
-        private EquipmentSelectView _equipmentSelectView;
+        private EquipmentSelectUIView _view;
 
-        private readonly List<SlotUiView> _equipmentsSlots = new();
+        private readonly List<SlotUIView> _equipmentsSlots = new();
 
-        protected BaseEquipmentSelectController(IShipConfigurator shipConfigurator, ICancellationTokenProvider tokenProvider,
-            IUiFactory uiFactory, UiConfig uiConfig)
+        protected BaseEquipmentSelectUIController(IShipConfigurator shipConfigurator, ICancellationTokenProvider tokenProvider,
+            IUIFactory uiFactory, UIConfig uiConfig)
         {
             ShipConfigurator = shipConfigurator;
             _tokenProvider = tokenProvider;
@@ -33,10 +33,10 @@ namespace UI.ShipSetup
 
         protected abstract UniTask SetupEquipSelectPanelAsync();
 
-        public async UniTask InitAsync(EquipmentSelectView view)
+        public async UniTask InitAsync(EquipmentSelectUIView view)
         {
-            _equipmentSelectView = view;
-            _equipmentSelectView.Init(_uiConfig.FadeAnimDuration);
+            _view = view;
+            _view.Init(_uiConfig.FadeAnimDuration);
             await SetupEquipSelectPanelAsync();
         }
 
@@ -49,7 +49,7 @@ namespace UI.ShipSetup
 
         public async UniTaskVoid ShowAsync(OpponentId opponentId, int slotIndex, Vector3 position)
         {
-            if (opponentId == OpponentId && slotIndex == SlotIndex && _equipmentSelectView.IsVisible())
+            if (opponentId == OpponentId && slotIndex == SlotIndex && _view.IsVisible())
                 return;
 
             using var cts = _tokenProvider.CreateLocalCts();
@@ -57,20 +57,20 @@ namespace UI.ShipSetup
             OpponentId = opponentId;
             SlotIndex = slotIndex;
 
-            await _equipmentSelectView.SetVisibleAsync(false, cts.Token, 0.3f);
-            _equipmentSelectView.Locate(opponentId, position);
-            await _equipmentSelectView.SetVisibleAsync(true, cts.Token);
+            await _view.SetVisibleAsync(false, cts.Token, 0.3f);
+            _view.Locate(opponentId, position);
+            await _view.SetVisibleAsync(true, cts.Token);
         }
 
         public async UniTaskVoid HideAsync()
         {
             using var cts = _tokenProvider.CreateLocalCts();
-            await _equipmentSelectView.SetVisibleAsync(false, cts.Token);
+            await _view.SetVisibleAsync(false, cts.Token);
         }
 
-        protected async UniTask<SlotUiView> CreateEquipmentSelectSlotAsync()
+        protected async UniTask<SlotUIView> CreateEquipmentSelectSlotAsync()
         {
-            var selectUiSlot = await _uiFactory.CreateSelectEquipmentSlotAsync(_equipmentSelectView.EquipmentsContent);
+            var selectUiSlot = await _uiFactory.CreateSelectEquipmentSlotAsync(_view.EquipmentsContent);
             _equipmentsSlots.Add(selectUiSlot);
             return selectUiSlot;
         }

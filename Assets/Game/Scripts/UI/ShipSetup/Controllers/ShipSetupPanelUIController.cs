@@ -13,23 +13,23 @@ namespace UI.ShipSetup
 {
     public sealed class ShipSetupPanelUIController
     {
-        private readonly IUiFactory _uiFactory;
+        private readonly IUIFactory _uiFactory;
         private readonly ICancellationTokenProvider _tokenProvider;
         private readonly IShipSetupUIService _shipSetupUIService;
 
         private ShipSetupPanelUIModel _model;
         private ShipSetupPanelUIView _view;
-        private WeaponSelectPanelController _weaponSelectPanelController;
-        private ModuleSelectPanelController _moduleSelectPanelController;
+        private WeaponSelectPanelUIController _weaponSelectPanelController;
+        private ModuleSelectPanelUIController _moduleSelectPanelController;
 
-        private CancellationTokenSource _cts;
-        private readonly Dictionary<int, ShipSlotUiView> _weaponSlots = new();
-        private readonly Dictionary<int, ShipSlotUiView> _moduleSlots = new();
-        private bool _isCleaned;
         private OpponentId OpponentId => _view.OpponentId;
+        private CancellationTokenSource _cts;
+        private readonly Dictionary<int, ShipSlotUIView> _weaponSlots = new();
+        private readonly Dictionary<int, ShipSlotUIView> _moduleSlots = new();
+        private bool _isCleaned;
 
         public ShipSetupPanelUIController(ICancellationTokenProvider tokenProvider, IShipSetupUIService shipSetupUIService,
-            IUiFactory uiFactory)
+            IUIFactory uiFactory)
         {
             _tokenProvider = tokenProvider;
             _shipSetupUIService = shipSetupUIService;
@@ -37,7 +37,7 @@ namespace UI.ShipSetup
         }
 
         public async UniTask InitAsync(ShipSetupPanelUIModel model, ShipSetupPanelUIView view,
-            WeaponSelectPanelController weaponSelectPanelController, ModuleSelectPanelController moduleSelectPanelController)
+            WeaponSelectPanelUIController weaponSelectPanelController, ModuleSelectPanelUIController moduleSelectPanelController)
         {
             _model = model;
             _view = view;
@@ -109,7 +109,7 @@ namespace UI.ShipSetup
                 => ShowSelectEquipPanel(_weaponSelectPanelController, _moduleSelectPanelController, EquipmentType.Module, slotIndex);
         }
 
-        private void ShowSelectEquipPanel(BaseEquipmentSelectController hidingPanel, BaseEquipmentSelectController showingPanel,
+        private void ShowSelectEquipPanel(BaseEquipmentSelectUIController hidingPanel, BaseEquipmentSelectUIController showingPanel,
             EquipmentType equipmentType, int slotIndex)
         {
             hidingPanel.HideAsync().Forget();

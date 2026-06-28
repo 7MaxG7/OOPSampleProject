@@ -8,15 +8,15 @@ using Zenject;
 
 namespace UI
 {
-    public sealed class UiFactory : IUiFactory
+    public sealed class UiFactory : IUIFactory
     {
         private readonly IAssetsInstantiator _instantiator;
-        private readonly UiConfig _uiConfig;
+        private readonly UIConfig _uiConfig;
 
         private Transform _rootCanvas;
 
         [Inject]
-        public UiFactory(UiConfig uiConfig, IAssetsInstantiator instantiator)
+        public UiFactory(UIConfig uiConfig, IAssetsInstantiator instantiator)
         {
             _instantiator = instantiator;
             _uiConfig = uiConfig;
@@ -28,23 +28,23 @@ namespace UI
                 _rootCanvas = (await _instantiator.CreateAsync(_uiConfig.RootCanvas)).transform;
         }
 
-        public CurtainView CreateCurtain()
+        public CurtainUIView CreateCurtain()
         {
             var curtainView = _instantiator.Create(_uiConfig.CurtainPrefab);
             curtainView.Init(_uiConfig.CurtainAnimDuration);
             return curtainView;
         }
 
-        public async UniTask<ShipSetupView> CreateShipSetupUIAsync()
-            => await _instantiator.CreateAsync<ShipSetupView>(_uiConfig.ShipSetupMenu, _rootCanvas);
+        public async UniTask<ShipSetupUIView> CreateShipSetupUIAsync()
+            => await _instantiator.CreateAsync<ShipSetupUIView>(_uiConfig.ShipSetupMenu, _rootCanvas);
 
-        public async UniTask<BattleUiView> CreateBattleUIAsync()
-            => await _instantiator.CreateAsync<BattleUiView>(_uiConfig.BattleUiPrefab, _rootCanvas);
+        public async UniTask<BattleUIView> CreateBattleUIAsync()
+            => await _instantiator.CreateAsync<BattleUIView>(_uiConfig.BattleUiPrefab, _rootCanvas);
 
-        public async UniTask<ShipSlotUiView> CreateShipEquipmentSlotAsync(Transform parent)
-            => await _instantiator.CreateAsync<ShipSlotUiView>(_uiConfig.ShipSlotUiPrefab, parent);
+        public async UniTask<ShipSlotUIView> CreateShipEquipmentSlotAsync(Transform parent)
+            => await _instantiator.CreateAsync<ShipSlotUIView>(_uiConfig.ShipSlotUiPrefab, parent);
 
-        public async UniTask<SlotUiView> CreateSelectEquipmentSlotAsync(Transform parent)
-            => await _instantiator.CreateAsync<SlotUiView>(_uiConfig.SlotUiPrefab, parent);
+        public async UniTask<SlotUIView> CreateSelectEquipmentSlotAsync(Transform parent)
+            => await _instantiator.CreateAsync<SlotUIView>(_uiConfig.SlotUiPrefab, parent);
     }
 }

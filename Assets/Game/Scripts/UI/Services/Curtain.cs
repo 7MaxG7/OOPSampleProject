@@ -7,12 +7,12 @@ namespace UI
 {
     public sealed class Curtain : ICurtain
     {
-        private readonly IUiFactory _uiFactory;
+        private readonly IUIFactory _uiFactory;
 
-        private CurtainView _curtainView;
+        private CurtainUIView _curtainView;
         
         [Inject]
-        public Curtain(IUiFactory uiFactory)
+        public Curtain(IUIFactory uiFactory)
         {
             _uiFactory = uiFactory;
         }

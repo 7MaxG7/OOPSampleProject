@@ -6,13 +6,13 @@ using Ui;
 
 namespace UI.ShipSetup
 {
-    public sealed class WeaponSelectPanelController : BaseEquipmentSelectController
+    public sealed class WeaponSelectPanelUIController : BaseEquipmentSelectUIController
     {
         private readonly IShipSetupUIService _shipSetupUIService;
         private readonly IStaticDataService _staticDataService;
 
-        public WeaponSelectPanelController(IShipConfigurator shipConfigurator, IUiFactory uiFactory, IShipSetupUIService shipSetupUIService,
-            ICancellationTokenProvider tokenProvider, IStaticDataService staticDataService, UiConfig uiConfig) : base(shipConfigurator,
+        public WeaponSelectPanelUIController(IShipConfigurator shipConfigurator, IUIFactory uiFactory, IShipSetupUIService shipSetupUIService,
+            ICancellationTokenProvider tokenProvider, IStaticDataService staticDataService, UIConfig uiConfig) : base(shipConfigurator,
             tokenProvider, uiFactory, uiConfig)
         {
             _shipSetupUIService = shipSetupUIService;

@@ -6,7 +6,7 @@ using Utils;
 
 namespace UI
 {
-    public sealed class CurtainView : MonoBehaviour
+    public sealed class CurtainUIView : MonoBehaviour
     {
         [SerializeField] private CanvasGroup _canvasGroup;
 

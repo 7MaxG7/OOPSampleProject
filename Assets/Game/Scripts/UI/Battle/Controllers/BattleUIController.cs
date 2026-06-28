@@ -15,7 +15,7 @@ namespace UI.Battle
         private readonly ICancellationTokenProvider _tokenProvider;
         private readonly IWinnerDefiner _winnerDefiner;
 
-        private BattleUiView _view;
+        private BattleUIView _view;
         private CancellationTokenSource _cts;
 
         public BattleUIController(ICancellationTokenProvider tokenProvider, IWinnerDefiner winnerDefiner)
@@ -33,7 +33,7 @@ namespace UI.Battle
             _cts = null;
         }
 
-        public void Init(BattleUIModel model, BattleUiView view, Action leaveBattle)
+        public void Init(BattleUIModel model, BattleUIView view, Action leaveBattle)
         {
             _view = view;
 

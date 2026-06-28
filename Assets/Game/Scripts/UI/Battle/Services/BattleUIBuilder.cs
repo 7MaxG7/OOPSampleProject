@@ -10,7 +10,7 @@ namespace UI.Battle
 {
     public class BattleUIBuilder : IBattleUIBuilder
     {
-        private readonly IUiFactory _uiFactory;
+        private readonly IUIFactory _uiFactory;
         private readonly IShipConfigurator _shipConfigurator;
         private readonly IWinnerDefiner _winnerDefiner;
         private readonly BattleUIModel _battleUIModel;
@@ -20,7 +20,7 @@ namespace UI.Battle
         private bool _isInited;
 
         [Inject]
-        public BattleUIBuilder(IUiFactory uiFactory, IShipConfigurator shipConfigurator, IWinnerDefiner winnerDefiner, ICleaner cleaner,
+        public BattleUIBuilder(IUIFactory uiFactory, IShipConfigurator shipConfigurator, IWinnerDefiner winnerDefiner, ICleaner cleaner,
             BattleUIModel battleUIModel, ICancellationTokenProvider tokenProvider)
         {
             _uiFactory = uiFactory;

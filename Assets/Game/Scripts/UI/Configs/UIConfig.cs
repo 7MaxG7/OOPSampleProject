@@ -3,13 +3,13 @@ using UnityEngine.AddressableAssets;
 
 namespace UI
 {
-    [CreateAssetMenu(menuName = "Configs/" + nameof(UiConfig), fileName = nameof(UiConfig))]
-    public class UiConfig : ScriptableObject
+    [CreateAssetMenu(menuName = "Configs/" + nameof(UIConfig), fileName = nameof(UIConfig))]
+    public class UIConfig : ScriptableObject
     {
         [SerializeField] private AssetReference _rootCanvas;
         [SerializeField] private float _fadeAnimDuration;
         [Header("Curtain")]
-        [SerializeField] private CurtainView _curtainPrefab;
+        [SerializeField] private CurtainUIView _curtainPrefab;
         [SerializeField] private float _curtainAnimDuration;
         [Header("Ship setup scene")]
         [SerializeField] private AssetReference _shipSetupMenu;
@@ -23,7 +23,7 @@ namespace UI
         public AssetReference SlotUiPrefab => _slotUiPrefab;
         public AssetReference BattleUiPrefab => _battleUiPrefab;
         public AssetReference RootCanvas => _rootCanvas;
-        public CurtainView CurtainPrefab => _curtainPrefab;
+        public CurtainUIView CurtainPrefab => _curtainPrefab;
         public float CurtainAnimDuration => _curtainAnimDuration;
         public float FadeAnimDuration => _fadeAnimDuration;
     }

@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7680989543203452689}
   - component: {fileID: 7881834816145185360}
   m_Layer: 5
-  m_Name: EquipSlotUi
+  m_Name: EquipSlotUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

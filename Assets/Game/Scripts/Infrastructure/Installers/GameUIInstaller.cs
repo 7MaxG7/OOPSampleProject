@@ -11,7 +11,7 @@ namespace Infrastructure
         public override void InstallBindings()
         {
             Container.Bind<ICurtain>().To<Curtain>().AsSingle();
-            Container.Bind<IUiFactory>().To<UiFactory>().AsSingle();
+            Container.Bind<IUIFactory>().To<UiFactory>().AsSingle();
             Container.Bind<IShipSetupUIBuilder>().To<ShipSetupUIBuilder>().AsSingle();
             Container.Bind<ShipSetupUIModel>().AsSingle();
             Container.Bind<IShipSetupUIService>().To<ShipSetupUIService>().AsSingle();

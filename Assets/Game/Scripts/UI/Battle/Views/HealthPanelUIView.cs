@@ -4,7 +4,7 @@ using UnityEngine.UI;
 
 namespace UI.Battle.Views
 {
-    public sealed class HealthPanel : MonoBehaviour
+    public sealed class HealthPanelUIView : MonoBehaviour
     {
         [SerializeField] private OpponentId _opponent;
         [SerializeField] private Slider _hpSlider;

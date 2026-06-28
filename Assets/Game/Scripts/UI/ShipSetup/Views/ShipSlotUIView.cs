@@ -2,7 +2,7 @@
 
 namespace UI.ShipSetup
 {
-    public sealed class ShipSlotUiView : SlotUiView
+    public sealed class ShipSlotUIView : SlotUIView
     {
         [SerializeField] private SelectPanelAnchor[] _selectPanelAnchor;
         
