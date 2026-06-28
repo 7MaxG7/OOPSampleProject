@@ -12,11 +12,11 @@ namespace UI.Battle.Views
 
         public OpponentId OpponentId => _opponent;
 
-        public void SetCurrentHp(float currentHp, float maxHp) 
-            => _hpSlider.value = ModifyToSliderValue(currentHp, maxHp);
+        public void SetHp((float current, float max) hp) 
+            => _hpSlider.value = ModifyToSliderValue(hp.current, hp.max);
 
-        public void SetCurrentShield(float currentShield, float maxShield)
-            => _shieldSlider.value = ModifyToSliderValue(currentShield, maxShield);
+        public void SetShield((float current, float max) shield)
+            => _shieldSlider.value = ModifyToSliderValue(shield.current, shield.max);
 
         private float ModifyToSliderValue(float value, float maxValue)
         {

@@ -2,7 +2,6 @@ using Cysharp.Threading.Tasks;
 using Ships;
 using Sounds;
 using Ui;
-using UI.Ship;
 using Zenject;
 
 namespace Infrastructure.GameStates
@@ -15,17 +14,15 @@ namespace Infrastructure.GameStates
         private readonly ISoundService _soundService;
         private readonly IAssetsProvider _assetsProvider;
         private readonly IShipSetupUIService _shipSetupUIService;
-        private readonly IUiFactory _uiFactory;
-        private readonly ICleaner _cleaner;
+        private readonly IShipSetupUIBuilder _shipSetupUIBuilder;
         private readonly ICancellationTokenProvider _tokenProvider;
 
         private IGameStateMachine _stateMachine;
-        private ShipSetupController _shipSetup;
 
         [Inject]
         public ShipSetupState(IShipsInitializer shipsInitializer, IShipsViewInitializer shipsViewInitializer,
             ISoundService soundService, ICancellationTokenProvider tokenProvider, ICurtain curtain, IAssetsProvider assetsProvider,
-            IShipSetupUIService shipSetupUIService, IUiFactory uiFactory, ICleaner cleaner)
+            IShipSetupUIService shipSetupUIService, IShipSetupUIBuilder shipSetupUIBuilder)
         {
             _curtain = curtain;
             _shipsInitializer = shipsInitializer;
@@ -33,8 +30,7 @@ namespace Infrastructure.GameStates
             _soundService = soundService;
             _assetsProvider = assetsProvider;
             _shipSetupUIService = shipSetupUIService;
-            _uiFactory = uiFactory;
-            _cleaner = cleaner;
+            _shipSetupUIBuilder = shipSetupUIBuilder;
             _tokenProvider = tokenProvider;
         }
 
@@ -48,7 +44,6 @@ namespace Infrastructure.GameStates
 
         public void Exit()
         {
-            _shipSetup.OnSetupComplete -= SwitchState;
         }
 
         private async UniTaskVoid StartSetupAsync()
@@ -67,16 +62,7 @@ namespace Infrastructure.GameStates
         {
             _shipsInitializer.CreateShips();
             await _shipsViewInitializer.CreateShipsViewsAsync();
-            await SetupUiAsync();
-        }
-
-        private async UniTask SetupUiAsync()
-        {
-            await _uiFactory.CreateRootAsync();
-            _shipSetup = await _uiFactory.CreateShipSetupUIAsync();
-            await _shipSetup.SetupUiAsync();
-            _shipSetup.OnSetupComplete += SwitchState;
-            _cleaner.AddCleanable(_shipSetup);
+            await _shipSetupUIBuilder.BuildUIAsync(SwitchState);
         }
 
         private void SwitchState()

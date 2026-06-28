@@ -1,7 +1,7 @@
 using Cysharp.Threading.Tasks;
 using UI;
-using UI.Battle;
-using UI.Ship;
+using UI.Battle.Views;
+using UI.ShipSetup;
 using UnityEngine;
 
 namespace Ui
@@ -10,8 +10,8 @@ namespace Ui
     {
         CurtainView CreateCurtain();
         UniTask CreateRootAsync();
-        UniTask<ShipSetupController> CreateShipSetupUIAsync();
-        UniTask<BattleUiController> CreateBattleUIAsync();
+        UniTask<ShipSetupView> CreateShipSetupUIAsync();
+        UniTask<BattleUiView> CreateBattleUIAsync();
         UniTask<SlotUiView> CreateSelectEquipmentSlotAsync(Transform parent);
         UniTask<ShipSlotUiView> CreateShipEquipmentSlotAsync(Transform parent);
     }
