@@ -43,9 +43,14 @@ namespace Ships
         private float _currentHp;
         private float _currentShield;
 
-
         public void OnUpdate(float deltaTime)
         {
+            if (_currentShield >= MaxShield)
+            {
+                _shieldRecoverTimer = 0f;
+                return;
+            }
+            
             _shieldRecoverTimer += deltaTime;
             if (_shieldRecoverTimer < ShieldRecoveryInterval)
                 return;

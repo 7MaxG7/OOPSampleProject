@@ -1,8 +1,6 @@
-using Infrastructure;
-
 namespace Ships
 {
-    public interface IShipsInitializer : ISceneCleanable
+    public interface IShipsInitializer
     {
         void CreateShips();
     }

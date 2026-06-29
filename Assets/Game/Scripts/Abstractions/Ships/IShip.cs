@@ -1,10 +1,9 @@
 ﻿using System;
 using Equipment;
-using Infrastructure;
 
 namespace Ships
 {
-    public interface IShip : ISceneCleanable
+    public interface IShip
     {
         event Action<IShip> OnDied;
         
@@ -16,5 +15,6 @@ namespace Ships
         void TakeDamage(int damage);
         void SetHealth(IHealth health);
         void SetWeapons(IWeaponBattery weapons);
+        void Clean();
     }
 }

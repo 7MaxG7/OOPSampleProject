@@ -1,5 +1,4 @@
 using Battle;
-using Infrastructure;
 using Zenject;
 
 namespace Ships
@@ -11,20 +10,11 @@ namespace Ships
         private readonly IWinnerDefiner _winnerDefiner;
 
         [Inject]
-        public ShipsInitializer(IShipsFactory shipsFactory, IShipConfigurator shipConfigurator, IWinnerDefiner winnerDefiner,
-            ICleaner cleaner)
+        public ShipsInitializer(IShipsFactory shipsFactory, IShipConfigurator shipConfigurator, IWinnerDefiner winnerDefiner)
         {
             _shipsFactory = shipsFactory;
             _shipConfigurator = shipConfigurator;
             _winnerDefiner = winnerDefiner;
-
-            cleaner.AddCleanable(this);
-        }
-
-        public void CleanUp()
-        {
-            foreach (var ship in _shipConfigurator.Ships.Values)
-                ship.CleanUp();
         }
 
         public void CreateShips()

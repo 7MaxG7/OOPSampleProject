@@ -27,7 +27,7 @@ namespace Ships
             Name = shipType.ToString();
         }
 
-        public void CleanUp() 
+        public void Clean() 
         {
             ModuleBattery.OnModuleEquipped -= UpgradeShip;
             ModuleBattery.OnModuleUnequip -= DowngradeShip;

@@ -22,7 +22,22 @@ namespace Ships
         {
             _staticDataService = staticDataService;
             _rulesConfig = rulesConfig;
-            cleaner.AddCleanable(this);
+            cleaner.AddCleanable(this, 1000);   // Cause Ships can be used in other services for CleanUp
+        }
+
+        public void CleanUp()
+        {
+            foreach (var (opponentId, ship) in _ships)
+            {
+                ship.Clean();
+                if (!TryGetConfiguration(opponentId, out var configuration))
+                    continue;
+
+                ship.WeaponBattery.OnEquipmentChanged -= configuration.SetWeapon;
+                ship.ModuleBattery.OnEquipmentChanged -= configuration.SetModule;
+            }
+            
+            _ships.Clear();
         }
 
         public void Init()
@@ -32,21 +47,6 @@ namespace Ships
                 var shipData = _staticDataService.GetShip(opponent.ShipType);
                 _shipConfigurations.Add(opponent.OpponentId, new ShipConfiguration(shipData));
             }
-        }
-
-        public void CleanUp()
-        {
-            foreach (var (opponentId, ship) in _ships)
-            {
-                if (!TryGetConfiguration(opponentId, out var configuration))
-                    continue;
-
-                ship.WeaponBattery.OnEquipmentChanged -= configuration.SetWeapon;
-                ship.ModuleBattery.OnEquipmentChanged -= configuration.SetModule;
-            }
-            
-            // TODO. Clear it after all other clearings (including UI)
-            // _ships.Clear();
         }
 
         public void RegisterShip(OpponentId opponentId, IShip ship)

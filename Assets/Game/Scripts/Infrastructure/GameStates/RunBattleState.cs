@@ -14,16 +14,18 @@ namespace Infrastructure.GameStates
         private readonly IUpdater _updater;
         private readonly ICancellationTokenProvider _tokenProvider;
         private readonly IWeaponShotService _weaponShotService;
+        private readonly IShipConfigurator _shipConfigurator;
 
         [Inject]
         public RunBattleState(ICurtain curtain, IWinnerDefiner winnerDefiner, ICancellationTokenProvider tokenProvider, IUpdater updater,
-            IWeaponShotService weaponShotService)
+            IWeaponShotService weaponShotService, IShipConfigurator shipConfigurator)
         {
             _curtain = curtain;
             _winnerDefiner = winnerDefiner;
             _updater = updater;
             _tokenProvider = tokenProvider;
             _weaponShotService = weaponShotService;
+            _shipConfigurator = shipConfigurator;
         }
 
         public void Init(IGameStateMachine stateMachine)
@@ -48,7 +50,7 @@ namespace Infrastructure.GameStates
 
         private void StartBattle()
         {
-            foreach (var ship in _winnerDefiner.Ships)
+            foreach (var ship in _shipConfigurator.Ships.Values)
             {
                 _updater.AddUpdatable(ship.Health);
                 _updater.AddUpdatable(ship.WeaponBattery);
@@ -58,7 +60,7 @@ namespace Infrastructure.GameStates
 
         private void HandleBattleStop(IShip winner)
         {
-            foreach (var ship in _winnerDefiner.Ships)
+            foreach (var ship in _shipConfigurator.Ships.Values)
             {
                 ship.WeaponBattery.ToggleShooting(false);
                 _updater.RemoveUpdatable(ship.Health);
